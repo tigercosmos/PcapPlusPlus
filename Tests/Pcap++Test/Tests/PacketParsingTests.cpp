@@ -213,11 +213,11 @@ PTF_TEST_CASE(TestHttpResponseParsing)
 	// wireshark filter: http.response && (tcp.srcport == 80 || tcp.srcport == 8080)
 	PTF_ASSERT_EQUAL(httpResponsePackets, 682);
 	// wireshark filter: http.response && (tcp.srcport == 80 || tcp.srcport == 8080) && http.response.code == 200
-	PTF_ASSERT_EQUAL(statusCodes[pcpp::HttpResponseLayer::Http200OK], 592);
+	PTF_ASSERT_EQUAL(statusCodes[pcpp::HttpResponseStatusCode::Http200OK], 592);
 	// wireshark filter: http.response && (tcp.srcport == 80 || tcp.srcport == 8080) && http.response.code == 302
-	PTF_ASSERT_EQUAL(statusCodes[pcpp::HttpResponseLayer::Http302], 15);
+	PTF_ASSERT_EQUAL(statusCodes[pcpp::HttpResponseStatusCode::Http302], 15);
 	// wireshark filter: http.response && (tcp.srcport == 80 || tcp.srcport == 8080) && http.response.code == 304
-	PTF_ASSERT_EQUAL(statusCodes[pcpp::HttpResponseLayer::Http304NotModified], 26);
+	PTF_ASSERT_EQUAL(statusCodes[pcpp::HttpResponseStatusCode::Http304NotModified], 26);
 
 	// wireshark filter: http.response && (tcp.srcport == 80 || tcp.srcport == 8080) && http.content_type == "text/html"
 	PTF_ASSERT_EQUAL(textHtmlCount, 38);
