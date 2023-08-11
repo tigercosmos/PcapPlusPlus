@@ -395,8 +395,11 @@ namespace pcpp
 			return m_value;
 		}
 		
-		constexpr bool operator==(HttpResponseStatusCode other) const { return m_value == other.m_value; }
-		constexpr bool operator!=(HttpResponseStatusCode other) const { return m_value != other.m_value; }
+		constexpr bool operator==(const HttpResponseStatusCode &other) const { return m_value == other.m_value; }
+		constexpr bool operator!=(const HttpResponseStatusCode &other) const { return m_value != other.m_value; }
+
+		constexpr bool operator==(const Value &otherValue) const { return m_value == otherValue; }
+		constexpr bool operator!=(const Value &otherValue) const { return m_value != otherValue; }
 	private:
   		Value m_value;
 	};
