@@ -26,7 +26,9 @@
 #define DISABLE_WARNING_POP DO_PRAGMA(GCC diagnostic pop)
 #define DISABLE_WARNING(warningName) DO_PRAGMA(GCC diagnostic ignored #warningName)
 
-#define DISABLE_WARNING_DEPRECATED DISABLE_WARNING(-Wdeprecated - declarations)
+// clang-format off
+#define DISABLE_WARNING_DEPRECATED DISABLE_WARNING(-Wdeprecated-declarations)
+// clang-format on
 #else
 #pragma message("WARNING: Disabling of warnings is not implemented for this compiler")
 #define DISABLE_WARNING_PUSH
