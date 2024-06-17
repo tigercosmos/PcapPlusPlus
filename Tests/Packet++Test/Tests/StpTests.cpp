@@ -43,7 +43,6 @@ PTF_TEST_CASE(StpConfigurationParsingTests)
 	PTF_ASSERT_EQUAL(stpConfLayer->toString(), "Spanning Tree Configuration");
 } // StpConfigurationParsingTests
 
-
 PTF_TEST_CASE(StpConfigurationCreationTests)
 {
 	timeval time;
@@ -74,7 +73,6 @@ PTF_TEST_CASE(StpConfigurationCreationTests)
 
 	PTF_ASSERT_BUF_COMPARE(stpConfLayer.getData(), stpConfLayerTgt->getData(), stpConfLayer.getHeaderLen());
 } // StpConfigurationCreationTests
-
 
 PTF_TEST_CASE(StpConfigurationEditTests)
 {
@@ -129,7 +127,6 @@ PTF_TEST_CASE(StpConfigurationEditTests)
 	PTF_ASSERT_BUF_COMPARE(stpConfLayerOrig->getData(), stpConfLayerTgt2->getData(), stpConfLayerOrig->getHeaderLen());
 } // StpConfigurationEditTests
 
-
 PTF_TEST_CASE(StpTopologyChangeParsingTests)
 {
 	timeval time;
@@ -152,7 +149,6 @@ PTF_TEST_CASE(StpTopologyChangeParsingTests)
 	PTF_ASSERT_EQUAL(stpTopologyLayer->toString(), "Spanning Tree Topology Change Notification");
 } // StpTopologyChangeParsingTests
 
-
 PTF_TEST_CASE(StpTopologyChangeCreationTests)
 {
 	timeval time;
@@ -163,14 +159,14 @@ PTF_TEST_CASE(StpTopologyChangeCreationTests)
 	pcpp::Packet stpPacket(&rawPacket1);
 	PTF_ASSERT_TRUE(stpPacket.isPacketOfType(pcpp::STP));
 
-	pcpp::StpTopologyChangeBPDULayer *stpTopologyLayerTgt = stpPacket.getLayerOfType<pcpp::StpTopologyChangeBPDULayer>();
+	pcpp::StpTopologyChangeBPDULayer *stpTopologyLayerTgt =
+		stpPacket.getLayerOfType<pcpp::StpTopologyChangeBPDULayer>();
 	PTF_ASSERT_NOT_NULL(stpTopologyLayerTgt);
 
 	pcpp::StpTopologyChangeBPDULayer stpTopologyLayer;
 
 	PTF_ASSERT_BUF_COMPARE(stpTopologyLayer.getData(), stpTopologyLayerTgt->getData(), stpTopologyLayer.getHeaderLen());
 } // StpTopologyChangeCreationTests
-
 
 PTF_TEST_CASE(StpTopologyChangeEditTests)
 {
@@ -182,7 +178,8 @@ PTF_TEST_CASE(StpTopologyChangeEditTests)
 	pcpp::Packet stpPacket1(&rawPacket1);
 	PTF_ASSERT_TRUE(stpPacket1.isPacketOfType(pcpp::STP));
 
-	pcpp::StpTopologyChangeBPDULayer *stpTopologyLayerOrig = stpPacket1.getLayerOfType<pcpp::StpTopologyChangeBPDULayer>();
+	pcpp::StpTopologyChangeBPDULayer *stpTopologyLayerOrig =
+		stpPacket1.getLayerOfType<pcpp::StpTopologyChangeBPDULayer>();
 	PTF_ASSERT_NOT_NULL(stpTopologyLayerOrig);
 
 	// Read target packet
@@ -190,16 +187,17 @@ PTF_TEST_CASE(StpTopologyChangeEditTests)
 	pcpp::Packet stpPacket2(&rawPacket2);
 	PTF_ASSERT_TRUE(stpPacket2.isPacketOfType(pcpp::STP));
 
-	pcpp::StpTopologyChangeBPDULayer *stpTopologyLayerTgt = stpPacket2.getLayerOfType<pcpp::StpTopologyChangeBPDULayer>();
+	pcpp::StpTopologyChangeBPDULayer *stpTopologyLayerTgt =
+		stpPacket2.getLayerOfType<pcpp::StpTopologyChangeBPDULayer>();
 	PTF_ASSERT_NOT_NULL(stpTopologyLayerTgt);
 
 	// Set fields
 	stpTopologyLayerOrig->setProtoId(0xaa);
 	stpTopologyLayerOrig->setVersion(0x13);
 
-	PTF_ASSERT_BUF_COMPARE(stpTopologyLayerOrig->getData(), stpTopologyLayerTgt->getData(), stpTopologyLayerOrig->getHeaderLen());
+	PTF_ASSERT_BUF_COMPARE(stpTopologyLayerOrig->getData(), stpTopologyLayerTgt->getData(),
+						   stpTopologyLayerOrig->getHeaderLen());
 } // StpTopologyChangeEditTests
-
 
 PTF_TEST_CASE(RapidStpParsingTests)
 {
@@ -239,7 +237,6 @@ PTF_TEST_CASE(RapidStpParsingTests)
 	PTF_ASSERT_EQUAL(stpRapidLayer->toString(), "Rapid Spanning Tree");
 } // RapidStpParsingTests
 
-
 PTF_TEST_CASE(RapidStpCreationTests)
 {
 	timeval time;
@@ -272,7 +269,6 @@ PTF_TEST_CASE(RapidStpCreationTests)
 	PTF_ASSERT_BUF_COMPARE(stpRapidLayer.getData(), stpRapidLayerTgt->getData(), stpRapidLayer.getHeaderLen());
 } // RapidStpCreationTests
 
-
 PTF_TEST_CASE(RapidStpEditTests)
 {
 	timeval time;
@@ -303,7 +299,6 @@ PTF_TEST_CASE(RapidStpEditTests)
 
 	PTF_ASSERT_BUF_COMPARE(stpRapidLayerOrig->getData(), stpRapidLayerTgt->getData(), stpRapidLayerTgt->getHeaderLen());
 } // RapidStpEditTests
-
 
 PTF_TEST_CASE(MultipleStpParsingTests)
 {
@@ -366,7 +361,6 @@ PTF_TEST_CASE(MultipleStpParsingTests)
 	PTF_ASSERT_EQUAL(stpMultipleLayer->toString(), "Multiple Spanning Tree");
 } // MultipleStpParsingTests
 
-
 PTF_TEST_CASE(MultipleStpCreationTests)
 {
 	timeval time;
@@ -408,7 +402,6 @@ PTF_TEST_CASE(MultipleStpCreationTests)
 	PTF_ASSERT_BUF_COMPARE(stpMultipleLayer.getData(), stpMultipleLayerTgt->getData(), stpMultipleLayer.getDataLen());
 } // MultipleStpParsingTests
 
-
 PTF_TEST_CASE(MultipleStpEditTests)
 {
 	timeval time;
@@ -440,13 +433,15 @@ PTF_TEST_CASE(MultipleStpEditTests)
 	stpMultipleLayerOrig->setRemainingHopCount(17);
 
 	PTF_ASSERT_EQUAL(stpMultipleLayerOrig->getDataLen(), stpMultipleLayerTgt->getDataLen());
-	PTF_ASSERT_BUF_COMPARE(stpMultipleLayerOrig->getData(), stpMultipleLayerTgt->getData(), stpMultipleLayerTgt->getDataLen());
+	PTF_ASSERT_BUF_COMPARE(stpMultipleLayerOrig->getData(), stpMultipleLayerTgt->getData(),
+						   stpMultipleLayerTgt->getDataLen());
 
 	READ_FILE_AND_CREATE_PACKET(3, "PacketExamples/StpMultipleEdit2.dat");
 	pcpp::Packet stpPacket3(&rawPacket3);
 	PTF_ASSERT_TRUE(stpPacket3.isPacketOfType(pcpp::STP));
 
-	pcpp::StpConfigurationBPDULayer *stpMultipleLayerTgt2 = stpPacket3.getLayerOfType<pcpp::StpConfigurationBPDULayer>();
+	pcpp::StpConfigurationBPDULayer *stpMultipleLayerTgt2 =
+		stpPacket3.getLayerOfType<pcpp::StpConfigurationBPDULayer>();
 	PTF_ASSERT_NOT_NULL(stpMultipleLayerTgt2);
 
 	stpMultipleLayerOrig->setCISTBridgePriority(24576);
@@ -454,5 +449,6 @@ PTF_TEST_CASE(MultipleStpEditTests)
 	stpMultipleLayerOrig->setCISTBridgeSystemID("FF:EE:DD:CC:BB:AA");
 
 	PTF_ASSERT_EQUAL(stpMultipleLayerOrig->getDataLen(), stpMultipleLayerTgt2->getDataLen());
-	PTF_ASSERT_BUF_COMPARE(stpMultipleLayerOrig->getData(), stpMultipleLayerTgt2->getData(), stpMultipleLayerTgt2->getDataLen());
+	PTF_ASSERT_BUF_COMPARE(stpMultipleLayerOrig->getData(), stpMultipleLayerTgt2->getData(),
+						   stpMultipleLayerTgt2->getDataLen());
 } // MultipleStpEditTests

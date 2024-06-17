@@ -32,16 +32,19 @@
 #include <stdint.h>
 #include <assert.h>
 
-struct _light_pcapng_stream {
-	union {
-		FILE* fd;
+struct _light_pcapng_stream
+{
+	union
+	{
+		FILE *fd;
 		void *reserved;
 	} stream;
 	struct _light_pcapng *current_block;
 	int valid;
 };
 
-struct _light_pcapng {
+struct _light_pcapng
+{
 	uint32_t block_type;
 	uint32_t block_total_length;
 	uint32_t *block_body;
@@ -49,7 +52,8 @@ struct _light_pcapng {
 	struct _light_pcapng *next_block;
 };
 
-struct _light_option {
+struct _light_option
+{
 	uint16_t custom_option_code;
 	uint16_t option_length;
 	// uint32_t PEN;
@@ -57,7 +61,8 @@ struct _light_option {
 	struct _light_option *next_option;
 };
 
-struct _light_pcapng_mem {
+struct _light_pcapng_mem
+{
 	uint32_t *mem;
 	uint32_t **mem_blocks;
 	size_t mem_size;

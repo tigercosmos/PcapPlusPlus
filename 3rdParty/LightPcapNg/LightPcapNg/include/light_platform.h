@@ -32,7 +32,8 @@
 #include "light_internal.h"
 #include "light_file.h"
 
-typedef enum {
+typedef enum
+{
 	LIGHT_OREAD,
 	LIGHT_OWRITE,
 	LIGHT_OAPPEND,

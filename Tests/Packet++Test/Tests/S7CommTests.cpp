@@ -5,7 +5,6 @@
 #include "S7CommLayer.h"
 #include "SystemUtils.h"
 
-
 PTF_TEST_CASE(S7CommLayerParsingTest)
 {
 	timeval time;
@@ -54,7 +53,6 @@ PTF_TEST_CASE(S7CommLayerParsingTest)
 	uint8_t expectedErrorParameterData[] = {4, 1};
 	PTF_ASSERT_BUF_COMPARE(s7commLayer->getParameter()->getData(), expectedErrorParameterData, 2);
 } // S7CommLayerParsingTest
-
 
 PTF_TEST_CASE(S7CommLayerCreationTest)
 {

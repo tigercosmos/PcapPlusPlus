@@ -29,8 +29,8 @@ bool sendURLRequest(const std::string &url)
 	return true;
 }
 
-
-bool readPcapIntoPacketVec(const std::string& pcapFileName, std::vector<pcpp::RawPacket>& packetStream, std::string& errMsg)
+bool readPcapIntoPacketVec(const std::string &pcapFileName, std::vector<pcpp::RawPacket> &packetStream,
+						   std::string &errMsg)
 {
 	errMsg = "";
 	packetStream.clear();
@@ -51,7 +51,6 @@ bool readPcapIntoPacketVec(const std::string& pcapFileName, std::vector<pcpp::Ra
 	return true;
 }
 
-
 int getFileLength(const std::string &filename)
 {
 	std::ifstream infile(filename.c_str(), std::ifstream::binary);
@@ -63,8 +62,7 @@ int getFileLength(const std::string &filename)
 	return length;
 }
 
-
-uint8_t* readFileIntoBuffer(const std::string &filename, int& bufferLength)
+uint8_t *readFileIntoBuffer(const std::string &filename, int &bufferLength)
 {
 	int fileLength = getFileLength(filename);
 	if (fileLength == -1)
@@ -74,8 +72,8 @@ uint8_t* readFileIntoBuffer(const std::string &filename, int& bufferLength)
 	if (!infile)
 		return nullptr;
 
-	bufferLength = fileLength/2 + 2;
-	uint8_t* result = new uint8_t[bufferLength];
+	bufferLength = fileLength / 2 + 2;
+	uint8_t *result = new uint8_t[bufferLength];
 	int i = 0;
 	while (!infile.eof())
 	{
@@ -90,16 +88,15 @@ uint8_t* readFileIntoBuffer(const std::string &filename, int& bufferLength)
 	return result;
 }
 
-
 void testSetUp()
 {
 	pcpp::PcapLiveDeviceList::getInstance();
 
-	#ifdef USE_PF_RING
+#ifdef USE_PF_RING
 	pcpp::PfRingDeviceList::getInstance();
-	#endif
+#endif
 
-	#ifdef USE_DPDK
+#ifdef USE_DPDK
 	if (PcapTestGlobalArgs.dpdkPort > -1)
 	{
 		pcpp::CoreMask coreMask = 0;
@@ -109,5 +106,5 @@ void testSetUp()
 		}
 		pcpp::DpdkDeviceList::initDpdk(coreMask, 16383);
 	}
-	#endif
+#endif
 }

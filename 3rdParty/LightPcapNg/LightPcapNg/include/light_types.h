@@ -24,13 +24,15 @@
 #ifndef INCLUDE_LIGHT_TYPES_H_
 #define INCLUDE_LIGHT_TYPES_H_
 
-typedef enum {
+typedef enum
+{
 	LIGHT_FALSE = 0,
 	LIGHT_TRUE = 1,
-//	LIGHT_MAYBE = 2,
+	//	LIGHT_MAYBE = 2,
 } light_boolean;
 
-typedef enum {
+typedef enum
+{
 	LIGHT_INFO_TYPE = 0,
 	LIGHT_INFO_LENGTH = 1,
 	LIGHT_INFO_BODY = 2,

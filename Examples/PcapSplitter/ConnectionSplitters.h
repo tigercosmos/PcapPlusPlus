@@ -2,7 +2,6 @@
 
 #include "Splitters.h"
 
-
 /**
  * Splits a pcap file by 2-tuple (IP src and IP dst). Works for IPv4 & IPv6.
  * All packets that aren't IPv4 or IPv6 will be placed in one file.
@@ -11,8 +10,7 @@
  */
 class TwoTupleSplitter : public ValueBasedSplitter
 {
-public:
-
+  public:
 	/**
 	 * A c'tor for this class that gets the maximum number of files. If this number is lower or equal to 0 it's
 	 * considered not to have a file count limit
@@ -20,9 +18,10 @@ public:
 	explicit TwoTupleSplitter(int maxFiles) : ValueBasedSplitter(maxFiles) {}
 
 	/**
-	 * Find the 2-tuple flow for this packet and get the file number it belongs to. If flow is new, return a new file number
+	 * Find the 2-tuple flow for this packet and get the file number it belongs to. If flow is new, return a new file
+	 * number
 	 */
-	int getFileNumber(pcpp::Packet& packet, std::vector<int>& filesToClose)
+	int getFileNumber(pcpp::Packet &packet, std::vector<int> &filesToClose)
 	{
 		// hash the 2-tuple and look for it in the flow table
 		uint32_t hash = pcpp::hash2Tuple(&packet);
@@ -44,7 +43,6 @@ public:
 	}
 };
 
-
 /**
  * Splits a pcap file by connection (IP src + IP dst + port src + port dst + protocol)
  * Works for IPv4, IPv6, TCP and UDP.
@@ -54,8 +52,7 @@ public:
  */
 class FiveTupleSplitter : public ValueBasedSplitter
 {
-private:
-
+  private:
 	// a flow table for saving TCP state per flow. Currently the only data that is saved is whether
 	// the last packet seen on the flow was a TCP SYN packet
 	std::unordered_map<uint32_t, bool> m_TcpFlowTable;
@@ -63,12 +60,12 @@ private:
 	/**
 	 * A utility method that takes a packet and returns true if it's a TCP SYN packet
 	 */
-	bool isTcpSyn(pcpp::Packet& packet)
+	bool isTcpSyn(pcpp::Packet &packet)
 	{
 		if (packet.isPacketOfType(pcpp::TCP))
 		{
 			// extract the TCP layer
-			pcpp::TcpLayer* tcpLayer = packet.getLayerOfType<pcpp::TcpLayer>();
+			pcpp::TcpLayer *tcpLayer = packet.getLayerOfType<pcpp::TcpLayer>();
 
 			// extract SYN and ACK flags
 			bool isSyn = (tcpLayer->getTcpHeader()->synFlag == 1);
@@ -81,8 +78,7 @@ private:
 		return false;
 	}
 
-public:
-
+  public:
 	/**
 	 * A c'tor for this class that gets the maximum number of files. If this number is lower or equal to 0 it's
 	 * considered not to have a file count limit
@@ -92,7 +88,7 @@ public:
 	/**
 	 * Find the flow for this packet and get the file number it belongs to. If flow is new, return a new file number
 	 */
-	int getFileNumber(pcpp::Packet& packet, std::vector<int>& filesToClose)
+	int getFileNumber(pcpp::Packet &packet, std::vector<int> &filesToClose)
 	{
 		// hash the 5-tuple and look for it in the flow table
 		uint32_t hash = pcpp::hash5Tuple(&packet);
@@ -146,21 +142,16 @@ public:
 		return m_FlowTable[hash];
 	}
 
-	void updateStringStream(std::ostringstream & sstream, const std::string & srcIp, uint16_t srcPort, const std::string & dstIp, uint16_t dstPort)
+	void updateStringStream(std::ostringstream &sstream, const std::string &srcIp, uint16_t srcPort,
+							const std::string &dstIp, uint16_t dstPort)
 	{
-		sstream << hyphenIP(srcIp)
-		        << "_"
-		        << srcPort
-		        << "-"
-		        << hyphenIP(dstIp)
-		        << "_"
-		        << dstPort;
+		sstream << hyphenIP(srcIp) << "_" << srcPort << "-" << hyphenIP(dstIp) << "_" << dstPort;
 	}
 
 	/**
 	 * Re-implement Splitter's getFileName() method, this time with the IPs/Ports/protocol value
 	 */
-	std::string getFileName(pcpp::Packet& packet, const std::string &outputPcapBasePath, int fileNumber)
+	std::string getFileName(pcpp::Packet &packet, const std::string &outputPcapBasePath, int fileNumber)
 	{
 		std::ostringstream sstream;
 
@@ -175,7 +166,7 @@ public:
 		if (packet.isPacketOfType(pcpp::TCP))
 		{
 			// extract TCP layer
-			pcpp::TcpLayer* tcpLayer = packet.getLayerOfType<pcpp::TcpLayer>();
+			pcpp::TcpLayer *tcpLayer = packet.getLayerOfType<pcpp::TcpLayer>();
 			if (tcpLayer != nullptr)
 			{
 				uint16_t srcPort = tcpLayer->getSrcPort();
@@ -186,12 +177,13 @@ public:
 				if ((tcpLayer->getTcpHeader()->synFlag == 1) && (tcpLayer->getTcpHeader()->ackFlag == 0))
 				{
 					updateStringStream(sstream, getSrcIPString(packet), srcPort, getDstIPString(packet), dstPort);
-				} else if (((tcpLayer->getTcpHeader()->synFlag == 1) &&
-					        (tcpLayer->getTcpHeader()->ackFlag == 1)
-					       ) || (srcPort < dstPort) )
+				}
+				else if (((tcpLayer->getTcpHeader()->synFlag == 1) && (tcpLayer->getTcpHeader()->ackFlag == 1)) ||
+						 (srcPort < dstPort))
 				{
 					updateStringStream(sstream, getDstIPString(packet), dstPort, getSrcIPString(packet), srcPort);
-				} else
+				}
+				else
 				{
 					updateStringStream(sstream, getSrcIPString(packet), srcPort, getDstIPString(packet), dstPort);
 				}
@@ -201,11 +193,12 @@ public:
 		else if (packet.isPacketOfType(pcpp::UDP))
 		{
 			// for UDP packets, decide the server port by the lower port
-			pcpp::UdpLayer* udpLayer = packet.getLayerOfType<pcpp::UdpLayer>();
+			pcpp::UdpLayer *udpLayer = packet.getLayerOfType<pcpp::UdpLayer>();
 			if (udpLayer != nullptr)
 			{
 				sstream << "udp_";
-				updateStringStream(sstream, getSrcIPString(packet), udpLayer->getSrcPort(), getDstIPString(packet), udpLayer->getDstPort());
+				updateStringStream(sstream, getSrcIPString(packet), udpLayer->getSrcPort(), getDstIPString(packet),
+								   udpLayer->getDstPort());
 				return outputPcapBasePath + sstream.str();
 			}
 		}

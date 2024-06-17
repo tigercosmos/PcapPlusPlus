@@ -7,23 +7,26 @@
 #include "SystemUtils.h"
 
 /**
- * Responsible for matching packets by match criteria received from the user. Current match criteria are a combination of zero or more of the
- * following parameters: source IP, dest IP, source TCP/UDP port, dest TCP/UDP port and TCP/UDP protocol.
+ * Responsible for matching packets by match criteria received from the user. Current match criteria are a combination
+ * of zero or more of the following parameters: source IP, dest IP, source TCP/UDP port, dest TCP/UDP port and TCP/UDP
+ * protocol.
  */
 class PacketMatchingEngine
 {
-private:
+  private:
 	pcpp::IPv4Address m_SrcIpToMatch, m_DstIpToMatch;
 	uint16_t m_SrcPortToMatch, m_DstPortToMatch;
 	pcpp::ProtocolType m_ProtocolToMatch;
 	bool m_MatchSrcIp, m_MatchDstIp;
 	bool m_MatchSrcPort, m_MatchDstPort;
 	bool m_MatchProtocol;
-public:
-	PacketMatchingEngine(const pcpp::IPv4Address& srcIpToMatch, const pcpp::IPv4Address& dstIpToMatch, uint16_t srcPortToMatch, uint16_t dstPortToMatch, pcpp::ProtocolType protocolToMatch)
-		: m_SrcIpToMatch(srcIpToMatch), m_DstIpToMatch(dstIpToMatch),
-		  m_SrcPortToMatch(srcPortToMatch), m_DstPortToMatch(dstPortToMatch), m_ProtocolToMatch(protocolToMatch),
-		  m_MatchSrcIp(false), m_MatchDstIp(false), m_MatchSrcPort(false), m_MatchDstPort(false), m_MatchProtocol(false)
+
+  public:
+	PacketMatchingEngine(const pcpp::IPv4Address &srcIpToMatch, const pcpp::IPv4Address &dstIpToMatch,
+						 uint16_t srcPortToMatch, uint16_t dstPortToMatch, pcpp::ProtocolType protocolToMatch)
+		: m_SrcIpToMatch(srcIpToMatch), m_DstIpToMatch(dstIpToMatch), m_SrcPortToMatch(srcPortToMatch),
+		  m_DstPortToMatch(dstPortToMatch), m_ProtocolToMatch(protocolToMatch), m_MatchSrcIp(false),
+		  m_MatchDstIp(false), m_MatchSrcPort(false), m_MatchDstPort(false), m_MatchProtocol(false)
 	{
 		if (m_SrcIpToMatch != pcpp::IPv4Address::Zero)
 			m_MatchSrcIp = true;
@@ -37,7 +40,7 @@ public:
 			m_MatchProtocol = true;
 	}
 
-	bool isMatched(pcpp::Packet& packet)
+	bool isMatched(pcpp::Packet &packet)
 	{
 		if (m_MatchSrcIp || m_MatchDstIp)
 		{
@@ -46,7 +49,7 @@ public:
 				return false;
 			}
 
-			pcpp::IPv4Layer* ip4Layer = packet.getLayerOfType<pcpp::IPv4Layer>();
+			pcpp::IPv4Layer *ip4Layer = packet.getLayerOfType<pcpp::IPv4Layer>();
 			if (m_MatchSrcIp && (ip4Layer->getSrcIPv4Address() != m_SrcIpToMatch))
 			{
 				return false;

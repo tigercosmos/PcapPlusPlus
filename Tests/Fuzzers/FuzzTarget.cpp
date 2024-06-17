@@ -10,7 +10,7 @@ static std::string tmpFile;
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 {
 	if (tmpName.empty())
-		tmpName = tmpnam (NULL);
+		tmpName = tmpnam(NULL);
 
 	if (tmpFile.empty())
 		tmpFile = tmpName + FILE_EXT;
@@ -32,15 +32,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
 	pcpp::IPcapDevice::PcapStats stats;
 	reader->getStatistics(stats);
-	std::cout << "Read " << stats.packetsRecv << " packets successfully and "
-	                     << stats.packetsDrop << " packets could not be read" << std::endl;
+	std::cout << "Read " << stats.packetsRecv << " packets successfully and " << stats.packetsDrop
+			  << " packets could not be read" << std::endl;
 
-	if (auto ngReader = dynamic_cast<pcpp::PcapNgFileReaderDevice*>(reader.get()))
+	if (auto ngReader = dynamic_cast<pcpp::PcapNgFileReaderDevice *>(reader.get()))
 	{
 		std::cout << "OS is '" << ngReader->getOS() << "'; Hardware is '" << ngReader->getHardware() << "'"
-				  << "'; CaptureApplication is '" << ngReader->getCaptureApplication()
-				  << "'; CaptureFileComment is '" << ngReader->getCaptureFileComment()
-				  << "'" << std::endl;
+				  << "'; CaptureApplication is '" << ngReader->getCaptureApplication() << "'; CaptureFileComment is '"
+				  << ngReader->getCaptureFileComment() << "'" << std::endl;
 	}
 
 	pcpp::RawPacketVector packets;
@@ -50,7 +49,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 		return 0;
 	}
 
-	pcpp::RawPacket& rawPacket = *packets.front();
+	pcpp::RawPacket &rawPacket = *packets.front();
 	do
 	{
 		// go deeper only for .pcap and .pcapng format

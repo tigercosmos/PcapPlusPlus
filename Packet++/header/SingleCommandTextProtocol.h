@@ -17,13 +17,14 @@ namespace pcpp
 	 */
 	class SingleCommandTextProtocol : public Layer
 	{
-	private:
+	  private:
 		size_t getArgumentFieldOffset() const;
 		void setDelimiter(bool hyphen);
-		bool hyphenRequired(const std::string& value);
+		bool hyphenRequired(const std::string &value);
 
-	protected:
-		SingleCommandTextProtocol(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet) : Layer(data, dataLen, prevLayer, packet) {};
+	  protected:
+		SingleCommandTextProtocol(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: Layer(data, dataLen, prevLayer, packet){};
 		SingleCommandTextProtocol(const std::string &command, const std::string &option);
 
 		bool setCommandInternal(std::string value);
@@ -32,10 +33,10 @@ namespace pcpp
 		std::string getCommandInternal() const;
 		std::string getCommandOptionInternal() const;
 
-	public:
-
+	  public:
 		/**
-		 * Checks if the current message is a multi-line reply. Multi-line messages are indicated with a Hyphen (-) immediately after reply code.
+		 * Checks if the current message is a multi-line reply. Multi-line messages are indicated with a Hyphen (-)
+		 * immediately after reply code.
 		 * @return true If this is a multi-line reply
 		 * @return false Otherwise
 		 */

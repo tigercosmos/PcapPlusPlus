@@ -8,17 +8,19 @@ namespace pcpp
 {
 	/**
 	 * @class PacketTrailerLayer
-	 * A class for representing packet tailer (a.k.a footer or padding) which refers to supplemental data placed at the end of a block of data
-	 * being stored or transmitted, which may contain information for the handling of the data block, or just mark its end
-	 * (taken from Wikipedia: https://en.wikipedia.org/wiki/Trailer_(computing) )
+	 * A class for representing packet tailer (a.k.a footer or padding) which refers to supplemental data placed at the
+	 * end of a block of data being stored or transmitted, which may contain information for the handling of the data
+	 * block, or just mark its end (taken from Wikipedia: https://en.wikipedia.org/wiki/Trailer_(computing) )
 	 *
-	 * There are various reasons for adding a packet trailer, one of the most famous is FCS (Frame check sequence) which refers to the extra
-	 * error-detecting code added to a frame. Another usage is padding which means adding data to reach a minimum required packet length.
+	 * There are various reasons for adding a packet trailer, one of the most famous is FCS (Frame check sequence) which
+	 * refers to the extra error-detecting code added to a frame. Another usage is padding which means adding data to
+	 * reach a minimum required packet length.
 	 *
-	 * Although this layer inherits from the Layer class, it is not a standard layer in the sense that it can't be constructed by the user.
-	 * This layer may be only be constructed in the Packet class, in the process of parsing the packet and creating the layers; if at the end
-	 * of the parsing process there is data left that is not allocated to any layer, it's assumed to be the packet trailer and an instance of
-	 * this class is created. This means this layer can only exist as the last layer in a packet, if a packet trailer indeed exists.
+	 * Although this layer inherits from the Layer class, it is not a standard layer in the sense that it can't be
+	 * constructed by the user. This layer may be only be constructed in the Packet class, in the process of parsing the
+	 * packet and creating the layers; if at the end of the parsing process there is data left that is not allocated to
+	 * any layer, it's assumed to be the packet trailer and an instance of this class is created. This means this layer
+	 * can only exist as the last layer in a packet, if a packet trailer indeed exists.
 	 *
 	 * No layer can be added by the user after this layer (trying to do that will result with an error).
 	 *
@@ -28,14 +30,18 @@ namespace pcpp
 	 */
 	class PacketTrailerLayer : public Layer
 	{
-	public:
-		 /** A constructor that creates the layer from an existing packet raw data
+	  public:
+		/** A constructor that creates the layer from an existing packet raw data
 		 * @param[in] data A pointer to the raw data
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] prevLayer A pointer to the previous layer
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		PacketTrailerLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : Layer(data, dataLen, prevLayer, packet) { m_Protocol = PacketTrailer; }
+		PacketTrailerLayer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: Layer(data, dataLen, prevLayer, packet)
+		{
+			m_Protocol = PacketTrailer;
+		}
 
 		~PacketTrailerLayer() {}
 
@@ -43,7 +49,7 @@ namespace pcpp
 		 * Get a pointer to the trailer data
 		 * @return A pointer to the trailer data
 		 */
-		uint8_t* getTrailerData() const { return m_Data; }
+		uint8_t *getTrailerData() const { return m_Data; }
 
 		/**
 		 * @return Trailer data as hex string
@@ -78,4 +84,4 @@ namespace pcpp
 		OsiModelLayer getOsiModelLayer() const { return OsiModelDataLinkLayer; }
 	};
 
-}
+} // namespace pcpp

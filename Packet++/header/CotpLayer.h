@@ -16,7 +16,7 @@ namespace pcpp
 		/** length */
 		uint8_t length;
 		/** PDU type identifier */
-		uint8_t pduType ;
+		uint8_t pduType;
 		/** TPDU number sequence*/
 		uint8_t tpduNumber;
 	} cotphdr;

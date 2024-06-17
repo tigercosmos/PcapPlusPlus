@@ -14,13 +14,12 @@ namespace pcpp
 	/**
 	 * A struct that represent a single buffer
 	 */
-	template<typename T>
-	struct ScalarBuffer
+	template <typename T> struct ScalarBuffer
 	{
 		/**
 		 * The pointer to the buffer
 		 */
-		T* buffer;
+		T *buffer;
 
 		/**
 		 * Buffer length
@@ -36,7 +35,7 @@ namespace pcpp
 	 */
 	uint16_t computeChecksum(ScalarBuffer<uint16_t> vec[], size_t vecSize);
 
-  /**
+	/**
 	 * Computes the checksum for Pseudo header
 	 * @param[in] dataPtr Data pointer
 	 * @param[in] dataLen Data length
@@ -46,9 +45,8 @@ namespace pcpp
 	 * @param[in] dstIPAddress Destination IP Address
 	 * @return The checksum result
 	 */
-	uint16_t computePseudoHdrChecksum(uint8_t *dataPtr, size_t dataLen,
-									  IPAddress::AddressType ipAddrType, uint8_t protocolType,
-									  IPAddress srcIPAddress, IPAddress dstIPAddress);
+	uint16_t computePseudoHdrChecksum(uint8_t *dataPtr, size_t dataLen, IPAddress::AddressType ipAddrType,
+									  uint8_t protocolType, IPAddress srcIPAddress, IPAddress dstIPAddress);
 
 	/**
 	 * Computes Fowler-Noll-Vo (FNV-1) 32bit hash function on an array of byte buffers. The hash is calculated on each
@@ -65,7 +63,7 @@ namespace pcpp
 	 * @param[in] bufSize The size of the byte buffer
 	 * @return The 32bit hash value
 	 */
-	uint32_t fnvHash(uint8_t* buffer, size_t bufSize);
+	uint32_t fnvHash(uint8_t *buffer, size_t bufSize);
 
 	/**
 	 * A method that is given a packet and calculates a hash value by the packet's 5-tuple. Supports IPv4, IPv6,
@@ -75,7 +73,7 @@ namespace pcpp
 	 * @param[in] directionUnique Make hash value unique for each direction
 	 * @return The hash value calculated for this packet or 0 if the packet doesn't contain 5-tuple
 	 */
-	uint32_t hash5Tuple(Packet* packet, bool const& directionUnique = false);
+	uint32_t hash5Tuple(Packet *packet, bool const &directionUnique = false);
 
 	/**
 	 * A method that is given a packet and calculates a hash value by the packet's 2-tuple (IP src + IP dst). Supports
@@ -83,6 +81,6 @@ namespace pcpp
 	 * @param[in] packet The packet to calculate hash for
 	 * @return The hash value calculated for this packet or 0 if the packet isn't IPv4/6
 	 */
-	uint32_t hash2Tuple(Packet* packet);
+	uint32_t hash2Tuple(Packet *packet);
 
 } // namespace pcpp

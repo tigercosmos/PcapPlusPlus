@@ -54,7 +54,7 @@ PTF_TEST_CASE(TestRawSockets)
 		rawSock.receivePackets(packetVec, 2, failedRecv);
 		if (packetVec.size() > 0)
 		{
-			PTF_PRINT_VERBOSE("Total wait time: " << 2*i);
+			PTF_PRINT_VERBOSE("Total wait time: " << 2 * i);
 			break;
 		}
 	}

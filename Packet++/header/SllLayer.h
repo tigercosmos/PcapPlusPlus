@@ -43,14 +43,17 @@ namespace pcpp
 	 */
 	class SllLayer : public Layer
 	{
-	public:
+	  public:
 		/**
 		 * A constructor that creates the layer from an existing packet raw data
 		 * @param[in] data A pointer to the raw data (will be casted to ether_header)
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		SllLayer(uint8_t* data, size_t dataLen, Packet* packet) : Layer(data, dataLen, nullptr, packet) { m_Protocol = SLL; }
+		SllLayer(uint8_t *data, size_t dataLen, Packet *packet) : Layer(data, dataLen, nullptr, packet)
+		{
+			m_Protocol = SLL;
+		}
 
 		/**
 		 * A constructor that creates a new SLL header and allocates the data
@@ -62,10 +65,11 @@ namespace pcpp
 		~SllLayer() {}
 
 		/**
-		 * Get a pointer to the Sll header. Notice this points directly to the data, so every change will change the actual packet data
+		 * Get a pointer to the Sll header. Notice this points directly to the data, so every change will change the
+		 * actual packet data
 		 * @return A pointer to the sll_header
 		 */
-		sll_header* getSllHeader() const { return (sll_header*)m_Data; }
+		sll_header *getSllHeader() const { return (sll_header *)m_Data; }
 
 		/**
 		 * A setter for the link layer address field
@@ -73,19 +77,18 @@ namespace pcpp
 		 * @param[in] addrLength Address length, must be lower or equal to 8 (which is max length for SLL address)
 		 * @return True if address was set successfully, or false of addrLength is out of bounds (0 or larger than 8)
 		 */
-		bool setLinkLayerAddr(uint8_t* addr, size_t addrLength);
+		bool setLinkLayerAddr(uint8_t *addr, size_t addrLength);
 
 		/**
 		 * Set a MAC address in the link layer address field
 		 * @param[in] macAddr MAC address to set
 		 * @return True if address was set successfully, false if MAC address isn't valid or if set failed
 		 */
-		bool setMacAddressAsLinkLayer(const MacAddress& macAddr);
+		bool setMacAddressAsLinkLayer(const MacAddress &macAddr);
 
 		/**
-		 * Currently identifies the following next layers: IPv4Layer, IPv6Layer, ArpLayer, VlanLayer, PPPoESessionLayer, PPPoEDiscoveryLayer,
-		 * MplsLayer.
-		 * Otherwise sets PayloadLayer
+		 * Currently identifies the following next layers: IPv4Layer, IPv6Layer, ArpLayer, VlanLayer, PPPoESessionLayer,
+		 * PPPoEDiscoveryLayer, MplsLayer. Otherwise sets PayloadLayer
 		 */
 		void parseNextLayer();
 

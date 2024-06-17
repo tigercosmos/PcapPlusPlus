@@ -9,14 +9,13 @@
 #include "SSLLayer.h"
 #include "SystemUtils.h"
 
-
 /**
  * An auxiliary struct for encapsulating rate stats
  */
 struct Rate
 {
 	double currentRate; // periodic rate
-	double totalRate;	 // overall rate
+	double totalRate;	// overall rate
 };
 
 /**
@@ -24,19 +23,19 @@ struct Rate
  */
 struct SSLGeneralStats
 {
-	int numOfSSLFlows; // total number of SSL flows
-	Rate sslFlowRate; // rate of SSL flows
-	int numOfSSLPackets; // total number of SSL packets
-	Rate sslPacketRate; // rate of SSL packets
-	double averageNumOfPacketsPerFlow; // average number of SSL packets per flow
-	int amountOfSSLTraffic; // total SSL traffic in bytes
-	double averageAmountOfDataPerFlow; // average number of SSL traffic per flow
-	Rate sslTrafficRate; // rate of SSL traffic
-	double sampleTime; // total stats collection time
-	int numOfHandshakeCompleteFlows; // number of flows which handshake was complete
-	int numOfFlowsWithAlerts; // number of flows that were terminated because of SSL/TLS alert
+	int numOfSSLFlows;								   // total number of SSL flows
+	Rate sslFlowRate;								   // rate of SSL flows
+	int numOfSSLPackets;							   // total number of SSL packets
+	Rate sslPacketRate;								   // rate of SSL packets
+	double averageNumOfPacketsPerFlow;				   // average number of SSL packets per flow
+	int amountOfSSLTraffic;							   // total SSL traffic in bytes
+	double averageAmountOfDataPerFlow;				   // average number of SSL traffic per flow
+	Rate sslTrafficRate;							   // rate of SSL traffic
+	double sampleTime;								   // total stats collection time
+	int numOfHandshakeCompleteFlows;				   // number of flows which handshake was complete
+	int numOfFlowsWithAlerts;						   // number of flows that were terminated because of SSL/TLS alert
 	std::unordered_map<uint16_t, int> sslVersionCount; // number of flows per SSL/TLS version
-	std::unordered_map<uint16_t, int> sslPortCount; // number of flows per TCP port
+	std::unordered_map<uint16_t, int> sslPortCount;	   // number of flows per TCP port
 
 	void clear()
 	{
@@ -59,14 +58,13 @@ struct SSLGeneralStats
 	}
 };
 
-
 /**
  * A base struct for collecting stats on client-hello messages
  */
 struct ClientHelloStats
 {
-	int numOfMessages; // total number of client-hello messages
-	Rate messageRate; // rate of client-hello messages
+	int numOfMessages;									  // total number of client-hello messages
+	Rate messageRate;									  // rate of client-hello messages
 	std::unordered_map<std::string, int> serverNameCount; // a map for counting the server names seen in traffic
 
 	virtual ~ClientHelloStats() {}
@@ -85,8 +83,8 @@ struct ClientHelloStats
  */
 struct ServerHelloStats
 {
-	int numOfMessages; // total number of server-hello messages
-	Rate messageRate; // rate of server-hello messages
+	int numOfMessages;									   // total number of server-hello messages
+	Rate messageRate;									   // rate of server-hello messages
 	std::unordered_map<std::string, int> cipherSuiteCount; // count of the different chosen cipher-suites
 
 	virtual ~ServerHelloStats() {}
@@ -100,26 +98,21 @@ struct ServerHelloStats
 	}
 };
 
-
 /**
  * The SSL stats collector. Should be called for every packet arriving and also periodically to calculate rates
  */
 class SSLStatsCollector
 {
-public:
-
+  public:
 	/**
 	 * C'tor - clear all structures
 	 */
-	SSLStatsCollector()
-	{
-		clear();
-	}
+	SSLStatsCollector() { clear(); }
 
 	/**
 	 * Collect stats for a single packet
 	 */
-	void collectStats(pcpp::Packet* sslPacket)
+	void collectStats(pcpp::Packet *sslPacket)
 	{
 		// verify packet is TCP and SSL/TLS
 		if (!sslPacket->isPacketOfType(pcpp::TCP) || !sslPacket->isPacketOfType(pcpp::SSL))
@@ -149,22 +142,27 @@ public:
 		// getting time from last rate calculation until now
 		double diffSec = curTime - m_LastCalcRateTime;
 
-		// calculating current rates which are the changes from last rate calculation until now divided by the time passed from
-		// last rate calculation until now
+		// calculating current rates which are the changes from last rate calculation until now divided by the time
+		// passed from last rate calculation until now
 		if (diffSec != 0)
 		{
-			m_GeneralStats.sslTrafficRate.currentRate = (m_GeneralStats.amountOfSSLTraffic - m_PrevGeneralStats.amountOfSSLTraffic) / diffSec;
-			m_GeneralStats.sslPacketRate.currentRate = (m_GeneralStats.numOfSSLPackets - m_PrevGeneralStats.numOfSSLPackets) / diffSec;
-			m_GeneralStats.sslFlowRate.currentRate = (m_GeneralStats.numOfSSLFlows - m_PrevGeneralStats.numOfSSLFlows) / diffSec;
-			m_ClientHelloStats.messageRate.currentRate = (m_ClientHelloStats.numOfMessages - m_PrevClientHelloStats.numOfMessages) / diffSec;
-			m_ServerHelloStats.messageRate.currentRate = (m_ServerHelloStats.numOfMessages - m_PrevServerHelloStats.numOfMessages) / diffSec;
+			m_GeneralStats.sslTrafficRate.currentRate =
+				(m_GeneralStats.amountOfSSLTraffic - m_PrevGeneralStats.amountOfSSLTraffic) / diffSec;
+			m_GeneralStats.sslPacketRate.currentRate =
+				(m_GeneralStats.numOfSSLPackets - m_PrevGeneralStats.numOfSSLPackets) / diffSec;
+			m_GeneralStats.sslFlowRate.currentRate =
+				(m_GeneralStats.numOfSSLFlows - m_PrevGeneralStats.numOfSSLFlows) / diffSec;
+			m_ClientHelloStats.messageRate.currentRate =
+				(m_ClientHelloStats.numOfMessages - m_PrevClientHelloStats.numOfMessages) / diffSec;
+			m_ServerHelloStats.messageRate.currentRate =
+				(m_ServerHelloStats.numOfMessages - m_PrevServerHelloStats.numOfMessages) / diffSec;
 		}
 
 		// getting the time from the beginning of stats collection until now
 		double diffSecTotal = curTime - m_StartTime;
 
-		// calculating total rate which is the change from beginning of stats collection until now divided by time passed from
-		// beginning of stats collection until now
+		// calculating total rate which is the change from beginning of stats collection until now divided by time
+		// passed from beginning of stats collection until now
 		if (diffSecTotal != 0)
 		{
 			m_GeneralStats.sslTrafficRate.totalRate = m_GeneralStats.amountOfSSLTraffic / diffSecTotal;
@@ -201,27 +199,26 @@ public:
 	/**
 	 * Get SSL general stats
 	 */
-	SSLGeneralStats& getGeneralStats() { return m_GeneralStats; }
+	SSLGeneralStats &getGeneralStats() { return m_GeneralStats; }
 
 	/**
 	 * Get client-hello stats
 	 */
-	ClientHelloStats& getClientHelloStats() { return m_ClientHelloStats; }
+	ClientHelloStats &getClientHelloStats() { return m_ClientHelloStats; }
 
 	/**
 	 * Get server-hello stats
 	 */
-	ServerHelloStats& getServerHelloStats() { return m_ServerHelloStats; }
+	ServerHelloStats &getServerHelloStats() { return m_ServerHelloStats; }
 
-private:
-
+  private:
 	/**
 	 * Auxiliary data collected for each flow for help calculating stats on this flow
 	 */
 	struct SSLFlowData
 	{
 		bool seenAppDataPacket; // was SSL application data seen in this flow
-		bool seenAlertPacket; // was SSL alert packet seen in this flow
+		bool seenAlertPacket;	// was SSL alert packet seen in this flow
 
 		void clear()
 		{
@@ -230,14 +227,13 @@ private:
 		}
 	};
 
-
 	/**
 	 * Collect stats relevant for every SSL packet (any SSL message)
 	 * This method calculates and returns the flow key for this packet
 	 */
-	uint32_t collectSSLTrafficStats(pcpp::Packet* sslpPacket)
+	uint32_t collectSSLTrafficStats(pcpp::Packet *sslpPacket)
 	{
-		pcpp::TcpLayer* tcpLayer = sslpPacket->getLayerOfType<pcpp::TcpLayer>();
+		pcpp::TcpLayer *tcpLayer = sslpPacket->getLayerOfType<pcpp::TcpLayer>();
 
 		// count traffic
 		m_GeneralStats.amountOfSSLTraffic += tcpLayer->getLayerPayloadSize();
@@ -268,8 +264,10 @@ private:
 		// calculate averages
 		if (m_FlowTable.size() != 0)
 		{
-			m_GeneralStats.averageAmountOfDataPerFlow = (double)m_GeneralStats.amountOfSSLTraffic / (double)m_FlowTable.size();
-			m_GeneralStats.averageNumOfPacketsPerFlow = (double)m_GeneralStats.numOfSSLPackets / (double)m_FlowTable.size();
+			m_GeneralStats.averageAmountOfDataPerFlow =
+				(double)m_GeneralStats.amountOfSSLTraffic / (double)m_FlowTable.size();
+			m_GeneralStats.averageNumOfPacketsPerFlow =
+				(double)m_GeneralStats.numOfSSLPackets / (double)m_FlowTable.size();
 		}
 
 		return hashVal;
@@ -278,10 +276,10 @@ private:
 	/**
 	 * Collect stats relevant for several kinds SSL messages
 	 */
-	void collectSSLStats(pcpp::Packet* sslPacket, uint32_t flowKey)
+	void collectSSLStats(pcpp::Packet *sslPacket, uint32_t flowKey)
 	{
 		// go over all SSL messages in this packet
-		pcpp::SSLLayer* sslLayer = sslPacket->getLayerOfType<pcpp::SSLLayer>();
+		pcpp::SSLLayer *sslLayer = sslPacket->getLayerOfType<pcpp::SSLLayer>();
 		while (sslLayer != NULL)
 		{
 			// check if the layer is an alert message
@@ -310,12 +308,13 @@ private:
 			// check if the layer is an handshake message
 			else if (recType == pcpp::SSL_HANDSHAKE)
 			{
-				pcpp::SSLHandshakeLayer* handshakeLayer = dynamic_cast<pcpp::SSLHandshakeLayer*>(sslLayer);
+				pcpp::SSLHandshakeLayer *handshakeLayer = dynamic_cast<pcpp::SSLHandshakeLayer *>(sslLayer);
 				if (handshakeLayer == NULL)
 					continue;
 
 				// try to find client-hello message
-				pcpp::SSLClientHelloMessage* clientHelloMessage = handshakeLayer->getHandshakeMessageOfType<pcpp::SSLClientHelloMessage>();
+				pcpp::SSLClientHelloMessage *clientHelloMessage =
+					handshakeLayer->getHandshakeMessageOfType<pcpp::SSLClientHelloMessage>();
 
 				// collect client-hello stats
 				if (clientHelloMessage != NULL)
@@ -324,7 +323,8 @@ private:
 				}
 
 				// try to find server-hello message
-				pcpp::SSLServerHelloMessage* serverHelloMessage = handshakeLayer->getHandshakeMessageOfType<pcpp::SSLServerHelloMessage>();
+				pcpp::SSLServerHelloMessage *serverHelloMessage =
+					handshakeLayer->getHandshakeMessageOfType<pcpp::SSLServerHelloMessage>();
 
 				// collect server-hello stats
 				if (serverHelloMessage != NULL)
@@ -341,11 +341,12 @@ private:
 	/**
 	 * Collect stats relevant only to client-hello messages
 	 */
-	void collecClientHelloStats(pcpp::SSLClientHelloMessage* clientHelloMessage)
+	void collecClientHelloStats(pcpp::SSLClientHelloMessage *clientHelloMessage)
 	{
 		m_ClientHelloStats.numOfMessages++;
 
-		pcpp::SSLServerNameIndicationExtension* sniExt = clientHelloMessage->getExtensionOfType<pcpp::SSLServerNameIndicationExtension>();
+		pcpp::SSLServerNameIndicationExtension *sniExt =
+			clientHelloMessage->getExtensionOfType<pcpp::SSLServerNameIndicationExtension>();
 		if (sniExt != NULL)
 			m_ClientHelloStats.serverNameCount[sniExt->getHostName()]++;
 	}
@@ -353,22 +354,22 @@ private:
 	/**
 	 * Collect stats relevant only to server-hello messages
 	 */
-	void collecServerHelloStats(pcpp::SSLServerHelloMessage* serverHelloMessage)
+	void collecServerHelloStats(pcpp::SSLServerHelloMessage *serverHelloMessage)
 	{
 		m_ServerHelloStats.numOfMessages++;
 
-		pcpp::SSLCipherSuite* cipherSuite = serverHelloMessage->getCipherSuite();
+		pcpp::SSLCipherSuite *cipherSuite = serverHelloMessage->getCipherSuite();
 		if (cipherSuite != NULL)
 			m_ServerHelloStats.cipherSuiteCount[cipherSuite->asString()]++;
 	}
 
 	double getCurTime(void)
 	{
-	    struct timeval tv;
+		struct timeval tv;
 
-	    gettimeofday(&tv, NULL);
+		gettimeofday(&tv, NULL);
 
-	    return (((double) tv.tv_sec) + (double) (tv.tv_usec / 1000000.0));
+		return (((double)tv.tv_sec) + (double)(tv.tv_usec / 1000000.0));
 	}
 
 	SSLGeneralStats m_GeneralStats;

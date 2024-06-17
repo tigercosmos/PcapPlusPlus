@@ -5,7 +5,6 @@
 #include "DhcpV6Layer.h"
 #include "SystemUtils.h"
 
-
 PTF_TEST_CASE(DhcpV6ParsingTest)
 {
 	timeval time;
@@ -14,7 +13,7 @@ PTF_TEST_CASE(DhcpV6ParsingTest)
 	READ_FILE_AND_CREATE_PACKET(1, "PacketExamples/dhcpv6_1.dat");
 
 	pcpp::Packet dhcpv6Packet(&rawPacket1);
-	pcpp::DhcpV6Layer* dhcpv6Layer = dhcpv6Packet.getLayerOfType<pcpp::DhcpV6Layer>();
+	pcpp::DhcpV6Layer *dhcpv6Layer = dhcpv6Packet.getLayerOfType<pcpp::DhcpV6Layer>();
 	PTF_ASSERT_NOT_NULL(dhcpv6Layer);
 	PTF_ASSERT_EQUAL(dhcpv6Layer->getMessageType(), pcpp::DHCPV6_SOLICIT);
 	PTF_ASSERT_EQUAL(dhcpv6Layer->getMessageTypeAsString(), "Solicit");
@@ -22,23 +21,17 @@ PTF_TEST_CASE(DhcpV6ParsingTest)
 	PTF_ASSERT_EQUAL(dhcpv6Layer->getOptionCount(), 6);
 	PTF_ASSERT_EQUAL(dhcpv6Layer->toString(), "DHCPv6 Layer, Solicit message");
 
-	pcpp::DhcpV6OptionType optTypeArr[] = {
-		pcpp::DHCPV6_OPT_CLIENTID,
-		pcpp::DHCPV6_OPT_ORO,
-		pcpp::DHCPV6_OPT_ELAPSED_TIME,
-		pcpp::DHCPV6_OPT_USER_CLASS,
-		pcpp::DHCPV6_OPT_VENDOR_CLASS,
-		pcpp::DHCPV6_OPT_IA_NA
-	};
-	size_t optDataSizeArr[] = { 18, 14, 2, 10, 51, 12 };
+	pcpp::DhcpV6OptionType optTypeArr[] = {pcpp::DHCPV6_OPT_CLIENTID,	  pcpp::DHCPV6_OPT_ORO,
+										   pcpp::DHCPV6_OPT_ELAPSED_TIME, pcpp::DHCPV6_OPT_USER_CLASS,
+										   pcpp::DHCPV6_OPT_VENDOR_CLASS, pcpp::DHCPV6_OPT_IA_NA};
+	size_t optDataSizeArr[] = {18, 14, 2, 10, 51, 12};
 	std::string optDataAsHexString[] = {
 		"000200000009464745313934373134515300",
 		"0017001800f300f2003b00f20027",
 		"0000",
 		"6578722d636f6e666967",
 		"00000009002d505845436c69656e743a417263683a30303030393a554e44493a3030333031303a5049443a4e43532d35353038",
-		"1d00fcea00000e1000001518"
-	};
+		"1d00fcea00000e1000001518"};
 
 	pcpp::DhcpV6Option dhcpOption = dhcpv6Layer->getFirstOptionData();
 	for (size_t i = 0; i < dhcpv6Layer->getOptionCount(); i++)
@@ -51,7 +44,6 @@ PTF_TEST_CASE(DhcpV6ParsingTest)
 		dhcpOption = dhcpv6Layer->getNextOptionData(dhcpOption);
 	}
 } // DhcpV6ParsingTest
-
 
 PTF_TEST_CASE(DhcpV6CreationTest)
 {
@@ -67,45 +59,57 @@ PTF_TEST_CASE(DhcpV6CreationTest)
 
 	memcpy(origBuffer, buffer1, bufferLength1);
 	pcpp::Packet dhcpv6Packet(&rawPacket1);
-	pcpp::DhcpV6Layer* origDhcpV6Layer = dynamic_cast<pcpp::DhcpV6Layer*>(dhcpv6Packet.detachLayer(pcpp::DHCPv6));
+	pcpp::DhcpV6Layer *origDhcpV6Layer = dynamic_cast<pcpp::DhcpV6Layer *>(dhcpv6Packet.detachLayer(pcpp::DHCPv6));
 	PTF_ASSERT_NOT_NULL(origDhcpV6Layer);
 
 	// 1st option
-	pcpp::DhcpV6Option option = newDhcpV6Layer.addOption(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_IA_NA, "1d00fcea00000000000000000005001820010dba0100000000000000000000300000017700000258"));
+	pcpp::DhcpV6Option option = newDhcpV6Layer.addOption(pcpp::DhcpV6OptionBuilder(
+		pcpp::DHCPV6_OPT_IA_NA, "1d00fcea00000000000000000005001820010dba0100000000000000000000300000017700000258"));
 	PTF_ASSERT_EQUAL(option.getType(), pcpp::DHCPV6_OPT_IA_NA);
 	PTF_ASSERT_EQUAL(option.getDataSize(), 40);
 	PTF_ASSERT_EQUAL(newDhcpV6Layer.getOptionCount(), 1);
 	// 4th option
-	option = newDhcpV6Layer.addOption(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DNS_SERVERS, "20010dba010000000000000000000001"));
+	option = newDhcpV6Layer.addOption(
+		pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DNS_SERVERS, "20010dba010000000000000000000001"));
 	PTF_ASSERT_EQUAL(option.getType(), pcpp::DHCPV6_OPT_DNS_SERVERS);
 	PTF_ASSERT_EQUAL(option.getDataSize(), 16);
 	PTF_ASSERT_EQUAL(newDhcpV6Layer.getOptionCount(), 2);
 	// 3rd option
-	option = newDhcpV6Layer.addOptionBefore(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_SERVERID, "000100012154eee7000c29703dd8"), pcpp::DHCPV6_OPT_DNS_SERVERS);
+	option = newDhcpV6Layer.addOptionBefore(
+		pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_SERVERID, "000100012154eee7000c29703dd8"),
+		pcpp::DHCPV6_OPT_DNS_SERVERS);
 	PTF_ASSERT_EQUAL(option.getType(), pcpp::DHCPV6_OPT_SERVERID);
 	PTF_ASSERT_EQUAL(option.getDataSize(), 14);
 	PTF_ASSERT_EQUAL(newDhcpV6Layer.getOptionCount(), 3);
 	// 2nd option
-	option = newDhcpV6Layer.addOptionAfter(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_CLIENTID, "000200000009464745313934373134515300"), pcpp::DHCPV6_OPT_IA_NA);
+	option = newDhcpV6Layer.addOptionAfter(
+		pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_CLIENTID, "000200000009464745313934373134515300"),
+		pcpp::DHCPV6_OPT_IA_NA);
 	PTF_ASSERT_EQUAL(option.getType(), pcpp::DHCPV6_OPT_CLIENTID);
 	PTF_ASSERT_EQUAL(option.getDataSize(), 18);
 	PTF_ASSERT_EQUAL(newDhcpV6Layer.getOptionCount(), 4);
 	// 6th option
-	option = newDhcpV6Layer.addOption(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_BOOTFILE_URL, "687474703a2f2f5b323030313a6462613a3130303a3a315d3a393039302f657868617573746976655f7a74705f7363726970742e7079"));
+	option = newDhcpV6Layer.addOption(pcpp::DhcpV6OptionBuilder(
+		pcpp::DHCPV6_OPT_BOOTFILE_URL, "687474703a2f2f5b323030313a6462613a3130303a3a315d3a393039302f6578686175737469766"
+									   "55f7a74705f7363726970742e7079"));
 	PTF_ASSERT_EQUAL(option.getType(), pcpp::DHCPV6_OPT_BOOTFILE_URL);
 	PTF_ASSERT_EQUAL(option.getDataSize(), 54);
 	PTF_ASSERT_EQUAL(newDhcpV6Layer.getOptionCount(), 5);
 	// 5th option
-	option = newDhcpV6Layer.addOptionAfter(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DOMAIN_LIST, "05636973636f056c6f63616c00"), pcpp::DHCPV6_OPT_DNS_SERVERS);
+	option = newDhcpV6Layer.addOptionAfter(
+		pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DOMAIN_LIST, "05636973636f056c6f63616c00"),
+		pcpp::DHCPV6_OPT_DNS_SERVERS);
 	PTF_ASSERT_EQUAL(option.getType(), pcpp::DHCPV6_OPT_DOMAIN_LIST);
 	PTF_ASSERT_EQUAL(option.getDataSize(), 13);
 	PTF_ASSERT_EQUAL(newDhcpV6Layer.getOptionCount(), 6);
 
 	pcpp::Logger::getInstance().suppressLogs();
 	// prev/next option doesn't exist in layer
-	option = newDhcpV6Layer.addOptionAfter(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DOMAIN_LIST, "05"), pcpp::DHCPV6_OPT_ELAPSED_TIME);
+	option = newDhcpV6Layer.addOptionAfter(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DOMAIN_LIST, "05"),
+										   pcpp::DHCPV6_OPT_ELAPSED_TIME);
 	PTF_ASSERT_TRUE(option.isNull());
-	option = newDhcpV6Layer.addOptionBefore(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DOMAIN_LIST, "05"), pcpp::DHCPV6_OPT_ELAPSED_TIME);
+	option = newDhcpV6Layer.addOptionBefore(pcpp::DhcpV6OptionBuilder(pcpp::DHCPV6_OPT_DOMAIN_LIST, "05"),
+											pcpp::DHCPV6_OPT_ELAPSED_TIME);
 	PTF_ASSERT_TRUE(option.isNull());
 
 	// string is not a valid hex stream
@@ -125,7 +129,6 @@ PTF_TEST_CASE(DhcpV6CreationTest)
 	delete origDhcpV6Layer;
 } // DhcpV6CreationTest
 
-
 PTF_TEST_CASE(DhcpV6EditTest)
 {
 	timeval time;
@@ -134,7 +137,7 @@ PTF_TEST_CASE(DhcpV6EditTest)
 	READ_FILE_AND_CREATE_PACKET(1, "PacketExamples/dhcpv6_1.dat");
 
 	pcpp::Packet dhcpv6Packet(&rawPacket1);
-	pcpp::DhcpV6Layer* dhcpv6Layer = dhcpv6Packet.getLayerOfType<pcpp::DhcpV6Layer>();
+	pcpp::DhcpV6Layer *dhcpv6Layer = dhcpv6Packet.getLayerOfType<pcpp::DhcpV6Layer>();
 	PTF_ASSERT_NOT_NULL(dhcpv6Layer);
 	dhcpv6Layer->setMessageType(pcpp::DHCPV6_RELEASE);
 	dhcpv6Layer->setTransactionID(0x12345);

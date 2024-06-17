@@ -36,8 +36,9 @@ namespace pcpp
 		 * If You feel safe to use it please do, but no guarantee is provided.
 		 * @param[in] kniDevice KNI device to be destroyed explicitly
 		 */
-		void destroyDevice(KniDevice* kniDevice);
-	public:
+		void destroyDevice(KniDevice *kniDevice);
+
+	  public:
 		/**
 		 * Callback related constants for KNI device
 		 */
@@ -55,7 +56,8 @@ namespace pcpp
 		{
 			/** KniDevice#KniIoctlCallbacks#change_mtu and KniDevice#KniOldIoctlCallbacks#change_mtu callback */
 			CALLBACK_MTU,
-			/** KniDevice#KniIoctlCallbacks#config_network_if and KniDevice#KniOldIoctlCallbacks#config_network_if callback */
+			/** KniDevice#KniIoctlCallbacks#config_network_if and KniDevice#KniOldIoctlCallbacks#config_network_if
+			 * callback */
 			CALLBACK_LINK,
 			/** KniDevice#KniIoctlCallbacks#config_mac_address callback */
 			CALLBACK_MAC,
@@ -70,7 +72,7 @@ namespace pcpp
 		 * @warning Initialization of Kni module depends on initialization of DPDK made by DpdkDeviceList
 		 * @return The singleton instance of KniDeviceList
 		 */
-		static KniDeviceList& getInstance();
+		static KniDeviceList &getInstance();
 
 		/**
 		 * @return true if KNI module was initialized successfully false otherwise
@@ -89,21 +91,21 @@ namespace pcpp
 		 * @param[in] mempoolSize Size of packet mempool used by this device
 		 * @return Pointer to new KNI device or NULL in case of error
 		 */
-		KniDevice* createDevice(const KniDevice::KniDeviceConfiguration& config, const size_t mempoolSize);
+		KniDevice *createDevice(const KniDevice::KniDeviceConfiguration &config, const size_t mempoolSize);
 		/**
 		 * @brief Returns KNI device with specified portId.
 		 * @note MT SAFE if createDevice or destroyDevice is not called concurrently
 		 * @param[in] portId ID of KNI device to find
 		 * @return Pointer to KNI device or NULL if device not found
 		 */
-		KniDevice* getDeviceByPort(const uint16_t portId);
+		KniDevice *getDeviceByPort(const uint16_t portId);
 		/**
 		 * @brief Returns KNI device with specified name.
 		 * @note MT SAFE if createDevice or destroyDevice is not called concurrently
 		 * @param[in] name Name of KNI device to find
 		 * @return Pointer to KNI device or NULL if device not found
 		 */
-		KniDevice* getDeviceByName(const std::string& name);
+		KniDevice *getDeviceByName(const std::string &name);
 
 		/* Static information */
 
@@ -119,8 +121,9 @@ namespace pcpp
 		 * @param[in] cbType One of KniCallbackType enum values
 		 */
 		static bool isCallbackSupported(const KniCallbackType cbType);
-	private:
-		std::vector<KniDevice*> m_Devices;
+
+	  private:
+		std::vector<KniDevice *> m_Devices;
 		bool m_Initialized;
 		int m_KniUniqueId;
 	};

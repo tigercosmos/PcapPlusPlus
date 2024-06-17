@@ -72,7 +72,8 @@
  *    suitable access rights (must have CAP_NET_ADMIN).
  *
  * Useful links:
- *  - <a href="https://doc.dpdk.org/guides/prog_guide/kernel_nic_interface.html">KNI interface concept DPDK documentation</a>
+ *  - <a href="https://doc.dpdk.org/guides/prog_guide/kernel_nic_interface.html">KNI interface concept DPDK
+ * documentation</a>
  *  - <a href="https://doc.dpdk.org/guides/nics/kni.html">KNI PMD</a>
  *  - <a href="https://doc.dpdk.org/guides/sample_app_ug/kernel_nic_interface.html">KNI DPDK sample application</a>
  *  - <a href="https://doc.dpdk.org/dts/test_plans/kni_test_plan.html">KNI DPDK test plan</a>
@@ -92,7 +93,8 @@ namespace pcpp
 	/**
 	 * Defines the signature callback used by capturing API on KNI device
 	 */
-	typedef bool (*OnKniPacketArriveCallback)(MBufRawPacket* packets, uint32_t numOfPackets, KniDevice* device, void* userCookie);
+	typedef bool (*OnKniPacketArriveCallback)(MBufRawPacket *packets, uint32_t numOfPackets, KniDevice *device,
+											  void *userCookie);
 
 	/**
 	 * @class KniDevice
@@ -123,7 +125,8 @@ namespace pcpp
 	{
 		friend class KniDeviceList;
 		friend class MBufRawPacket;
-	public:
+
+	  public:
 		/**
 		 * Various link related constants for KNI device
 		 */
@@ -237,8 +240,8 @@ namespace pcpp
 			std::string name;
 			union
 			{
-				KniIoctlCallbacks* callbacks;
-				KniOldIoctlCallbacks* oldCallbacks;
+				KniIoctlCallbacks *callbacks;
+				KniOldIoctlCallbacks *oldCallbacks;
 			};
 			/**
 			 * MAC (ETHERNET) address of new KNI device.
@@ -268,17 +271,17 @@ namespace pcpp
 			uint32_t kthreadCoreId;
 		};
 
-	private:
+	  private:
 		/** All instances of this class MUST be produced by KniDeviceList class */
-		KniDevice(const KniDeviceConfiguration& conf, size_t mempoolSize, int unique);
+		KniDevice(const KniDeviceConfiguration &conf, size_t mempoolSize, int unique);
 		/** This class is not copyable */
-		KniDevice(const KniDevice&);
+		KniDevice(const KniDevice &);
 		/** This class is not copyable */
-		KniDevice& operator=(const KniDevice&);
+		KniDevice &operator=(const KniDevice &);
 		/** All instances of this class MUST be destroyed by KniDeviceList class */
 		~KniDevice();
 
-	public:
+	  public:
 		/* Information getters */
 
 		/**
@@ -353,7 +356,7 @@ namespace pcpp
 		 * @param[in] mac New MAC address of KNI device
 		 * @return true if desired MAC address is set, false if not and some error occurred (debug info is printed)
 		 */
-		bool setMacAddress(const MacAddress& mac);
+		bool setMacAddress(const MacAddress &mac);
 		/**
 		 * @brief Sets MTU of KNI device.
 		 * Unconditionally changes MTU of KNI device.
@@ -404,7 +407,8 @@ namespace pcpp
 		 *  - change mac: ip l set [interface] address [new_mac]
 		 *  - change promiscuous mode: ip l set [interface] promisc on/off
 		 * @warning Functions setLinkState, setMacAddress, setMtu and setPromiscuous will generate this requests.
-		 * @note Callbacks provided for this KNI device will be called synchronously in calling thread during execution of this function
+		 * @note Callbacks provided for this KNI device will be called synchronously in calling thread during execution
+		 * of this function
 		 * @return true if no error happened during request handling false otherwise
 		 */
 		bool handleRequests();
@@ -414,7 +418,8 @@ namespace pcpp
 		 * New thread is detached using pthread_detach.
 		 * This thread can be stopped explicitly by calling stopRequestHandlerThread() or
 		 * implicitly on KNI device destruction.
-		 * Linux <a href="http://man7.org/linux/man-pages/man2/nanosleep.2.html">nanosleep()</a> function is used for sleeping.
+		 * Linux <a href="http://man7.org/linux/man-pages/man2/nanosleep.2.html">nanosleep()</a> function is used for
+		 * sleeping.
 		 * @note Callbacks provided for this KNI device will be called asynchronously in new thread
 		 * @param[in] sleepSeconds Sleeping time in seconds
 		 * @param[in] sleepNanoSeconds Sleeping time in nanoseconds
@@ -436,118 +441,128 @@ namespace pcpp
 		/**
 		 * @brief Receive raw packets from kernel.
 		 * @param[out] rawPacketsArr A vector where all received packets will be written into
-		 * @return The number of packets received. If an error occurred 0 will be returned and the error will be printed to log
+		 * @return The number of packets received. If an error occurred 0 will be returned and the error will be printed
+		 * to log
 		 */
-		uint16_t receivePackets(MBufRawPacketVector& rawPacketsArr);
+		uint16_t receivePackets(MBufRawPacketVector &rawPacketsArr);
 		/**
 		 * @brief Receive raw packets from kernel.
 		 * Please notice that in terms of performance, this is the best method to use
-		 * for receiving packets because out of all receivePackets overloads this method requires the least overhead and is
-		 * almost as efficient as receiving packets directly through DPDK. So if performance is a critical factor in your
-		 * application, please use this method
-		 * @param[out] rawPacketsArr A pointer to an array of MBufRawPacket pointers where all received packets will be written into. The array is expected to
-		 * be allocated by the user and its length should be provided in rawPacketArrLength. Number of packets received will be returned.
-		 * Notice it's the user responsibility to free the array and its content when done using it
+		 * for receiving packets because out of all receivePackets overloads this method requires the least overhead and
+		 * is almost as efficient as receiving packets directly through DPDK. So if performance is a critical factor in
+		 * your application, please use this method
+		 * @param[out] rawPacketsArr A pointer to an array of MBufRawPacket pointers where all received packets will be
+		 * written into. The array is expected to be allocated by the user and its length should be provided in
+		 * rawPacketArrLength. Number of packets received will be returned. Notice it's the user responsibility to free
+		 * the array and its content when done using it
 		 * @param[out] rawPacketArrLength The length of MBufRawPacket pointers array
-		 * @return The number of packets received. If an error occurred 0 will be returned and the error will be printed to log
+		 * @return The number of packets received. If an error occurred 0 will be returned and the error will be printed
+		 * to log
 		 */
-		uint16_t receivePackets(MBufRawPacket** rawPacketsArr, uint16_t rawPacketArrLength);
+		uint16_t receivePackets(MBufRawPacket **rawPacketsArr, uint16_t rawPacketArrLength);
 		/**
 		 * @brief Receive parsed packets from kernel.
-		 * @param[out] packetsArr A pointer to an allocated array of Packet pointers where all received packets will be written into. The array is expected to
-		 * be allocated by the user and its length should be provided in packetsArrLength. Number of packets received will be returned.
-		 * Notice it's the user responsibility to free the array and its content when done using it
+		 * @param[out] packetsArr A pointer to an allocated array of Packet pointers where all received packets will be
+		 * written into. The array is expected to be allocated by the user and its length should be provided in
+		 * packetsArrLength. Number of packets received will be returned. Notice it's the user responsibility to free
+		 * the array and its content when done using it
 		 * @param[out] packetsArrLength The length of Packet pointers array
-		 * @return The number of packets received. If an error occurred 0 will be returned and the error will be printed to log
+		 * @return The number of packets received. If an error occurred 0 will be returned and the error will be printed
+		 * to log
 		 */
-		uint16_t receivePackets(Packet** packetsArr, uint16_t packetsArrLength);
+		uint16_t receivePackets(Packet **packetsArr, uint16_t packetsArrLength);
 
 		/* Packet send */
 
 		/**
 		 * @brief Send an array of MBufRawPacket to kernel.
 		 * Please notice the following:<BR>
-		 * - In terms of performance, this is the best method to use for sending packets because out of all sendPackets overloads
-		 * this method requires the least overhead and is almost as efficient as sending the packets directly through DPDK. So if performance
-		 * is a critical factor in your application, please use this method
-		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending packets to DPDK, each
-		 * iteration of 64 packets
+		 * - In terms of performance, this is the best method to use for sending packets because out of all sendPackets
+		 * overloads this method requires the least overhead and is almost as efficient as sending the packets directly
+		 * through DPDK. So if performance is a critical factor in your application, please use this method
+		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending
+		 * packets to DPDK, each iteration of 64 packets
 		 * - The mbufs used in this method aren't freed by this method, they will be transparently freed by DPDK
 		 * <BR><BR>
 		 * @param[in] rawPacketsArr A pointer to an array of MBufRawPacket
 		 * @param[in] arrLength The length of the array
 		 * @return The number of packets actually and successfully sent
 		 */
-		uint16_t sendPackets(MBufRawPacket** rawPacketsArr, uint16_t arrLength);
+		uint16_t sendPackets(MBufRawPacket **rawPacketsArr, uint16_t arrLength);
 		/**
 		 * @brief Send an array of parsed packets to kernel.
 		 * Please notice the following:<BR>
-		 * - If some or all of the packets contain raw packets which aren't of type MBufRawPacket, a new temp MBufRawPacket instances
-		 * will be created and packet data will be copied to them. This is necessary to allocate mbufs which will store the data to be sent.
-		 * If performance is a critical factor please make sure you send parsed packets
-		 * that contain only raw packets of type MBufRawPacket
-		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending packets to DPDK, each
-		 * iteration of 64 packets
-		 * - The mbufs used or allocated in this method aren't freed by this method, they will be transparently freed by DPDK
-		 * <BR><BR>
+		 * - If some or all of the packets contain raw packets which aren't of type MBufRawPacket, a new temp
+		 * MBufRawPacket instances will be created and packet data will be copied to them. This is necessary to allocate
+		 * mbufs which will store the data to be sent. If performance is a critical factor please make sure you send
+		 * parsed packets that contain only raw packets of type MBufRawPacket
+		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending
+		 * packets to DPDK, each iteration of 64 packets
+		 * - The mbufs used or allocated in this method aren't freed by this method, they will be transparently freed by
+		 * DPDK <BR><BR>
 		 * @param[in] packetsArr A pointer to an array of parsed packet pointers
 		 * @param[in] arrLength The length of the array
 		 * @return The number of packets actually and successfully sent
 		 */
-		uint16_t sendPackets(Packet** packetsArr, uint16_t arrLength);
+		uint16_t sendPackets(Packet **packetsArr, uint16_t arrLength);
 		/**
 		 * @brief Send a vector of MBufRawPacket pointers to kernel.
 		 * Please notice the following:<BR>
-		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending packets to DPDK, each
-		 * iteration of 64 packets
+		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending
+		 * packets to DPDK, each iteration of 64 packets
 		 * - The mbufs used in this method aren't freed by this method, they will be transparently freed by DPDK
 		 * <BR><BR>
 		 * @param[in] rawPacketsVec The vector of raw packet
 		 * @return The number of packets actually and successfully sent
 		 */
-		uint16_t sendPackets(MBufRawPacketVector& rawPacketsVec);
+		uint16_t sendPackets(MBufRawPacketVector &rawPacketsVec);
 		/**
 		 * @brief Send a vector of RawPacket pointers to kernel.
 		 * Please notice the following:<BR>
-		 * - If some or all of the raw packets aren't of type MBufRawPacket, a new temp MBufRawPacket instances will be created
-		 * and packet data will be copied to them. This is necessary to allocate mbufs which will store the data to be sent. If
-		 * performance is a critical factor please make sure you send only raw packets of type MBufRawPacket
-		 * (or use the sendPackets overload that sends MBufRawPacketVector)
-		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending packets to DPDK, each
-		 * iteration of 64 packets
-		 * - The mbufs used or allocated in this method aren't freed by this method, they will be transparently freed by DPDK
-		 * <BR><BR>
+		 * - If some or all of the raw packets aren't of type MBufRawPacket, a new temp MBufRawPacket instances will be
+		 * created and packet data will be copied to them. This is necessary to allocate mbufs which will store the data
+		 * to be sent. If performance is a critical factor please make sure you send only raw packets of type
+		 * MBufRawPacket (or use the sendPackets overload that sends MBufRawPacketVector)
+		 * - If the number of packets to send is higher than 64 this method will run multiple iterations of sending
+		 * packets to DPDK, each iteration of 64 packets
+		 * - The mbufs used or allocated in this method aren't freed by this method, they will be transparently freed by
+		 * DPDK <BR><BR>
 		 * @param[in] rawPacketsVec The vector of raw packet
 		 * @return The number of packets actually and successfully sent
 		 */
-		uint16_t sendPackets(RawPacketVector& rawPacketsVec);
+		uint16_t sendPackets(RawPacketVector &rawPacketsVec);
 		/**
 		 * @brief Send a raw packet to kernel.
 		 * Please notice that if the raw packet isn't of type MBufRawPacket, a new temp MBufRawPacket
-		 * will be created and the data will be copied to it. This is necessary to allocate an mbuf which will store the data to be sent.
-		 * If performance is a critical factor please make sure you send a raw packet of type MBufRawPacket.
-		 * Please also notice that the mbuf used or allocated in this method isn't freed by this method, it will be transparently freed by DPDK
+		 * will be created and the data will be copied to it. This is necessary to allocate an mbuf which will store the
+		 * data to be sent. If performance is a critical factor please make sure you send a raw packet of type
+		 * MBufRawPacket. Please also notice that the mbuf used or allocated in this method isn't freed by this method,
+		 * it will be transparently freed by DPDK
 		 * @param[in] rawPacket The raw packet to send
 		 * @return True if packet was sent successfully or false if the packet wasn't sent for any other reason
 		 */
-		bool sendPacket(RawPacket& rawPacket);
+		bool sendPacket(RawPacket &rawPacket);
 		/**
 		 * @brief Send a MBufRawPacket to kernel.
-		 * Please notice that the mbuf used in this method isn't freed by this method, it will be transparently freed by DPDK
+		 * Please notice that the mbuf used in this method isn't freed by this method, it will be transparently freed by
+		 * DPDK
 		 * @param[in] rawPacket The MBufRawPacket to send
-		 * @return True if packet was sent successfully or false if device is not opened or if the packet wasn't sent for any other reason
+		 * @return True if packet was sent successfully or false if device is not opened or if the packet wasn't sent
+		 * for any other reason
 		 */
-		bool sendPacket(MBufRawPacket& rawPacket);
+		bool sendPacket(MBufRawPacket &rawPacket);
 		/**
 		 * @brief Send a parsed packet to kernel.
-		 * Please notice that the mbuf used or allocated in this method isn't freed by this method, it will be transparently freed by DPDK
-		 * @param[in] packet The parsed packet to send. Please notice that if the packet contains a raw packet which isn't of type
-		 * MBufRawPacket, a new temp MBufRawPacket will be created and the data will be copied to it. This is necessary to
-		 * allocate an mbuf which will store the data to be sent. If performance is a critical factor please make sure you send a
-		 * parsed packet that contains a raw packet of type MBufRawPacket
-		 * @return True if packet was sent successfully or false if device is not opened or if the packet wasn't sent for any other reason
+		 * Please notice that the mbuf used or allocated in this method isn't freed by this method, it will be
+		 * transparently freed by DPDK
+		 * @param[in] packet The parsed packet to send. Please notice that if the packet contains a raw packet which
+		 * isn't of type MBufRawPacket, a new temp MBufRawPacket will be created and the data will be copied to it. This
+		 * is necessary to allocate an mbuf which will store the data to be sent. If performance is a critical factor
+		 * please make sure you send a parsed packet that contains a raw packet of type MBufRawPacket
+		 * @return True if packet was sent successfully or false if device is not opened or if the packet wasn't sent
+		 * for any other reason
 		 */
-		bool sendPacket(Packet& packet);
+		bool sendPacket(Packet &packet);
 
 		/* Packet capture */
 
@@ -557,41 +572,44 @@ namespace pcpp
 		 * The capture is done on a new thread created by this method, meaning all callback
 		 * calls are done in a thread other than the caller thread.
 		 * Capture process will stop and this capture thread will be terminated when calling stopCapture().
-		 * This method must be called after the device is opened (i.e the open() method was called), otherwise an error will be returned.
-		 * Capturing thread will be terminated automatically on KNI device destruction or when close() is called.
+		 * This method must be called after the device is opened (i.e the open() method was called), otherwise an error
+		 * will be returned. Capturing thread will be terminated automatically on KNI device destruction or when close()
+		 * is called.
 		 * @param[in] onPacketArrives A callback that is called each time a burst of packets is captured
-		 * @param[in] onPacketArrivesUserCookie A pointer to a user provided object. This object will be transferred to the onPacketArrives callback
-		 * each time it is called. This cookie is very useful for transferring objects that give context to the capture callback, for example:
-		 * objects that counts packets, manages flow state or manages the application state according to the packet that was captured
+		 * @param[in] onPacketArrivesUserCookie A pointer to a user provided object. This object will be transferred to
+		 * the onPacketArrives callback each time it is called. This cookie is very useful for transferring objects that
+		 * give context to the capture callback, for example: objects that counts packets, manages flow state or manages
+		 * the application state according to the packet that was captured
 		 * @return True if capture started successfully, false if (relevant log error is printed in any case):
 		 * - Capture is already running
 		 * - Device is not opened
 		 * - Capture thread could not be created
 		 */
-		bool startCapture(OnKniPacketArriveCallback onPacketArrives, void* onPacketArrivesUserCookie);
+		bool startCapture(OnKniPacketArriveCallback onPacketArrives, void *onPacketArrivesUserCookie);
 		/**
 		 * @brief Start capturing packets synchronously on this KNI interface in blocking mode.
 		 * Blocking mode means that this method block and won't return until the user frees the blocking
 		 * (via onPacketArrives callback) or until a user defined timeout expires.
-		 * Whenever a burst of packets is captured the onPacketArrives callback is called and lets the user handle the packet.
-		 * In each callback call the user should return true if he wants to release the block or false if it wants it to keep blocking.
-		 * Regardless of this callback a timeout is defined when stop capturing.
-		 * When this timeout expires the method will return.<BR>
-		 * Please notice that stopCapture() isn't needed here because when the method returns (after timeout or per user decision) capturing
-		 * on the device is stopped.
-		 * @param[in] onPacketArrives A callback given by the user for handling incoming packets. After handling each burst of packets
-		 * the user needs to return a boolean value. True value indicates stop capturing and stop blocking and
-		 * false value indicates continue capturing and blocking
-		 * @param[in] onPacketArrivesUserCookie A pointer to a user provided object. This object will be transferred to the onPacketArrives callback
-		 * each time it is called. This cookie is very useful for transferring objects that give context to the capture callback, for example:
-		 * objects that counts packets, manages flow state or manages the application state according to the packet that was captured
-		 * @param[in] timeout A timeout in seconds for the blocking to stop even if the user didn't return "true" in the onPacketArrives callback
-		 * If this timeout is set to 0 or less the timeout will be ignored, meaning the method will keep blocking until the user frees it via
-		 * the onPacketArrives callback
-		 * @return -1 if timeout expired, 1 if blocking was stopped via onPacketArrives callback or 0 if an error occurred (such as device
-		 * not open etc.). When returning 0 an appropriate error message is printed to log
+		 * Whenever a burst of packets is captured the onPacketArrives callback is called and lets the user handle the
+		 * packet. In each callback call the user should return true if he wants to release the block or false if it
+		 * wants it to keep blocking. Regardless of this callback a timeout is defined when stop capturing. When this
+		 * timeout expires the method will return.<BR> Please notice that stopCapture() isn't needed here because when
+		 * the method returns (after timeout or per user decision) capturing on the device is stopped.
+		 * @param[in] onPacketArrives A callback given by the user for handling incoming packets. After handling each
+		 * burst of packets the user needs to return a boolean value. True value indicates stop capturing and stop
+		 * blocking and false value indicates continue capturing and blocking
+		 * @param[in] onPacketArrivesUserCookie A pointer to a user provided object. This object will be transferred to
+		 * the onPacketArrives callback each time it is called. This cookie is very useful for transferring objects that
+		 * give context to the capture callback, for example: objects that counts packets, manages flow state or manages
+		 * the application state according to the packet that was captured
+		 * @param[in] timeout A timeout in seconds for the blocking to stop even if the user didn't return "true" in the
+		 * onPacketArrives callback If this timeout is set to 0 or less the timeout will be ignored, meaning the method
+		 * will keep blocking until the user frees it via the onPacketArrives callback
+		 * @return -1 if timeout expired, 1 if blocking was stopped via onPacketArrives callback or 0 if an error
+		 * occurred (such as device not open etc.). When returning 0 an appropriate error message is printed to log
 		 */
-		int startCaptureBlockingMode(OnKniPacketArriveCallback onPacketArrives, void* onPacketArrivesUserCookie, int timeout);
+		int startCaptureBlockingMode(OnKniPacketArriveCallback onPacketArrives, void *onPacketArrivesUserCookie,
+									 int timeout);
 		/**
 		 * Stop a currently running asynchronous packet capture.
 		 */
@@ -612,9 +630,9 @@ namespace pcpp
 		 */
 		void close();
 
-	private:
-		struct rte_kni* m_Device;
-		struct rte_mempool* m_MBufMempool;
+	  private:
+		struct rte_kni *m_Device;
+		struct rte_mempool *m_MBufMempool;
 		struct KniDeviceInfo
 		{
 			LinuxNicInformationSocket soc;
@@ -625,16 +643,16 @@ namespace pcpp
 			MacAddress mac;
 			std::string name;
 
-			bool init(const KniDeviceConfiguration& conf);
+			bool init(const KniDeviceConfiguration &conf);
 		} m_DeviceInfo;
 		struct KniThread;
 		struct KniCapturing
 		{
 			OnKniPacketArriveCallback callback;
-			void* userCookie;
-			KniThread* thread;
+			void *userCookie;
+			KniThread *thread;
 
-			static void runCapture(void* devicePointer, std::atomic<bool>& stopThread);
+			static void runCapture(void *devicePointer, std::atomic<bool> &stopThread);
 			inline bool isRunning() const { return thread != NULL; }
 			void cleanup();
 		} m_Capturing;
@@ -642,9 +660,9 @@ namespace pcpp
 		{
 			long sleepS;
 			long sleepNs;
-			KniThread* thread;
+			KniThread *thread;
 
-			static void runRequests(void* devicePointer, std::atomic<bool>& stopThread);
+			static void runRequests(void *devicePointer, std::atomic<bool> &stopThread);
 			void cleanup();
 		} m_Requests;
 	};

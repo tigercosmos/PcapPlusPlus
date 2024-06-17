@@ -34,15 +34,17 @@ namespace pcpp
 	 */
 	class EthDot3Layer : public Layer
 	{
-	public:
-
+	  public:
 		/**
 		 * A constructor that creates the layer from an existing packet raw data
 		 * @param[in] data A pointer to the raw data (will be casted to ether_dot3_header)
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		EthDot3Layer(uint8_t* data, size_t dataLen, Packet* packet) : Layer(data, dataLen, NULL, packet) { m_Protocol = EthernetDot3; }
+		EthDot3Layer(uint8_t *data, size_t dataLen, Packet *packet) : Layer(data, dataLen, NULL, packet)
+		{
+			m_Protocol = EthernetDot3;
+		}
 
 		/**
 		 * A constructor that creates the layer from an existing packet raw data
@@ -51,7 +53,11 @@ namespace pcpp
 		 * @param[in] prevLayer A pointer to the previous layer
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		EthDot3Layer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : Layer(data, dataLen, prevLayer, packet) { m_Protocol = EthernetDot3; }
+		EthDot3Layer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: Layer(data, dataLen, prevLayer, packet)
+		{
+			m_Protocol = EthernetDot3;
+		}
 
 		/**
 		 * A constructor that creates a new IEEE 802.3 Ethernet header and allocates the data
@@ -59,15 +65,16 @@ namespace pcpp
 		 * @param[in] destMac The destination MAC address
 		 * @param[in] length The frame length
 		 */
-		EthDot3Layer(const MacAddress& sourceMac, const MacAddress& destMac, uint16_t length);
+		EthDot3Layer(const MacAddress &sourceMac, const MacAddress &destMac, uint16_t length);
 
 		~EthDot3Layer() {}
 
 		/**
-		 * Get a pointer to the Ethernet header. Notice this points directly to the data, so every change will change the actual packet data
+		 * Get a pointer to the Ethernet header. Notice this points directly to the data, so every change will change
+		 * the actual packet data
 		 * @return A pointer to the ether_header
 		 */
-		ether_dot3_header* getEthHeader() const { return (ether_dot3_header*)m_Data; }
+		ether_dot3_header *getEthHeader() const { return (ether_dot3_header *)m_Data; }
 
 		/**
 		 * Get the source MAC address
@@ -79,7 +86,7 @@ namespace pcpp
 		 * Set source MAC address
 		 * @param sourceMac Source MAC to set
 		 */
-		void setSourceMac(const MacAddress& sourceMac) { sourceMac.copyTo(getEthHeader()->srcMac); }
+		void setSourceMac(const MacAddress &sourceMac) { sourceMac.copyTo(getEthHeader()->srcMac); }
 
 		/**
 		 * Get the destination MAC address
@@ -91,7 +98,7 @@ namespace pcpp
 		 * Set destination MAC address
 		 * @param destMac Destination MAC to set
 		 */
-		void setDestMac(const MacAddress& destMac) { destMac.copyTo(getEthHeader()->dstMac); }
+		void setDestMac(const MacAddress &destMac) { destMac.copyTo(getEthHeader()->dstMac); }
 
 		// implement abstract methods
 
@@ -120,7 +127,7 @@ namespace pcpp
 		 * @param[in] dataLen The length of the byte stream
 		 * @return True if the data is valid and can represent an IEEE 802.3 Eth packet
 		 */
-		static bool isDataValid(const uint8_t* data, size_t dataLen);
+		static bool isDataValid(const uint8_t *data, size_t dataLen);
 	};
 
 } // namespace pcpp

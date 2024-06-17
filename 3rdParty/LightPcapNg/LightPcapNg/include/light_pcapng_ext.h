@@ -25,7 +25,8 @@
 #define LIGHT_PCAPNG_EXT_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include "light_types.h"
@@ -40,64 +41,68 @@ extern "C" {
 #endif
 
 #ifndef NULL
-#define NULL   ((void *) 0)
+#define NULL ((void *)0)
 #endif
 
 #define MAX_SUPPORTED_INTERFACE_BLOCKS 32
 
-struct _light_pcapng_t;
-typedef struct _light_pcapng_t light_pcapng_t;
+	struct _light_pcapng_t;
+	typedef struct _light_pcapng_t light_pcapng_t;
 
-typedef struct _light_packet_header {
-	uint32_t interface_id;
-	struct timespec timestamp;
-	uint32_t captured_length;
-	uint32_t original_length;
-	uint16_t data_link;
-	char* comment;
-	uint16_t comment_length;
-} light_packet_header;
+	typedef struct _light_packet_header
+	{
+		uint32_t interface_id;
+		struct timespec timestamp;
+		uint32_t captured_length;
+		uint32_t original_length;
+		uint16_t data_link;
+		char *comment;
+		uint16_t comment_length;
+	} light_packet_header;
 
-typedef struct _light_pcapng_file_info {
-	uint16_t major_version;
-	uint16_t minor_version;
-	char *file_comment;
-	size_t file_comment_size;
-	char *hardware_desc;
-	size_t hardware_desc_size;
-	char *os_desc;
-	size_t os_desc_size;
-	char *user_app_desc;
-	size_t user_app_desc_size;
-	size_t interface_block_count;
-	uint16_t link_types[MAX_SUPPORTED_INTERFACE_BLOCKS];
-	double timestamp_resolution[MAX_SUPPORTED_INTERFACE_BLOCKS];
+	typedef struct _light_pcapng_file_info
+	{
+		uint16_t major_version;
+		uint16_t minor_version;
+		char *file_comment;
+		size_t file_comment_size;
+		char *hardware_desc;
+		size_t hardware_desc_size;
+		char *os_desc;
+		size_t os_desc_size;
+		char *user_app_desc;
+		size_t user_app_desc_size;
+		size_t interface_block_count;
+		uint16_t link_types[MAX_SUPPORTED_INTERFACE_BLOCKS];
+		double timestamp_resolution[MAX_SUPPORTED_INTERFACE_BLOCKS];
 
-} light_pcapng_file_info;
+	} light_pcapng_file_info;
 
+	light_pcapng_t *light_pcapng_open_read(const char *file_path, light_boolean read_all_interfaces);
 
-light_pcapng_t *light_pcapng_open_read(const char* file_path, light_boolean read_all_interfaces);
+	// Set compression level to 0 to disable compression!
+	light_pcapng_t *light_pcapng_open_write(const char *file_path, light_pcapng_file_info *file_info,
+											int compression_level);
 
-//Set compression level to 0 to disable compression!
-light_pcapng_t *light_pcapng_open_write(const char* file_path, light_pcapng_file_info *file_info, int compression_level);
+	light_pcapng_t *light_pcapng_open_append(const char *file_path);
 
-light_pcapng_t *light_pcapng_open_append(const char* file_path);
+	light_pcapng_file_info *light_create_default_file_info();
 
-light_pcapng_file_info *light_create_default_file_info();
+	light_pcapng_file_info *light_create_file_info(const char *os_desc, const char *hardware_desc,
+												   const char *user_app_desc, const char *file_comment);
 
-light_pcapng_file_info *light_create_file_info(const char *os_desc, const char *hardware_desc, const char *user_app_desc, const char *file_comment);
+	void light_free_file_info(light_pcapng_file_info *info);
 
-void light_free_file_info(light_pcapng_file_info *info);
+	light_pcapng_file_info *light_pcang_get_file_info(light_pcapng_t *pcapng);
 
-light_pcapng_file_info *light_pcang_get_file_info(light_pcapng_t *pcapng);
+	int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_header, const uint8_t **packet_data);
 
-int light_get_next_packet(light_pcapng_t *pcapng, light_packet_header *packet_header, const uint8_t **packet_data);
+	void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packet_header,
+							const uint8_t *packet_data);
 
-void light_write_packet(light_pcapng_t *pcapng, const light_packet_header *packet_header, const uint8_t *packet_data);
+	void light_pcapng_close(light_pcapng_t *pcapng);
 
-void light_pcapng_close(light_pcapng_t *pcapng);
-
-void light_pcapng_flush(light_pcapng_t *pcapng);
+	void light_pcapng_flush(light_pcapng_t *pcapng);
 
 #ifdef __cplusplus
 }

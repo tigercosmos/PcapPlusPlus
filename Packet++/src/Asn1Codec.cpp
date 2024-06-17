@@ -19,12 +19,11 @@
 
 namespace pcpp
 {
-	const std::unordered_map<Asn1TagClass, std::string, EnumClassHash<Asn1TagClass>> Asn1TagClassToString {
-		{Asn1TagClass::Universal, "Universal" },
-		{Asn1TagClass::ContextSpecific, "ContextSpecific" },
+	const std::unordered_map<Asn1TagClass, std::string, EnumClassHash<Asn1TagClass>> Asn1TagClassToString{
+		{Asn1TagClass::Universal, "Universal"},
+		{Asn1TagClass::ContextSpecific, "ContextSpecific"},
 		{Asn1TagClass::Application, "Application"},
-		{Asn1TagClass::Private, "Private"}
-	};
+		{Asn1TagClass::Private, "Private"}};
 
 	std::string toString(Asn1TagClass tagClass)
 	{
@@ -36,46 +35,45 @@ namespace pcpp
 		return "Unknown";
 	}
 
-	const std::unordered_map<Asn1UniversalTagType, std::string, EnumClassHash<Asn1UniversalTagType>> Asn1UniversalTagTypeToString {
-		{Asn1UniversalTagType::EndOfContent, "EndOfContent"},
-		{Asn1UniversalTagType::Boolean, "Boolean"},
-		{Asn1UniversalTagType::Integer, "Integer"},
-		{Asn1UniversalTagType::BitString, "BitString"},
-		{Asn1UniversalTagType::OctetString, "OctetString"},
-		{Asn1UniversalTagType::Null, "Null"},
-		{Asn1UniversalTagType::ObjectIdentifier, "ObjectIdentifier"},
-		{Asn1UniversalTagType::ObjectDescriptor, "ObjectDescriptor"},
-		{Asn1UniversalTagType::External, "External"},
-		{Asn1UniversalTagType::Real, "Real"},
-		{Asn1UniversalTagType::Enumerated, "Enumerated"},
-		{Asn1UniversalTagType::EmbeddedPDV, "EmbeddedPDV"},
-		{Asn1UniversalTagType::UTF8String, "UTF8String"},
-		{Asn1UniversalTagType::RelativeObjectIdentifier, "RelativeObjectIdentifier"},
-		{Asn1UniversalTagType::Time, "Time"},
-		{Asn1UniversalTagType::Reserved, "Reserved"},
-		{Asn1UniversalTagType::Sequence, "Sequence"},
-		{Asn1UniversalTagType::Set, "Set"},
-		{Asn1UniversalTagType::NumericString, "NumericString"},
-		{Asn1UniversalTagType::PrintableString, "PrintableString"},
-		{Asn1UniversalTagType::T61String, "T61String"},
-		{Asn1UniversalTagType::VideotexString, "VideotexString"},
-		{Asn1UniversalTagType::IA5String, "IA5String"},
-		{Asn1UniversalTagType::UTCTime, "UTCTime"},
-		{Asn1UniversalTagType::GeneralizedTime, "GeneralizedTime"},
-		{Asn1UniversalTagType::GraphicString, "GraphicString"},
-		{Asn1UniversalTagType::VisibleString, "VisibleString"},
-		{Asn1UniversalTagType::GeneralString, "GeneralString"},
-		{Asn1UniversalTagType::UniversalString, "UniversalString"},
-		{Asn1UniversalTagType::CharacterString, "CharacterString"},
-		{Asn1UniversalTagType::BMPString, "BMPString"},
-		{Asn1UniversalTagType::Date, "Date"},
-		{Asn1UniversalTagType::TimeOfDay, "TimeOfDay"},
-		{Asn1UniversalTagType::DateTime, "DateTime"},
-		{Asn1UniversalTagType::Duration, "Duration"},
-		{Asn1UniversalTagType::ObjectIdentifierIRI, "ObjectIdentifierIRI"},
-		{Asn1UniversalTagType::RelativeObjectIdentifierIRI, "RelativeObjectIdentifierIRI"},
-		{Asn1UniversalTagType::NotApplicable, "Unknown"}
-	};
+	const std::unordered_map<Asn1UniversalTagType, std::string, EnumClassHash<Asn1UniversalTagType>>
+		Asn1UniversalTagTypeToString{{Asn1UniversalTagType::EndOfContent, "EndOfContent"},
+									 {Asn1UniversalTagType::Boolean, "Boolean"},
+									 {Asn1UniversalTagType::Integer, "Integer"},
+									 {Asn1UniversalTagType::BitString, "BitString"},
+									 {Asn1UniversalTagType::OctetString, "OctetString"},
+									 {Asn1UniversalTagType::Null, "Null"},
+									 {Asn1UniversalTagType::ObjectIdentifier, "ObjectIdentifier"},
+									 {Asn1UniversalTagType::ObjectDescriptor, "ObjectDescriptor"},
+									 {Asn1UniversalTagType::External, "External"},
+									 {Asn1UniversalTagType::Real, "Real"},
+									 {Asn1UniversalTagType::Enumerated, "Enumerated"},
+									 {Asn1UniversalTagType::EmbeddedPDV, "EmbeddedPDV"},
+									 {Asn1UniversalTagType::UTF8String, "UTF8String"},
+									 {Asn1UniversalTagType::RelativeObjectIdentifier, "RelativeObjectIdentifier"},
+									 {Asn1UniversalTagType::Time, "Time"},
+									 {Asn1UniversalTagType::Reserved, "Reserved"},
+									 {Asn1UniversalTagType::Sequence, "Sequence"},
+									 {Asn1UniversalTagType::Set, "Set"},
+									 {Asn1UniversalTagType::NumericString, "NumericString"},
+									 {Asn1UniversalTagType::PrintableString, "PrintableString"},
+									 {Asn1UniversalTagType::T61String, "T61String"},
+									 {Asn1UniversalTagType::VideotexString, "VideotexString"},
+									 {Asn1UniversalTagType::IA5String, "IA5String"},
+									 {Asn1UniversalTagType::UTCTime, "UTCTime"},
+									 {Asn1UniversalTagType::GeneralizedTime, "GeneralizedTime"},
+									 {Asn1UniversalTagType::GraphicString, "GraphicString"},
+									 {Asn1UniversalTagType::VisibleString, "VisibleString"},
+									 {Asn1UniversalTagType::GeneralString, "GeneralString"},
+									 {Asn1UniversalTagType::UniversalString, "UniversalString"},
+									 {Asn1UniversalTagType::CharacterString, "CharacterString"},
+									 {Asn1UniversalTagType::BMPString, "BMPString"},
+									 {Asn1UniversalTagType::Date, "Date"},
+									 {Asn1UniversalTagType::TimeOfDay, "TimeOfDay"},
+									 {Asn1UniversalTagType::DateTime, "DateTime"},
+									 {Asn1UniversalTagType::Duration, "Duration"},
+									 {Asn1UniversalTagType::ObjectIdentifierIRI, "ObjectIdentifierIRI"},
+									 {Asn1UniversalTagType::RelativeObjectIdentifierIRI, "RelativeObjectIdentifierIRI"},
+									 {Asn1UniversalTagType::NotApplicable, "Unknown"}};
 
 	std::string toString(Asn1UniversalTagType tagType)
 	{
@@ -87,9 +85,9 @@ namespace pcpp
 		return "Unknown";
 	}
 
-	std::unique_ptr<Asn1Record> Asn1Record::decode(const uint8_t* data, size_t dataLen, bool lazy)
+	std::unique_ptr<Asn1Record> Asn1Record::decode(const uint8_t *data, size_t dataLen, bool lazy)
 	{
-		auto record = decodeInternal(data, dataLen ,lazy);
+		auto record = decodeInternal(data, dataLen, lazy);
 		return std::unique_ptr<Asn1Record>(record);
 	}
 
@@ -99,26 +97,26 @@ namespace pcpp
 
 		switch (m_TagClass)
 		{
-			case Asn1TagClass::Private:
-			{
-				tagByte = 0xc0;
-				break;
-			}
-			case Asn1TagClass::ContextSpecific:
-			{
-				tagByte = 0x80;
-				break;
-			}
-			case Asn1TagClass::Application:
-			{
-				tagByte = 0x40;
-				break;
-			}
-			default:
-			{
-				tagByte = 0;
-				break;
-			}
+		case Asn1TagClass::Private:
+		{
+			tagByte = 0xc0;
+			break;
+		}
+		case Asn1TagClass::ContextSpecific:
+		{
+			tagByte = 0x80;
+			break;
+		}
+		case Asn1TagClass::Application:
+		{
+			tagByte = 0x40;
+			break;
+		}
+		default:
+		{
+			tagByte = 0;
+			break;
+		}
 		}
 
 		if (m_IsConstructed)
@@ -174,7 +172,7 @@ namespace pcpp
 		return result;
 	}
 
-	Asn1Record* Asn1Record::decodeInternal(const uint8_t* data, size_t dataLen, bool lazy)
+	Asn1Record *Asn1Record::decodeInternal(const uint8_t *data, size_t dataLen, bool lazy)
 	{
 		int tagLen;
 		auto decodedRecord = decodeTagAndCreateRecord(data, dataLen, tagLen);
@@ -202,18 +200,17 @@ namespace pcpp
 		{
 			try
 			{
-				decodedRecord->decodeValue(const_cast<uint8_t*>(data) + tagLen + lengthLen, lazy);
+				decodedRecord->decodeValue(const_cast<uint8_t *>(data) + tagLen + lengthLen, lazy);
 			}
 			catch (...)
 			{
 				delete decodedRecord;
 				throw;
 			}
-
 		}
 		else
 		{
-			decodedRecord->m_EncodedValue = const_cast<uint8_t*>(data) + tagLen + lengthLen;
+			decodedRecord->m_EncodedValue = const_cast<uint8_t *>(data) + tagLen + lengthLen;
 		}
 
 		return decodedRecord;
@@ -229,7 +226,7 @@ namespace pcpp
 		return Asn1UniversalTagType::NotApplicable;
 	}
 
-	Asn1Record* Asn1Record::decodeTagAndCreateRecord(const uint8_t* data, size_t dataLen, int& tagLen)
+	Asn1Record *Asn1Record::decodeTagAndCreateRecord(const uint8_t *data, size_t dataLen, int &tagLen)
 	{
 		if (dataLen < 1)
 		{
@@ -281,7 +278,7 @@ namespace pcpp
 			tagLen = 2;
 		}
 
-		Asn1Record* newRecord;
+		Asn1Record *newRecord;
 
 		if (isConstructed)
 		{
@@ -289,20 +286,20 @@ namespace pcpp
 			{
 				switch (static_cast<Asn1UniversalTagType>(tagType))
 				{
-					case Asn1UniversalTagType::Sequence:
-					{
-						newRecord = new Asn1SequenceRecord();
-						break;
-					}
-					case Asn1UniversalTagType::Set:
-					{
-						newRecord = new Asn1SetRecord();
-						break;
-					}
-					default:
-					{
-						newRecord = new Asn1ConstructedRecord();
-					}
+				case Asn1UniversalTagType::Sequence:
+				{
+					newRecord = new Asn1SequenceRecord();
+					break;
+				}
+				case Asn1UniversalTagType::Set:
+				{
+					newRecord = new Asn1SetRecord();
+					break;
+				}
+				default:
+				{
+					newRecord = new Asn1ConstructedRecord();
+				}
 				}
 			}
 			else
@@ -317,35 +314,35 @@ namespace pcpp
 				auto asn1UniversalTagType = static_cast<Asn1UniversalTagType>(tagType);
 				switch (asn1UniversalTagType)
 				{
-					case Asn1UniversalTagType::Integer:
-					{
-						newRecord = new Asn1IntegerRecord();
-						break;
-					}
-					case Asn1UniversalTagType::Enumerated:
-					{
-						newRecord = new Asn1EnumeratedRecord();
-						break;
-					}
-					case Asn1UniversalTagType::OctetString:
-					{
-						newRecord = new Asn1OctetStringRecord();
-						break;
-					}
-					case Asn1UniversalTagType::Boolean:
-					{
-						newRecord = new Asn1BooleanRecord();
-						break;
-					}
-					case Asn1UniversalTagType::Null:
-					{
-						newRecord = new Asn1NullRecord();
-						break;
-					}
-					default:
-					{
-						newRecord = new Asn1GenericRecord();
-					}
+				case Asn1UniversalTagType::Integer:
+				{
+					newRecord = new Asn1IntegerRecord();
+					break;
+				}
+				case Asn1UniversalTagType::Enumerated:
+				{
+					newRecord = new Asn1EnumeratedRecord();
+					break;
+				}
+				case Asn1UniversalTagType::OctetString:
+				{
+					newRecord = new Asn1OctetStringRecord();
+					break;
+				}
+				case Asn1UniversalTagType::Boolean:
+				{
+					newRecord = new Asn1BooleanRecord();
+					break;
+				}
+				case Asn1UniversalTagType::Null:
+				{
+					newRecord = new Asn1NullRecord();
+					break;
+				}
+				default:
+				{
+					newRecord = new Asn1GenericRecord();
+				}
 				}
 			}
 			else
@@ -361,7 +358,7 @@ namespace pcpp
 		return newRecord;
 	}
 
-	int Asn1Record::decodeLength(const uint8_t* data, size_t dataLen)
+	int Asn1Record::decodeLength(const uint8_t *data, size_t dataLen)
 	{
 		if (dataLen < 1)
 		{
@@ -410,8 +407,7 @@ namespace pcpp
 	{
 		auto lines = toStringList();
 
-		auto commaSeparated = [](std::string str1, std::string str2)
-		{
+		auto commaSeparated = [](std::string str1, std::string str2) {
 			return std::move(str1) + '\n' + std::move(str2);
 		};
 
@@ -442,22 +438,21 @@ namespace pcpp
 		return {stream.str()};
 	}
 
-	Asn1GenericRecord::Asn1GenericRecord(Asn1TagClass tagClass, bool isConstructed, uint8_t tagType, const uint8_t* value, size_t valueLen)
+	Asn1GenericRecord::Asn1GenericRecord(Asn1TagClass tagClass, bool isConstructed, uint8_t tagType,
+										 const uint8_t *value, size_t valueLen)
 	{
 		init(tagClass, isConstructed, tagType, value, valueLen);
 	}
 
-	Asn1GenericRecord::Asn1GenericRecord(Asn1TagClass tagClass, bool isConstructed, uint8_t tagType, const std::string& value)
+	Asn1GenericRecord::Asn1GenericRecord(Asn1TagClass tagClass, bool isConstructed, uint8_t tagType,
+										 const std::string &value)
 	{
-		init(tagClass, isConstructed, tagType, reinterpret_cast<const uint8_t*>(value.c_str()), value.size());
+		init(tagClass, isConstructed, tagType, reinterpret_cast<const uint8_t *>(value.c_str()), value.size());
 	}
 
-	Asn1GenericRecord::~Asn1GenericRecord()
-	{
-		delete m_Value;
-	}
+	Asn1GenericRecord::~Asn1GenericRecord() { delete m_Value; }
 
-	void Asn1GenericRecord::decodeValue(uint8_t* data, bool lazy)
+	void Asn1GenericRecord::decodeValue(uint8_t *data, bool lazy)
 	{
 		delete m_Value;
 
@@ -465,12 +460,10 @@ namespace pcpp
 		memcpy(m_Value, data, m_ValueLength);
 	}
 
-	std::vector<uint8_t> Asn1GenericRecord::encodeValue() const
-	{
-		return {m_Value, m_Value + m_ValueLength};
-	}
+	std::vector<uint8_t> Asn1GenericRecord::encodeValue() const { return {m_Value, m_Value + m_ValueLength}; }
 
-	void Asn1GenericRecord::init(Asn1TagClass tagClass, bool isConstructed, uint8_t tagType, const uint8_t* value, size_t valueLen)
+	void Asn1GenericRecord::init(Asn1TagClass tagClass, bool isConstructed, uint8_t tagType, const uint8_t *value,
+								 size_t valueLen)
 	{
 		m_TagType = tagType;
 		m_TagClass = tagClass;
@@ -481,17 +474,19 @@ namespace pcpp
 		m_TotalLength = m_ValueLength + 2;
 	}
 
-	Asn1ConstructedRecord::Asn1ConstructedRecord(Asn1TagClass tagClass, uint8_t tagType, const std::vector<Asn1Record*>& subRecords)
+	Asn1ConstructedRecord::Asn1ConstructedRecord(Asn1TagClass tagClass, uint8_t tagType,
+												 const std::vector<Asn1Record *> &subRecords)
 	{
 		init(tagClass, tagType, subRecords.begin(), subRecords.end());
 	}
 
-	Asn1ConstructedRecord::Asn1ConstructedRecord(Asn1TagClass tagClass, uint8_t tagType, const PointerVector<Asn1Record>& subRecords)
+	Asn1ConstructedRecord::Asn1ConstructedRecord(Asn1TagClass tagClass, uint8_t tagType,
+												 const PointerVector<Asn1Record> &subRecords)
 	{
 		init(tagClass, tagType, subRecords.begin(), subRecords.end());
 	}
 
-	void Asn1ConstructedRecord::decodeValue(uint8_t* data, bool lazy)
+	void Asn1ConstructedRecord::decodeValue(uint8_t *data, bool lazy)
 	{
 		if (!(data || m_ValueLength))
 		{
@@ -519,7 +514,8 @@ namespace pcpp
 		for (auto record : m_SubRecords)
 		{
 			auto encodedRecord = record->encode();
-			result.insert(result.end(), std::make_move_iterator(encodedRecord.begin()), std::make_move_iterator(encodedRecord.end()));
+			result.insert(result.end(), std::make_move_iterator(encodedRecord.begin()),
+						  std::make_move_iterator(encodedRecord.end()));
 		}
 		return result;
 	}
@@ -530,7 +526,7 @@ namespace pcpp
 		std::vector<std::string> result = {Asn1Record::toStringList().front()};
 		for (auto subRecord : m_SubRecords)
 		{
-			for (const auto& line : subRecord->toStringList())
+			for (const auto &line : subRecord->toStringList())
 			{
 				result.push_back("  " + line);
 			}
@@ -538,25 +534,31 @@ namespace pcpp
 		return result;
 	}
 
-	Asn1SequenceRecord::Asn1SequenceRecord(const std::vector<Asn1Record*>& subRecords)
-		: Asn1ConstructedRecord(Asn1TagClass::Universal, static_cast<uint8_t>(Asn1UniversalTagType::Sequence), subRecords)
-	{}
+	Asn1SequenceRecord::Asn1SequenceRecord(const std::vector<Asn1Record *> &subRecords)
+		: Asn1ConstructedRecord(Asn1TagClass::Universal, static_cast<uint8_t>(Asn1UniversalTagType::Sequence),
+								subRecords)
+	{
+	}
 
-	Asn1SequenceRecord::Asn1SequenceRecord(const PointerVector<Asn1Record>& subRecords)
-		: Asn1ConstructedRecord(Asn1TagClass::Universal, static_cast<uint8_t>(Asn1UniversalTagType::Sequence), subRecords)
-	{}
+	Asn1SequenceRecord::Asn1SequenceRecord(const PointerVector<Asn1Record> &subRecords)
+		: Asn1ConstructedRecord(Asn1TagClass::Universal, static_cast<uint8_t>(Asn1UniversalTagType::Sequence),
+								subRecords)
+	{
+	}
 
-	Asn1SetRecord::Asn1SetRecord(const std::vector<Asn1Record*>& subRecords)
+	Asn1SetRecord::Asn1SetRecord(const std::vector<Asn1Record *> &subRecords)
 		: Asn1ConstructedRecord(Asn1TagClass::Universal, static_cast<uint8_t>(Asn1UniversalTagType::Set), subRecords)
-	{}
+	{
+	}
 
-	Asn1SetRecord::Asn1SetRecord(const PointerVector<Asn1Record>& subRecords)
+	Asn1SetRecord::Asn1SetRecord(const PointerVector<Asn1Record> &subRecords)
 		: Asn1ConstructedRecord(Asn1TagClass::Universal, static_cast<uint8_t>(Asn1UniversalTagType::Set), subRecords)
-	{}
+	{
+	}
 
 	Asn1PrimitiveRecord::Asn1PrimitiveRecord(Asn1UniversalTagType tagType) : Asn1Record()
 	{
-		m_TagType = static_cast<uint8_t >(tagType);
+		m_TagType = static_cast<uint8_t>(tagType);
 		m_TagClass = Asn1TagClass::Universal;
 		m_IsConstructed = false;
 	}
@@ -585,36 +587,36 @@ namespace pcpp
 		m_TotalLength = m_ValueLength + 2;
 	}
 
-	void Asn1IntegerRecord::decodeValue(uint8_t* data, bool lazy)
+	void Asn1IntegerRecord::decodeValue(uint8_t *data, bool lazy)
 	{
 		switch (m_ValueLength)
 		{
-			case 1:
-			{
-				m_Value = *data;
-				break;
-			}
-			case 2:
-			{
-				m_Value = be16toh(*reinterpret_cast<uint16_t*>(data));
-				break;
-			}
-			case 3:
-			{
-				uint8_t tempData[4] = {0};
-				memcpy(tempData + 1, data, 3);
-				m_Value = be32toh(*reinterpret_cast<uint32_t*>(tempData));
-				break;
-			}
-			case 4:
-			{
-				m_Value = be32toh(*reinterpret_cast<uint32_t*>(data));
-				break;
-			}
-			default:
-			{
-				throw std::runtime_error("An integer ASN.1 record of more than 4 bytes is not supported");
-			}
+		case 1:
+		{
+			m_Value = *data;
+			break;
+		}
+		case 2:
+		{
+			m_Value = be16toh(*reinterpret_cast<uint16_t *>(data));
+			break;
+		}
+		case 3:
+		{
+			uint8_t tempData[4] = {0};
+			memcpy(tempData + 1, data, 3);
+			m_Value = be32toh(*reinterpret_cast<uint32_t *>(tempData));
+			break;
+		}
+		case 4:
+		{
+			m_Value = be32toh(*reinterpret_cast<uint32_t *>(data));
+			break;
+		}
+		default:
+		{
+			throw std::runtime_error("An integer ASN.1 record of more than 4 bytes is not supported");
+		}
 		}
 	}
 
@@ -625,39 +627,39 @@ namespace pcpp
 
 		switch (m_ValueLength)
 		{
-			case 1:
-			{
-				result.push_back(static_cast<uint8_t>(m_Value));
-				break;
-			}
-			case 2:
-			{
-				uint8_t tempArr[sizeof(uint16_t)];
-				auto hostValue = htobe16(static_cast<uint16_t>(m_Value));
-				memcpy(tempArr, &hostValue, m_ValueLength);
-				std::copy(tempArr, tempArr + m_ValueLength, std::back_inserter(result));
-				break;
-			}
-			case 3:
-			{
-				uint8_t tempArr[sizeof(uint32_t)];
-				auto hostValue = htobe32(static_cast<uint32_t>(m_Value));
-				memcpy(tempArr, &hostValue, m_ValueLength + 1);
-				std::copy(tempArr + 1, tempArr + m_ValueLength + 1, std::back_inserter(result));
-				break;
-			}
-			case 4:
-			{
-				uint8_t tempArr[sizeof(uint32_t)];
-				auto hostValue = htobe32(static_cast<uint32_t>(m_Value));
-				memcpy(tempArr, &hostValue, m_ValueLength);
-				std::copy(tempArr, tempArr + m_ValueLength, std::back_inserter(result));
-				break;
-			}
-			default:
-			{
-				throw std::runtime_error("Integer value of more than 4 bytes is not supported");
-			}
+		case 1:
+		{
+			result.push_back(static_cast<uint8_t>(m_Value));
+			break;
+		}
+		case 2:
+		{
+			uint8_t tempArr[sizeof(uint16_t)];
+			auto hostValue = htobe16(static_cast<uint16_t>(m_Value));
+			memcpy(tempArr, &hostValue, m_ValueLength);
+			std::copy(tempArr, tempArr + m_ValueLength, std::back_inserter(result));
+			break;
+		}
+		case 3:
+		{
+			uint8_t tempArr[sizeof(uint32_t)];
+			auto hostValue = htobe32(static_cast<uint32_t>(m_Value));
+			memcpy(tempArr, &hostValue, m_ValueLength + 1);
+			std::copy(tempArr + 1, tempArr + m_ValueLength + 1, std::back_inserter(result));
+			break;
+		}
+		case 4:
+		{
+			uint8_t tempArr[sizeof(uint32_t)];
+			auto hostValue = htobe32(static_cast<uint32_t>(m_Value));
+			memcpy(tempArr, &hostValue, m_ValueLength);
+			std::copy(tempArr, tempArr + m_ValueLength, std::back_inserter(result));
+			break;
+		}
+		default:
+		{
+			throw std::runtime_error("Integer value of more than 4 bytes is not supported");
+		}
 		}
 
 		return result;
@@ -665,7 +667,8 @@ namespace pcpp
 
 	std::vector<std::string> Asn1IntegerRecord::toStringList()
 	{
-		return std::vector<std::string>({Asn1Record::toStringList().front() + ", Value: " + std::to_string(getValue())});
+		return std::vector<std::string>(
+			{Asn1Record::toStringList().front() + ", Value: " + std::to_string(getValue())});
 	}
 
 	Asn1EnumeratedRecord::Asn1EnumeratedRecord(uint32_t value) : Asn1IntegerRecord(value)
@@ -673,7 +676,8 @@ namespace pcpp
 		m_TagType = static_cast<uint8_t>(Asn1UniversalTagType::Enumerated);
 	}
 
-	Asn1OctetStringRecord::Asn1OctetStringRecord(const std::string& value) : Asn1PrimitiveRecord(Asn1UniversalTagType::OctetString)
+	Asn1OctetStringRecord::Asn1OctetStringRecord(const std::string &value)
+		: Asn1PrimitiveRecord(Asn1UniversalTagType::OctetString)
 	{
 		m_Value = value;
 		m_ValueLength = value.size();
@@ -681,7 +685,8 @@ namespace pcpp
 		m_IsPrintable = true;
 	}
 
-	Asn1OctetStringRecord::Asn1OctetStringRecord(const uint8_t* value, size_t valueLength) : Asn1PrimitiveRecord(Asn1UniversalTagType::OctetString)
+	Asn1OctetStringRecord::Asn1OctetStringRecord(const uint8_t *value, size_t valueLength)
+		: Asn1PrimitiveRecord(Asn1UniversalTagType::OctetString)
 	{
 		m_Value = byteArrayToHexString(value, valueLength);
 		m_ValueLength = valueLength;
@@ -689,13 +694,11 @@ namespace pcpp
 		m_IsPrintable = false;
 	}
 
-	void Asn1OctetStringRecord::decodeValue(uint8_t* data, bool lazy)
+	void Asn1OctetStringRecord::decodeValue(uint8_t *data, bool lazy)
 	{
-		auto value = reinterpret_cast<char*>(data);
+		auto value = reinterpret_cast<char *>(data);
 
-		m_IsPrintable = std::all_of(value, value + m_ValueLength, [](char c) {
-			return isprint(0xff & c);
-		});
+		m_IsPrintable = std::all_of(value, value + m_ValueLength, [](char c) { return isprint(0xff & c); });
 
 		if (m_IsPrintable)
 		{
@@ -736,15 +739,12 @@ namespace pcpp
 		m_TotalLength = 3;
 	}
 
-	void Asn1BooleanRecord::decodeValue(uint8_t* data, bool lazy)
-	{
-		m_Value = data[0] != 0;
-	}
+	void Asn1BooleanRecord::decodeValue(uint8_t *data, bool lazy) { m_Value = data[0] != 0; }
 
 	std::vector<uint8_t> Asn1BooleanRecord::encodeValue() const
 	{
 		uint8_t byte = (m_Value ? 0xff : 0x00);
-		return { byte };
+		return {byte};
 	}
 
 	std::vector<std::string> Asn1BooleanRecord::toStringList()
@@ -757,4 +757,4 @@ namespace pcpp
 		m_ValueLength = 0;
 		m_TotalLength = 2;
 	}
-}
+} // namespace pcpp

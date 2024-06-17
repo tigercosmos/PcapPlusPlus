@@ -51,15 +51,12 @@ PTF_TEST_CASE(SmtpParsingTests)
 	PTF_ASSERT_EQUAL(smtpLayer3->getHeaderLen(), 181);
 	PTF_ASSERT_EQUAL(smtpLayer3->getStatusCode(), pcpp::SmtpResponseLayer::SmtpStatusCode::SERVICE_READY, enumclass);
 	PTF_ASSERT_EQUAL(smtpLayer3->getStatusCodeString(), "220");
-	PTF_ASSERT_EQUAL(
-		smtpLayer3->getStatusOption(),
-		"xc90.websitewelcome.com ESMTP Exim 4.69 #1 Mon, 05 Oct 2009 01:05:54 -0500 We do not authorize "
-		"the use of this system to transport unsolicited, and/or bulk e-mail.");
-	PTF_ASSERT_EQUAL(
-		smtpLayer3->getStatusOption(false),
-		"xc90.websitewelcome.com ESMTP Exim 4.69 #1 Mon, 05 Oct 2009 01:05:54 -0500 \r\n"
-		"We do not authorize the use of this system to transport unsolicited, \r\nand/or bulk e-mail."
-	)
+	PTF_ASSERT_EQUAL(smtpLayer3->getStatusOption(),
+					 "xc90.websitewelcome.com ESMTP Exim 4.69 #1 Mon, 05 Oct 2009 01:05:54 -0500 We do not authorize "
+					 "the use of this system to transport unsolicited, and/or bulk e-mail.");
+	PTF_ASSERT_EQUAL(smtpLayer3->getStatusOption(false),
+					 "xc90.websitewelcome.com ESMTP Exim 4.69 #1 Mon, 05 Oct 2009 01:05:54 -0500 \r\n"
+					 "We do not authorize the use of this system to transport unsolicited, \r\nand/or bulk e-mail.")
 	PTF_ASSERT_EQUAL(smtpLayer3->toString(), "SMTP response layer, status code: Service ready");
 	PTF_ASSERT_TRUE(smtpLayer3->isMultiLine());
 

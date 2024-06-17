@@ -9,24 +9,25 @@
 #include "PcapFileDevice.h"
 
 /**
- * The worker thread class which does all the work: receive packets from relevant DPDK port(s), matched them with the packet matching engine and send them to
- * TX port and/or save them to a file. In addition it collects packets statistics.
- * Each core is assigned with one such worker thread, and all of them are activated using DpdkDeviceList::startDpdkWorkerThreads (see main.cpp)
+ * The worker thread class which does all the work: receive packets from relevant DPDK port(s), matched them with the
+ * packet matching engine and send them to TX port and/or save them to a file. In addition it collects packets
+ * statistics. Each core is assigned with one such worker thread, and all of them are activated using
+ * DpdkDeviceList::startDpdkWorkerThreads (see main.cpp)
  */
 class AppWorkerThread : public pcpp::DpdkWorkerThread
 {
-private:
-	AppWorkerConfig& m_WorkerConfig;
+  private:
+	AppWorkerConfig &m_WorkerConfig;
 	bool m_Stop;
 	uint32_t m_CoreId;
 	PacketStats m_Stats;
-	PacketMatchingEngine& m_PacketMatchingEngine;
+	PacketMatchingEngine &m_PacketMatchingEngine;
 	std::unordered_map<uint32_t, bool> m_FlowTable;
 
-public:
-	AppWorkerThread(AppWorkerConfig& workerConfig, PacketMatchingEngine& matchingEngine) :
-		m_WorkerConfig(workerConfig), m_Stop(true), m_CoreId(MAX_NUM_OF_CORES+1),
-		m_PacketMatchingEngine(matchingEngine)
+  public:
+	AppWorkerThread(AppWorkerConfig &workerConfig, PacketMatchingEngine &matchingEngine)
+		: m_WorkerConfig(workerConfig), m_Stop(true), m_CoreId(MAX_NUM_OF_CORES + 1),
+		  m_PacketMatchingEngine(matchingEngine)
 	{
 	}
 
@@ -35,10 +36,7 @@ public:
 		// do nothing
 	}
 
-	PacketStats& getStats()
-	{
-		return m_Stats;
-	}
+	PacketStats &getStats() { return m_Stats; }
 
 	// implement abstract methods
 
@@ -47,8 +45,8 @@ public:
 		m_CoreId = coreId;
 		m_Stop = false;
 		m_Stats.workerId = coreId;
-		pcpp::DpdkDevice* sendPacketsTo = m_WorkerConfig.sendPacketsTo;
-		pcpp::PcapFileWriterDevice* pcapWriter = NULL;
+		pcpp::DpdkDevice *sendPacketsTo = m_WorkerConfig.sendPacketsTo;
+		pcpp::PcapFileWriterDevice *pcapWriter = NULL;
 
 		// if needed, create the pcap file writer which all matched packets will be written into
 		if (m_WorkerConfig.writeMatchedPacketsToFile)
@@ -66,8 +64,8 @@ public:
 			return true;
 		}
 
-		#define MAX_RECEIVE_BURST 64
-		pcpp::MBufRawPacket* packetArr[MAX_RECEIVE_BURST] = {};
+#define MAX_RECEIVE_BURST 64
+		pcpp::MBufRawPacket *packetArr[MAX_RECEIVE_BURST] = {};
 
 		// main loop, runs until be told to stop
 		// cppcheck-suppress knownConditionTrueFalse
@@ -79,7 +77,7 @@ public:
 				// for each DPDK device go over all RX queues configured for this worker/core
 				for (const auto &iter2 : iter.second)
 				{
-					pcpp::DpdkDevice* dev = iter.first;
+					pcpp::DpdkDevice *dev = iter.first;
 
 					// receive packets from network on the specified DPDK device and RX queue
 					uint16_t packetsReceived = dev->receivePackets(packetArr, MAX_RECEIVE_BURST, iter2);
@@ -94,7 +92,8 @@ public:
 
 						bool packetMatched;
 
-						// hash the packet by 5-tuple and look in the flow table to see whether this packet belongs to an existing or new flow
+						// hash the packet by 5-tuple and look in the flow table to see whether this packet belongs to
+						// an existing or new flow
 						uint32_t hash = pcpp::hash5Tuple(&parsedPacket);
 						auto iter3 = m_FlowTable.find(hash);
 
@@ -111,7 +110,7 @@ public:
 								// put new flow in flow table
 								m_FlowTable[hash] = true;
 
-								//collect stats
+								// collect stats
 								if (parsedPacket.isPacketOfType(pcpp::TCP))
 								{
 									m_Stats.matchedTcpFlows++;
@@ -120,7 +119,6 @@ public:
 								{
 									m_Stats.matchedUdpFlows++;
 								}
-
 							}
 						}
 
@@ -167,9 +165,5 @@ public:
 		m_Stop = true;
 	}
 
-	uint32_t getCoreId() const
-	{
-		return m_CoreId;
-	}
-
+	uint32_t getCoreId() const { return m_CoreId; }
 };

@@ -50,20 +50,25 @@ namespace pcpp
 	 */
 	class AuthenticationHeaderLayer : public Layer
 	{
-	public:
-		 /** A constructor that creates the layer from an existing packet raw data
+	  public:
+		/** A constructor that creates the layer from an existing packet raw data
 		 * @param[in] data A pointer to the raw data
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] prevLayer A pointer to the previous layer
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		AuthenticationHeaderLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : Layer(data, dataLen, prevLayer, packet) { m_Protocol = AuthenticationHeader; }
+		AuthenticationHeaderLayer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: Layer(data, dataLen, prevLayer, packet)
+		{
+			m_Protocol = AuthenticationHeader;
+		}
 
 		/**
-		 * Get a pointer to the raw AH header. Notice this points directly to the data, so every change will change the actual packet data
+		 * Get a pointer to the raw AH header. Notice this points directly to the data, so every change will change the
+		 * actual packet data
 		 * @return A pointer to the ipsec_authentication_header
 		 */
-		ipsec_authentication_header* getAHHeader() const { return (ipsec_authentication_header*)m_Data; }
+		ipsec_authentication_header *getAHHeader() const { return (ipsec_authentication_header *)m_Data; }
 
 		/**
 		 * @return The Security Parameters Index (SPI) field value
@@ -83,7 +88,7 @@ namespace pcpp
 		/**
 		 * @return A pointer to the raw data of the Integrity Check Value (ICV)
 		 */
-		uint8_t* getICVBytes() const;
+		uint8_t *getICVBytes() const;
 
 		/**
 		 * @return The value of the Integrity Check Value (ICV) as a hex string
@@ -96,17 +101,18 @@ namespace pcpp
 		 * @param[in] dataLen The length of byte stream
 		 * @return True if the data is valid and can represent an AuthenticationHeader layer
 		 */
-		static inline bool isDataValid(const uint8_t* data, size_t dataLen);
+		static inline bool isDataValid(const uint8_t *data, size_t dataLen);
 
 		// implement abstract methods
 
 		/**
 		 * @return The size of the AH header
 		 */
-		size_t getHeaderLen() const { return 4*(getAHHeader()->payloadLen + 2); }
+		size_t getHeaderLen() const { return 4 * (getAHHeader()->payloadLen + 2); }
 
 		/**
-		 * Currently identifies the following next layers: UdpLayer, TcpLayer, IPv4Layer, IPv6Layer and ESPLayer. Otherwise sets PayloadLayer
+		 * Currently identifies the following next layers: UdpLayer, TcpLayer, IPv4Layer, IPv6Layer and ESPLayer.
+		 * Otherwise sets PayloadLayer
 		 */
 		void parseNextLayer();
 
@@ -119,12 +125,10 @@ namespace pcpp
 
 		OsiModelLayer getOsiModelLayer() const { return OsiModelNetworkLayer; }
 
-	private:
+	  private:
 		// this layer supports parsing only
 		AuthenticationHeaderLayer() {}
 	};
-
-
 
 	/**
 	 * @class ESPLayer
@@ -132,16 +136,20 @@ namespace pcpp
 	 */
 	class ESPLayer : public Layer
 	{
-	public:
-		 /** A constructor that creates the layer from an existing packet raw data
+	  public:
+		/** A constructor that creates the layer from an existing packet raw data
 		 * @param[in] data A pointer to the raw data
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] prevLayer A pointer to the previous layer
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		ESPLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : Layer(data, dataLen, prevLayer, packet) { m_Protocol = ESP; }
+		ESPLayer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: Layer(data, dataLen, prevLayer, packet)
+		{
+			m_Protocol = ESP;
+		}
 
-		ipsec_esp* getESPHeader() const { return (ipsec_esp*)m_Data; }
+		ipsec_esp *getESPHeader() const { return (ipsec_esp *)m_Data; }
 
 		/**
 		 * @return The Security Parameters Index (SPI) field value
@@ -159,7 +167,7 @@ namespace pcpp
 		 * @param[in] dataLen The length of byte stream
 		 * @return True if the data is valid and can represent an ESP layer
 		 */
-		static inline bool isDataValid(const uint8_t* data, size_t dataLen);
+		static inline bool isDataValid(const uint8_t *data, size_t dataLen);
 
 		// implement abstract methods
 
@@ -182,15 +190,14 @@ namespace pcpp
 
 		OsiModelLayer getOsiModelLayer() const { return OsiModelTransportLayer; }
 
-	private:
+	  private:
 		// this layer supports parsing only
 		ESPLayer() {}
 	};
 
-
 	// implementation of inline methods
 
-	bool AuthenticationHeaderLayer::isDataValid(const uint8_t* data, size_t dataLen)
+	bool AuthenticationHeaderLayer::isDataValid(const uint8_t *data, size_t dataLen)
 	{
 		if (dataLen < sizeof(ipsec_authentication_header))
 			return false;
@@ -202,8 +209,5 @@ namespace pcpp
 		return true;
 	}
 
-	bool ESPLayer::isDataValid(const uint8_t* data, size_t dataLen)
-	{
-		return data && dataLen >= sizeof(ipsec_esp);
-	}
-}
+	bool ESPLayer::isDataValid(const uint8_t *data, size_t dataLen) { return data && dataLen >= sizeof(ipsec_esp); }
+} // namespace pcpp

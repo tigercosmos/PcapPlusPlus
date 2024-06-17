@@ -13,7 +13,7 @@ namespace pcpp
 	{
 		std::unique_ptr<pcap_if_t, PcapFreeAllDevsDeleter> getAllLocalPcapDevices()
 		{
-			pcap_if_t* interfaceListRaw;
+			pcap_if_t *interfaceListRaw;
 			std::array<char, PCAP_ERRBUF_SIZE> errbuf;
 			int err = pcap_findalldevs(&interfaceListRaw, errbuf.data());
 			if (err < 0)
@@ -23,5 +23,5 @@ namespace pcpp
 			// Assigns the raw pointer to the smart pointer with specialized deleter.
 			return std::unique_ptr<pcap_if_t, internal::PcapFreeAllDevsDeleter>(interfaceListRaw);
 		}
-	}
-}
+	} // namespace internal
+} // namespace pcpp

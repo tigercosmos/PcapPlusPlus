@@ -12,7 +12,7 @@
 #include "DnsLayer.h"
 #include "PcapFileDevice.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	// Packet Editing
 	// ~~~~~~~~~~~~~~
@@ -50,12 +50,12 @@ int main(int argc, char* argv[])
 	pcpp::Packet parsedPacket(&rawPacket);
 
 	// now let's get the Ethernet layer
-	auto* ethernetLayer = parsedPacket.getLayerOfType<pcpp::EthLayer>();
+	auto *ethernetLayer = parsedPacket.getLayerOfType<pcpp::EthLayer>();
 	// change the source dest MAC address
 	ethernetLayer->setDestMac(pcpp::MacAddress("aa:bb:cc:dd:ee:ff"));
 
 	// let's get the IPv4 layer
-	auto* ipLayer = parsedPacket.getLayerOfType<pcpp::IPv4Layer>();
+	auto *ipLayer = parsedPacket.getLayerOfType<pcpp::IPv4Layer>();
 	// change source IP address
 	ipLayer->setSrcIPv4Address(pcpp::IPv4Address("1.1.1.1"));
 	// change IP ID
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 	ipLayer->getIPv4Header()->timeToLive = 12;
 
 	// let's get the TCP layer
-	auto* tcpLayer = parsedPacket.getLayerOfType<pcpp::TcpLayer>();
+	auto *tcpLayer = parsedPacket.getLayerOfType<pcpp::TcpLayer>();
 	// change source port
 	tcpLayer->getTcpHeader()->portSrc = pcpp::hostToNet16(12345);
 	// add URG flag
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
 	tcpLayer->insertTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TcpOptionEnumType::Mss, (uint16_t)1460));
 
 	// let's get the HTTP layer
-	auto* httpRequestLayer = parsedPacket.getLayerOfType<pcpp::HttpRequestLayer>();
+	auto *httpRequestLayer = parsedPacket.getLayerOfType<pcpp::HttpRequestLayer>();
 	// change the request method from GET to TRACE
 	httpRequestLayer->getFirstLine()->setMethod(pcpp::HttpRequestLayer::HttpTRACE);
 	// change host to www.google.com
@@ -83,7 +83,8 @@ int main(int argc, char* argv[])
 	// remove cookie field
 	httpRequestLayer->removeField(PCPP_HTTP_COOKIE_FIELD);
 	// add x-forwarded-for field
-	pcpp::HeaderField* xForwardedForField = httpRequestLayer->insertField(httpRequestLayer->getFieldByName(PCPP_HTTP_HOST_FIELD), "X-Forwarded-For", "1.1.1.1");
+	pcpp::HeaderField *xForwardedForField = httpRequestLayer->insertField(
+		httpRequestLayer->getFieldByName(PCPP_HTTP_HOST_FIELD), "X-Forwarded-For", "1.1.1.1");
 	// add cache-control field
 	httpRequestLayer->insertField(xForwardedForField, "Cache-Control", "max-age=0");
 
@@ -103,7 +104,6 @@ int main(int argc, char* argv[])
 		writer.writePacket(*(parsedPacket.getRawPacket()));
 		writer.close();
 	}
-
 
 	// Packet Creation
 	// ~~~~~~~~~~~~~~~

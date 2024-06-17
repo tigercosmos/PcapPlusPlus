@@ -14,7 +14,6 @@
 DISABLE_WARNING_PUSH
 DISABLE_WARNING_DEPRECATED
 
-
 PTF_TEST_CASE(TcpPacketNoOptionsParsing)
 {
 	timeval time;
@@ -26,7 +25,7 @@ PTF_TEST_CASE(TcpPacketNoOptionsParsing)
 	PTF_ASSERT_TRUE(tcpPacketNoOptions.isPacketOfType(pcpp::IPv4));
 	PTF_ASSERT_TRUE(tcpPacketNoOptions.isPacketOfType(pcpp::TCP));
 
-	pcpp::TcpLayer* tcpLayer = tcpPacketNoOptions.getLayerOfType<pcpp::TcpLayer>();
+	pcpp::TcpLayer *tcpLayer = tcpPacketNoOptions.getLayerOfType<pcpp::TcpLayer>();
 	PTF_ASSERT_NOT_NULL(tcpLayer);
 
 	PTF_ASSERT_EQUAL(tcpLayer->getDstPort(), 60388);
@@ -51,20 +50,18 @@ PTF_TEST_CASE(TcpPacketNoOptionsParsing)
 	// TCP options
 	PTF_ASSERT_EQUAL(tcpLayer->getTcpOptionCount(), 0);
 
-	//TODO: remove deprecated
+	// TODO: remove deprecated
 	PTF_ASSERT_TRUE(tcpLayer->getTcpOption(pcpp::PCPP_TCPOPT_NOP).isNull());
 	PTF_ASSERT_TRUE(tcpLayer->getTcpOption(pcpp::PCPP_TCPOPT_TIMESTAMP).isNull());
-	//end deprecated
+	// end deprecated
 
 	PTF_ASSERT_TRUE(tcpLayer->getTcpOption(pcpp::TcpOptionEnumType::Nop).isNull());
 	PTF_ASSERT_TRUE(tcpLayer->getTcpOption(pcpp::TcpOptionEnumType::Timestamp).isNull());
 
-	pcpp::Layer* afterTcpLayer = tcpLayer->getNextLayer();
+	pcpp::Layer *afterTcpLayer = tcpLayer->getNextLayer();
 	PTF_ASSERT_NOT_NULL(afterTcpLayer);
 	PTF_ASSERT_EQUAL(afterTcpLayer->getProtocol(), pcpp::HTTPResponse, enum);
 } // TcpPacketNoOptionsParsing
-
-
 
 PTF_TEST_CASE(TcpPacketWithOptionsParsing)
 {
@@ -77,7 +74,7 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing)
 	PTF_ASSERT_TRUE(tcpPacketWithOptions.isPacketOfType(pcpp::IPv4));
 	PTF_ASSERT_TRUE(tcpPacketWithOptions.isPacketOfType(pcpp::TCP));
 
-	pcpp::TcpLayer* tcpLayer = tcpPacketWithOptions.getLayerOfType<pcpp::TcpLayer>();
+	pcpp::TcpLayer *tcpLayer = tcpPacketWithOptions.getLayerOfType<pcpp::TcpLayer>();
 	PTF_ASSERT_NOT_NULL(tcpLayer);
 
 	PTF_ASSERT_EQUAL(tcpLayer->getSrcPort(), 44147);
@@ -90,7 +87,7 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing)
 	// TCP options
 	PTF_ASSERT_EQUAL(tcpLayer->getTcpOptionCount(), 3);
 
-	//TODO: remove deprecated
+	// TODO: remove deprecated
 	PTF_ASSERT_TRUE(!tcpLayer->getTcpOption(pcpp::PCPP_TCPOPT_NOP).isNull());
 	pcpp::TcpOption timestampOptionData = tcpLayer->getTcpOption(pcpp::PCPP_TCPOPT_TIMESTAMP);
 	PTF_ASSERT_TRUE(!timestampOptionData.isNull());
@@ -99,7 +96,7 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing)
 	uint32_t tsEchoReply = timestampOptionData.getValueAs<uint32_t>(4);
 	PTF_ASSERT_EQUAL(tsValue, htobe32(195102));
 	PTF_ASSERT_EQUAL(tsEchoReply, htobe32(3555729271UL));
-	//end deprecated
+	// end deprecated
 
 	PTF_ASSERT_TRUE(!tcpLayer->getTcpOption(pcpp::TcpOptionEnumType::Nop).isNull());
 	pcpp::TcpOption timestampOptionData2 = tcpLayer->getTcpOption(pcpp::TcpOptionEnumType::Timestamp);
@@ -120,12 +117,12 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing2)
 
 	pcpp::Packet tcpPacketWithOptions(&rawPacket1);
 
-	pcpp::TcpLayer* tcpLayer = tcpPacketWithOptions.getLayerOfType<pcpp::TcpLayer>();
+	pcpp::TcpLayer *tcpLayer = tcpPacketWithOptions.getLayerOfType<pcpp::TcpLayer>();
 	PTF_ASSERT_NOT_NULL(tcpLayer);
 
 	PTF_ASSERT_EQUAL(tcpLayer->getTcpOptionCount(), 5);
 
-	//TODO: remove deprecated
+	// TODO: remove deprecated
 	pcpp::TcpOption mssOption = tcpLayer->getTcpOption(pcpp::TCPOPT_MSS);
 	pcpp::TcpOption sackPermOption = tcpLayer->getTcpOption(pcpp::TCPOPT_SACK_PERM);
 	pcpp::TcpOption windowScaleOption = tcpLayer->getTcpOption(pcpp::PCPP_TCPOPT_WINDOW);
@@ -146,7 +143,7 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing2)
 	PTF_ASSERT_EQUAL(sackPermOption.getValueAs<uint32_t>(), 0);
 	PTF_ASSERT_EQUAL(mssOption.getValueAs<uint32_t>(), 0);
 	PTF_ASSERT_EQUAL(mssOption.getValueAs<uint16_t>(1), 0);
-	//end deprecated
+	// end deprecated
 
 	pcpp::TcpOption mssOption2 = tcpLayer->getTcpOption(pcpp::TcpOptionEnumType::Mss);
 	pcpp::TcpOption sackPermOption2 = tcpLayer->getTcpOption(pcpp::TcpOptionEnumType::SackPerm);
@@ -169,7 +166,7 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing2)
 	PTF_ASSERT_EQUAL(mssOption2.getValueAs<uint32_t>(), 0);
 	PTF_ASSERT_EQUAL(mssOption2.getValueAs<uint16_t>(1), 0);
 
-	//TODO: remove deprecated
+	// TODO: remove deprecated
 	pcpp::TcpOption curOpt = tcpLayer->getFirstTcpOption();
 	PTF_ASSERT_TRUE(curOpt.isNotNull() && curOpt.getTcpOptionType() == pcpp::TCPOPT_MSS);
 	curOpt = tcpLayer->getNextTcpOption(curOpt);
@@ -180,7 +177,7 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing2)
 	PTF_ASSERT_TRUE(curOpt.isNotNull() && curOpt.getTcpOptionType() == pcpp::PCPP_TCPOPT_NOP);
 	curOpt = tcpLayer->getNextTcpOption(curOpt);
 	PTF_ASSERT_TRUE(curOpt.isNotNull() && curOpt.getTcpOptionType() == pcpp::PCPP_TCPOPT_WINDOW);
-	//end deprecated
+	// end deprecated
 
 	curOpt = tcpLayer->getFirstTcpOption();
 	PTF_ASSERT_TRUE(curOpt.isNotNull() && curOpt.getTcpOptionEnumType() == pcpp::TcpOptionEnumType::Mss);
@@ -195,8 +192,6 @@ PTF_TEST_CASE(TcpPacketWithOptionsParsing2)
 	curOpt = tcpLayer->getNextTcpOption(curOpt);
 	PTF_ASSERT_TRUE(curOpt.isNull());
 } // TcpPacketWithOptionsParsing2
-
-
 
 PTF_TEST_CASE(TcpMalformedPacketParsing)
 {
@@ -232,15 +227,20 @@ PTF_TEST_CASE(TcpPacketCreation)
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 24);
 	PTF_ASSERT_TRUE(tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionBuilder::NOP)).isNotNull());
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 24);
-	PTF_ASSERT_TRUE(tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::PCPP_TCPOPT_TIMESTAMP, nullptr, PCPP_TCPOLEN_TIMESTAMP-2)).isNotNull());
+	PTF_ASSERT_TRUE(
+		tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::PCPP_TCPOPT_TIMESTAMP, nullptr, PCPP_TCPOLEN_TIMESTAMP - 2))
+			.isNotNull());
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 32);
 
-	PTF_ASSERT_TRUE(tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionBuilder::NopEolOptionEnumType::Nop)).isNotNull());
-	PTF_ASSERT_TRUE(tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionEnumType::Window, nullptr, PCPP_TCPOLEN_WINDOW-2)).isNotNull());
+	PTF_ASSERT_TRUE(
+		tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionBuilder::NopEolOptionEnumType::Nop)).isNotNull());
+	PTF_ASSERT_TRUE(
+		tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionEnumType::Window, nullptr, PCPP_TCPOLEN_WINDOW - 2))
+			.isNotNull());
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 36);
 	PTF_ASSERT_EQUAL(tcpLayer.getTcpOptionCount(), 5);
 
-	uint8_t payloadData[9] = { 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82 };
+	uint8_t payloadData[9] = {0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82};
 	pcpp::PayloadLayer payloadLayer(payloadData, 9);
 
 	pcpp::Packet tcpPacket(1);
@@ -269,10 +269,8 @@ PTF_TEST_CASE(TcpPacketCreation)
 
 	PTF_ASSERT_BUF_COMPARE(tcpPacket.getRawPacket()->getRawData(), buffer1, bufferLength1);
 
-	delete [] buffer1;
+	delete[] buffer1;
 } // TcpPacketCreation
-
-
 
 PTF_TEST_CASE(TcpPacketCreation2)
 {
@@ -297,17 +295,21 @@ PTF_TEST_CASE(TcpPacketCreation2)
 	PTF_ASSERT_TRUE(tcpLayer.addTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TCPOPT_MSS, (uint16_t)1460)).isNotNull());
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 28);
 
-	pcpp::TcpOption tsOption = tcpLayer.addTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::PCPP_TCPOPT_TIMESTAMP, nullptr, PCPP_TCPOLEN_TIMESTAMP-2), pcpp::TCPOPT_MSS);
+	pcpp::TcpOption tsOption = tcpLayer.addTcpOptionAfter(
+		pcpp::TcpOptionBuilder(pcpp::PCPP_TCPOPT_TIMESTAMP, nullptr, PCPP_TCPOLEN_TIMESTAMP - 2), pcpp::TCPOPT_MSS);
 	PTF_ASSERT_TRUE(tsOption.isNotNull());
 	tsOption.setValue<uint32_t>(htobe32(197364));
 	tsOption.setValue<uint32_t>(0, 4);
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 36);
 
-	pcpp::TcpOption winScaleOption = tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::PCPP_TCPOPT_WINDOW, (uint8_t)4));
+	pcpp::TcpOption winScaleOption =
+		tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::PCPP_TCPOPT_WINDOW, (uint8_t)4));
 	PTF_ASSERT_TRUE(winScaleOption.isNotNull());
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 40);
 
-	PTF_ASSERT_TRUE(tcpLayer.addTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TCPOPT_SACK_PERM, nullptr, 0), pcpp::TCPOPT_MSS).isNotNull());
+	PTF_ASSERT_TRUE(
+		tcpLayer.addTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TCPOPT_SACK_PERM, nullptr, 0), pcpp::TCPOPT_MSS)
+			.isNotNull());
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 40);
 
 	PTF_ASSERT_EQUAL(tcpLayer.getTcpOptionCount(), 5);
@@ -325,11 +327,18 @@ PTF_TEST_CASE(TcpPacketCreation2)
 
 	PTF_ASSERT_BUF_COMPARE(tcpPacket.getRawPacket()->getRawData(), buffer1, bufferLength1);
 
-	pcpp::TcpOption qsOption = tcpLayer.addTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TCPOPT_QS, nullptr, PCPP_TCPOLEN_QS), pcpp::TCPOPT_MSS);
+	pcpp::TcpOption qsOption =
+		tcpLayer.addTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TCPOPT_QS, nullptr, PCPP_TCPOLEN_QS), pcpp::TCPOPT_MSS);
 	PTF_ASSERT_TRUE(qsOption.isNotNull());
 	PTF_ASSERT_TRUE(qsOption.setValue(htobe32(9999)));
-	PTF_ASSERT_TRUE(tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionEnumType::Snack, static_cast<uint32_t>(htobe32(1000)))).isNotNull());
-	PTF_ASSERT_TRUE(tcpLayer.insertTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TcpOptionBuilder::NopEolOptionEnumType::Nop), pcpp::TcpOptionEnumType::Timestamp).isNotNull());
+	PTF_ASSERT_TRUE(
+		tcpLayer
+			.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TcpOptionEnumType::Snack, static_cast<uint32_t>(htobe32(1000))))
+			.isNotNull());
+	PTF_ASSERT_TRUE(tcpLayer
+						.insertTcpOptionAfter(pcpp::TcpOptionBuilder(pcpp::TcpOptionBuilder::NopEolOptionEnumType::Nop),
+											  pcpp::TcpOptionEnumType::Timestamp)
+						.isNotNull());
 
 	PTF_ASSERT_EQUAL(tcpLayer.getTcpOptionCount(), 8);
 
@@ -341,7 +350,7 @@ PTF_TEST_CASE(TcpPacketCreation2)
 
 	PTF_ASSERT_BUF_COMPARE(tcpPacket.getRawPacket()->getRawData(), buffer1, bufferLength1);
 
-	delete [] buffer1;
+	delete[] buffer1;
 
 	PTF_ASSERT_TRUE(tcpLayer.removeAllTcpOptions());
 	PTF_ASSERT_EQUAL(tcpLayer.getTcpOptionCount(), 0);
@@ -349,7 +358,8 @@ PTF_TEST_CASE(TcpPacketCreation2)
 	PTF_ASSERT_EQUAL(tcpLayer.getHeaderLen(), 20);
 	PTF_ASSERT_TRUE(tcpLayer.getTcpOption(pcpp::PCPP_TCPOPT_TIMESTAMP).isNull());
 
-	pcpp::TcpOption tcpSnackOption = tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TCPOPT_SNACK, nullptr, PCPP_TCPOLEN_SNACK));
+	pcpp::TcpOption tcpSnackOption =
+		tcpLayer.addTcpOption(pcpp::TcpOptionBuilder(pcpp::TCPOPT_SNACK, nullptr, PCPP_TCPOLEN_SNACK));
 	PTF_ASSERT_TRUE(tcpSnackOption.isNotNull());
 	PTF_ASSERT_TRUE(tcpSnackOption.setValue(htobe32(1000)));
 } // TcpPacketCreation2
@@ -362,13 +372,13 @@ PTF_TEST_CASE(TcpChecksumInvalidRead)
 	m[2] = 0xF3;
 
 	pcpp::ScalarBuffer<uint16_t> vec[1];
-	vec[0].buffer = reinterpret_cast<uint16_t*>(m);
+	vec[0].buffer = reinterpret_cast<uint16_t *>(m);
 	vec[0].len = 3;
 
 	uint16_t c = pcpp::computeChecksum(vec, 1);
 	PTF_ASSERT_EQUAL(c, 0xbedU);
 
-	delete [] m;
+	delete[] m;
 } // TcpChecksumInvalidRead
 
 PTF_TEST_CASE(TcpChecksumMultiBuffer)

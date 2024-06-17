@@ -8,17 +8,18 @@
 #include "PayloadLayer.h"
 #include "VrrpLayer.h"
 
-namespace pcpp {
+namespace pcpp
+{
 
-#define VRRP_PRIO_STOP      0     /* priority to stop  */
-#define VRRP_PRIO_DEF       100   /* default priority */
-#define VRRP_PRIO_OWNER     255   /* priority of the ip owner */
+#define VRRP_PRIO_STOP 0	/* priority to stop  */
+#define VRRP_PRIO_DEF 100	/* default priority */
+#define VRRP_PRIO_OWNER 255 /* priority of the ip owner */
 
 #define VRRP_PACKET_FIX_LEN 8
 #define VRRP_PACKET_MAX_IP_ADDRESS_NUM 255
 
-#define VRRP_V2_VERSION     2
-#define VRRP_V3_VERSION     3
+#define VRRP_V2_VERSION 2
+#define VRRP_V3_VERSION 3
 
 	/*************
 	 * VrrpLayer
@@ -52,16 +53,16 @@ namespace pcpp {
 			return UnknownProtocol;
 		}
 
-		auto *vrrpPacketCommon = (vrrp_header *) data;
+		auto *vrrpPacketCommon = (vrrp_header *)data;
 		uint8_t version = vrrpPacketCommon->version;
 		switch (version)
 		{
-			case VRRP_V2_VERSION:
-				return VRRPv2;
-			case VRRP_V3_VERSION:
-				return VRRPv3;
-			default:
-				return UnknownProtocol;
+		case VRRP_V2_VERSION:
+			return VRRPv2;
+		case VRRP_V3_VERSION:
+			return VRRPv3;
+		default:
+			return UnknownProtocol;
 		}
 	}
 
@@ -96,29 +97,28 @@ namespace pcpp {
 	{
 		switch (getVrrpHeader()->priority)
 		{
-			case VRRP_PRIO_DEF:
-				return VrrpLayer::VrrpPriority::Default;
+		case VRRP_PRIO_DEF:
+			return VrrpLayer::VrrpPriority::Default;
 
-			case VRRP_PRIO_STOP:
-				return VrrpLayer::VrrpPriority::Stop;
+		case VRRP_PRIO_STOP:
+			return VrrpLayer::VrrpPriority::Stop;
 
-			case VRRP_PRIO_OWNER:
-				return VrrpLayer::VrrpPriority::Owner;
+		case VRRP_PRIO_OWNER:
+			return VrrpLayer::VrrpPriority::Owner;
 
-			default:
-				return VrrpLayer::VrrpPriority::Other;
+		default:
+			return VrrpLayer::VrrpPriority::Other;
 		}
 	}
 
 	std::string VrrpLayer::toString() const
 	{
-		return "VRRP v" + std::to_string(getVersion()) + " Layer, virtual router ID: " + std::to_string(getVirtualRouterID()) + ", IP address count: " + std::to_string(getIPAddressesCount());
+		return "VRRP v" + std::to_string(getVersion()) +
+			   " Layer, virtual router ID: " + std::to_string(getVirtualRouterID()) +
+			   ", IP address count: " + std::to_string(getIPAddressesCount());
 	}
 
-	uint8_t VrrpLayer::getVersion() const
-	{
-		return getVrrpHeader()->version;
-	}
+	uint8_t VrrpLayer::getVersion() const { return getVrrpHeader()->version; }
 
 	VrrpLayer::VrrpType VrrpLayer::getType() const
 	{
@@ -130,40 +130,19 @@ namespace pcpp {
 		return VrrpType_Unknown;
 	}
 
-	uint8_t VrrpLayer::getVirtualRouterID() const
-	{
-		return getVrrpHeader()->vrId;
-	}
+	uint8_t VrrpLayer::getVirtualRouterID() const { return getVrrpHeader()->vrId; }
 
-	void VrrpLayer::setVirtualRouterID(uint8_t virtualRouterID)
-	{
-		getVrrpHeader()->vrId = virtualRouterID;
-	}
+	void VrrpLayer::setVirtualRouterID(uint8_t virtualRouterID) { getVrrpHeader()->vrId = virtualRouterID; }
 
-	uint8_t VrrpLayer::getPriority() const
-	{
-		return getVrrpHeader()->priority;
-	}
+	uint8_t VrrpLayer::getPriority() const { return getVrrpHeader()->priority; }
 
-	void VrrpLayer::setPriority(uint8_t priority)
-	{
-		getVrrpHeader()->priority = priority;
-	}
+	void VrrpLayer::setPriority(uint8_t priority) { getVrrpHeader()->priority = priority; }
 
-	uint16_t VrrpLayer::getChecksum() const
-	{
-		return be16toh(getVrrpHeader()->checksum);
-	}
+	uint16_t VrrpLayer::getChecksum() const { return be16toh(getVrrpHeader()->checksum); }
 
-	void VrrpLayer::calculateAndSetChecksum()
-	{
-		getVrrpHeader()->checksum = htobe16(calculateChecksum());
-	}
+	void VrrpLayer::calculateAndSetChecksum() { getVrrpHeader()->checksum = htobe16(calculateChecksum()); }
 
-	uint8_t VrrpLayer::getIPAddressesCount() const
-	{
-		return getVrrpHeader()->ipAddrCount;
-	}
+	uint8_t VrrpLayer::getIPAddressesCount() const { return getVrrpHeader()->ipAddrCount; }
 
 	std::vector<IPAddress> VrrpLayer::getIPAddresses() const
 	{
@@ -179,7 +158,7 @@ namespace pcpp {
 		return ipAddressesVec;
 	}
 
-	uint8_t* VrrpLayer::getFirstIPAddressPtr() const
+	uint8_t *VrrpLayer::getFirstIPAddressPtr() const
 	{
 		size_t ipAddressLen = getIPAddressLen();
 
@@ -192,7 +171,7 @@ namespace pcpp {
 		return (m_Data + VRRP_PACKET_FIX_LEN);
 	}
 
-	uint8_t *VrrpLayer::getNextIPAddressPtr(uint8_t* ipAddressPtr) const
+	uint8_t *VrrpLayer::getNextIPAddressPtr(uint8_t *ipAddressPtr) const
 	{
 		if (ipAddressPtr == nullptr)
 		{
@@ -202,7 +181,7 @@ namespace pcpp {
 		size_t ipAddressLen = getIPAddressLen();
 
 		// prev virtual IP address was the last virtual IP address
-		if (ipAddressPtr + ipAddressLen - m_Data >= (int) getHeaderLen())
+		if (ipAddressPtr + ipAddressLen - m_Data >= (int)getHeaderLen())
 		{
 			return nullptr;
 		}
@@ -212,13 +191,13 @@ namespace pcpp {
 
 	bool VrrpLayer::addIPAddressesAt(const std::vector<IPAddress> &ipAddresses, int offset)
 	{
-		if (offset > (int) getHeaderLen())
+		if (offset > (int)getHeaderLen())
 		{
 			PCPP_LOG_ERROR("Cannot add virtual IP address offset(" << offset << ") is out of layer bounds");
 			return false;
 		}
 
-		for (auto ipAddress: ipAddresses)
+		for (auto ipAddress : ipAddresses)
 		{
 			if (!isIPAddressValid(ipAddress))
 			{
@@ -248,7 +227,7 @@ namespace pcpp {
 
 		size_t ipAddrOffset = 0;
 		uint8_t *newIpAddresses = getData() + offset;
-		for (auto ipAddress: ipAddresses)
+		for (auto ipAddress : ipAddresses)
 		{
 			copyIPAddressToData(newIpAddresses + ipAddrOffset, ipAddress);
 			ipAddrOffset += ipAddrLen;
@@ -261,7 +240,7 @@ namespace pcpp {
 
 	bool VrrpLayer::addIPAddresses(const std::vector<IPAddress> &ipAddresses)
 	{
-		return addIPAddressesAt(ipAddresses, (int) getHeaderLen());
+		return addIPAddressesAt(ipAddresses, (int)getHeaderLen());
 	}
 
 	bool VrrpLayer::addIPAddress(const IPAddress &ipAddress)
@@ -269,12 +248,12 @@ namespace pcpp {
 		std::vector<IPAddress> ipAddresses;
 		ipAddresses.push_back(ipAddress);
 
-		return addIPAddressesAt(ipAddresses, (int) getHeaderLen());
+		return addIPAddressesAt(ipAddresses, (int)getHeaderLen());
 	}
 
 	bool VrrpLayer::removeIPAddressAtIndex(int index)
 	{
-		int ipAddressCount = (int) getIPAddressesCount();
+		int ipAddressCount = (int)getIPAddressesCount();
 
 		if (index < 0 || index >= ipAddressCount)
 		{
@@ -291,7 +270,7 @@ namespace pcpp {
 			if (curIpAddressPtr == nullptr)
 			{
 				PCPP_LOG_ERROR("Cannot remove virtual IP address at index "
-									   << index << ", cannot find virtual IP address at index " << i);
+							   << index << ", cannot find virtual IP address at index " << i);
 				return false;
 			}
 
@@ -299,7 +278,7 @@ namespace pcpp {
 			curIpAddressPtr = getNextIPAddressPtr(curIpAddressPtr);
 		}
 
-		if (!shortenLayer((int) offset, ipAddressLen))
+		if (!shortenLayer((int)offset, ipAddressLen))
 		{
 			PCPP_LOG_ERROR("Cannot remove virtual IP address at index " << index << ", cannot shorted layer");
 			return false;
@@ -348,7 +327,7 @@ namespace pcpp {
 	{
 		if (getAddressType() == IPAddress::IPv4AddressType)
 		{
-			return IPv4Address(*((uint32_t *) data));
+			return IPv4Address(*((uint32_t *)data));
 		}
 
 		return IPv6Address(data);
@@ -370,21 +349,16 @@ namespace pcpp {
 		return true;
 	}
 
-	IPAddress::AddressType VrrpLayer::getAddressType() const
-	{
-		return m_AddressType;
-	}
+	IPAddress::AddressType VrrpLayer::getAddressType() const { return m_AddressType; }
 
-	void VrrpLayer::setAddressType(IPAddress::AddressType addressType)
-	{
-		m_AddressType = addressType;
-	}
+	void VrrpLayer::setAddressType(IPAddress::AddressType addressType) { m_AddressType = addressType; }
 
 	/*************
 	 * Vrrpv2Layer
 	 *************/
 
-	VrrpV2Layer::VrrpV2Layer(uint8_t virtualRouterId, uint8_t priority, uint8_t advInt, uint8_t authType) : VrrpLayer(VRRPv2, virtualRouterId, priority)
+	VrrpV2Layer::VrrpV2Layer(uint8_t virtualRouterId, uint8_t priority, uint8_t advInt, uint8_t authType)
+		: VrrpLayer(VRRPv2, virtualRouterId, priority)
 	{
 		setAdvInt(advInt);
 		setAuthType(authType);
@@ -404,7 +378,7 @@ namespace pcpp {
 	uint8_t VrrpV2Layer::getAdvInt() const
 	{
 		uint16_t authAdvInt = getVrrpHeader()->authTypeAdvInt;
-		auto authAdvIntPtr = (vrrpv2_auth_adv *) (&authAdvInt);
+		auto authAdvIntPtr = (vrrpv2_auth_adv *)(&authAdvInt);
 		return authAdvIntPtr->advInt;
 	}
 
@@ -417,7 +391,7 @@ namespace pcpp {
 	uint8_t VrrpV2Layer::getAuthType() const
 	{
 		uint16_t authAdvInt = getVrrpHeader()->authTypeAdvInt;
-		auto *authAdvIntPtr = (vrrpv2_auth_adv *) (&authAdvInt);
+		auto *authAdvIntPtr = (vrrpv2_auth_adv *)(&authAdvInt);
 		return authAdvIntPtr->authType;
 	}
 
@@ -436,7 +410,7 @@ namespace pcpp {
 
 		auto vrrpHeader = getVrrpHeader();
 		ScalarBuffer<uint16_t> buffer = {};
-		buffer.buffer = (uint16_t *) vrrpHeader;
+		buffer.buffer = (uint16_t *)vrrpHeader;
 		buffer.len = getHeaderLen();
 
 		uint16_t currChecksumValue = vrrpHeader->checksum;
@@ -451,8 +425,9 @@ namespace pcpp {
 	 * Vrrpv3Layer
 	 *************/
 
-	VrrpV3Layer::VrrpV3Layer(IPAddress::AddressType addressType, uint8_t virtualRouterId, uint8_t priority, uint16_t maxAdvInt) : VrrpLayer(
-			VRRPv3, virtualRouterId, priority)
+	VrrpV3Layer::VrrpV3Layer(IPAddress::AddressType addressType, uint8_t virtualRouterId, uint8_t priority,
+							 uint16_t maxAdvInt)
+		: VrrpLayer(VRRPv3, virtualRouterId, priority)
 	{
 		setAddressType(addressType);
 		setMaxAdvInt(maxAdvInt);
@@ -461,7 +436,7 @@ namespace pcpp {
 	uint16_t VrrpV3Layer::getMaxAdvInt() const
 	{
 		uint16_t authAdvInt = getVrrpHeader()->authTypeAdvInt;
-		auto rsvdAdv = (vrrpv3_rsvd_adv *) (&authAdvInt);
+		auto rsvdAdv = (vrrpv3_rsvd_adv *)(&authAdvInt);
 		return be16toh(rsvdAdv->maxAdvInt);
 	}
 
@@ -480,7 +455,8 @@ namespace pcpp {
 		auto *ipLayer = m_Packet->getLayerOfType<pcpp::IPLayer>();
 		if (ipLayer == nullptr)
 		{
-			PCPP_LOG_ERROR("Calculate checksum failed, for can not get IPLayer" << "");
+			PCPP_LOG_ERROR("Calculate checksum failed, for can not get IPLayer"
+						   << "");
 			return 0;
 		}
 
@@ -493,12 +469,12 @@ namespace pcpp {
 		uint16_t checksum;
 		if (getAddressType() == IPAddress::IPv4AddressType)
 		{
-			checksum = computePseudoHdrChecksum((uint8_t *) vrrpHeader, getDataLen(), IPAddress::IPv4AddressType,
+			checksum = computePseudoHdrChecksum((uint8_t *)vrrpHeader, getDataLen(), IPAddress::IPv4AddressType,
 												PACKETPP_IPPROTO_VRRP, srcIPAddr, dstIPAddr);
 		}
 		else
 		{
-			checksum = computePseudoHdrChecksum((uint8_t *) vrrpHeader, getDataLen(), IPAddress::IPv6AddressType,
+			checksum = computePseudoHdrChecksum((uint8_t *)vrrpHeader, getDataLen(), IPAddress::IPv6AddressType,
 												PACKETPP_IPPROTO_VRRP, srcIPAddr, dstIPAddr);
 		}
 
@@ -506,4 +482,4 @@ namespace pcpp {
 
 		return checksum;
 	}
-}
+} // namespace pcpp

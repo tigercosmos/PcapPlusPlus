@@ -8,7 +8,7 @@
 #define ASCII_HYPHEN 0x2d
 #define ASCII_SPACE 0x20
 #define MAX_COMMAND_LENGTH 9 // From SMTP command "STARTTLS" + 1 byte hyphen or space
-#define MIN_PACKET_LENGTH 2 // CRLF
+#define MIN_PACKET_LENGTH 2	 // CRLF
 
 namespace pcpp
 {
@@ -144,7 +144,7 @@ namespace pcpp
 			// Remove XXX- and XXX<SP> since they are delimiters of the protocol where XXX is the usually status code
 			// Check RFC821 (SMTP) Section 3.3 and RFC959 (FTP) Section 4.2
 			auto code = getCommandInternal();
-			auto vDelim = std::vector<std::string> {code + " ", code + "-"};
+			auto vDelim = std::vector<std::string>{code + " ", code + "-"};
 
 			for (const auto &delim : vDelim)
 			{

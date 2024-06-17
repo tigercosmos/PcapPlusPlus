@@ -32,7 +32,7 @@ typedef _decompression_t *light_decompression;
 
 typedef struct light_file_t
 {
-	FILE* file;
+	FILE *file;
 	light_compression compression_context;
 	light_decompression decompression_context;
 

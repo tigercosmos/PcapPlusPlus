@@ -6,7 +6,7 @@
 /**
  * main method of the application
  */
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	// use the IFileReaderDevice interface to automatically identify file type (pcap/pcap-ng)
 	// and create an interface instance that both readers implement
@@ -68,9 +68,9 @@ int main(int argc, char* argv[])
 	}
 
 	// Use lambda to simplify statistics output
-	auto printStats = [](const std::string& writerName, const pcpp::IPcapDevice::PcapStats& stats) {
-		std::cout << "Written " << stats.packetsRecv << " packets successfully to " << writerName
-			<< " and " << stats.packetsDrop << " packets could not be written" << std::endl;
+	auto printStats = [](const std::string &writerName, const pcpp::IPcapDevice::PcapStats &stats) {
+		std::cout << "Written " << stats.packetsRecv << " packets successfully to " << writerName << " and "
+				  << stats.packetsDrop << " packets could not be written" << std::endl;
 	};
 
 	// create the stats object
@@ -78,7 +78,8 @@ int main(int argc, char* argv[])
 
 	// read stats from reader and print them
 	reader->getStatistics(stats);
-	std::cout << "Read " << stats.packetsRecv << " packets successfully and " << stats.packetsDrop << " packets could not be read" << std::endl;
+	std::cout << "Read " << stats.packetsRecv << " packets successfully and " << stats.packetsDrop
+			  << " packets could not be read" << std::endl;
 
 	// read stats from pcap writer and print them
 	pcapWriter.getStatistics(stats);

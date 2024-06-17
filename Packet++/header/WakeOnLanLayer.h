@@ -18,7 +18,7 @@ namespace pcpp
 	class WakeOnLanLayer : public Layer
 	{
 	  private:
-	  	void init(uint16_t len);
+		void init(uint16_t len);
 
 	  public:
 		/**

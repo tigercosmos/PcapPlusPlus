@@ -20,9 +20,10 @@ namespace pcpp
 	 */
 	class IPLayer
 	{
-	protected:
+	  protected:
 		IPLayer() {}
-	public:
+
+	  public:
 		/**
 		 * An abstract method to get the source IP address
 		 * @return An IPAddress object containing the source address
@@ -40,4 +41,4 @@ namespace pcpp
 		 */
 		virtual ~IPLayer() {}
 	};
-}
+} // namespace pcpp

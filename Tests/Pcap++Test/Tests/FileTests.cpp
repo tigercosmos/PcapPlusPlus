@@ -6,17 +6,13 @@
 #include <array>
 #include <fstream>
 
-
 class FileReaderTeardown
 {
-private:
-	pcpp::IFileReaderDevice* m_Reader;
+  private:
+	pcpp::IFileReaderDevice *m_Reader;
 
-public:
-	explicit FileReaderTeardown(pcpp::IFileReaderDevice* reader)
-	{
-		m_Reader = reader;
-	}
+  public:
+	explicit FileReaderTeardown(pcpp::IFileReaderDevice *reader) { m_Reader = reader; }
 
 	~FileReaderTeardown()
 	{
@@ -26,9 +22,6 @@ public:
 		}
 	}
 };
-
-
-
 
 PTF_TEST_CASE(TestPcapFileReadWrite)
 {
@@ -65,7 +58,6 @@ PTF_TEST_CASE(TestPcapFileReadWrite)
 
 		PTF_ASSERT_TRUE(writerDev.writePacket(rawPacket));
 	}
-
 
 	pcpp::IPcapDevice::PcapStats readerStatistics;
 	pcpp::IPcapDevice::PcapStats writerStatistics;
@@ -106,22 +98,28 @@ PTF_TEST_CASE(TestPcapFileReadWrite)
 
 PTF_TEST_CASE(TestPcapFilePrecision)
 {
-	std::array<uint8_t, 16> testPayload = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+	std::array<uint8_t, 16> testPayload = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+										   0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
 	pcpp::RawPacket rawPacketNano(testPayload.data(), testPayload.size(), timespec({1, 1234}), false); // 1.000001234
-	pcpp::RawPacket rawPacketMicro(testPayload.data(), testPayload.size(), timeval({1, 2}), false); // 1.000002000
+	pcpp::RawPacket rawPacketMicro(testPayload.data(), testPayload.size(), timeval({1, 2}), false);	   // 1.000002000
 
 	// Writer precision support should equal to reader precision support
-	PTF_ASSERT_EQUAL(pcpp::PcapFileWriterDevice::isNanoSecondPrecisionSupported(), pcpp::PcapFileReaderDevice::isNanoSecondPrecisionSupported());
+	PTF_ASSERT_EQUAL(pcpp::PcapFileWriterDevice::isNanoSecondPrecisionSupported(),
+					 pcpp::PcapFileReaderDevice::isNanoSecondPrecisionSupported());
 
 	// Write nano precision file
 	pcpp::PcapFileWriterDevice writerDevNano(EXAMPLE_PCAP_NANO_PATH, pcpp::LINKTYPE_ETHERNET, true);
-	PTF_ASSERT_EQUAL(writerDevNano.getTimestampPrecision(), pcpp::PcapFileWriterDevice::isNanoSecondPrecisionSupported()
-																? pcpp::FileTimestampPrecision::Nanoseconds
-																: pcpp::FileTimestampPrecision::Microseconds, enumclass);
+	PTF_ASSERT_EQUAL(writerDevNano.getTimestampPrecision(),
+					 pcpp::PcapFileWriterDevice::isNanoSecondPrecisionSupported()
+						 ? pcpp::FileTimestampPrecision::Nanoseconds
+						 : pcpp::FileTimestampPrecision::Microseconds,
+					 enumclass);
 	PTF_ASSERT_TRUE(writerDevNano.open());
-	PTF_ASSERT_EQUAL(writerDevNano.getTimestampPrecision(), pcpp::PcapFileWriterDevice::isNanoSecondPrecisionSupported()
-																? pcpp::FileTimestampPrecision::Nanoseconds
-																: pcpp::FileTimestampPrecision::Microseconds, enumclass);
+	PTF_ASSERT_EQUAL(writerDevNano.getTimestampPrecision(),
+					 pcpp::PcapFileWriterDevice::isNanoSecondPrecisionSupported()
+						 ? pcpp::FileTimestampPrecision::Nanoseconds
+						 : pcpp::FileTimestampPrecision::Microseconds,
+					 enumclass);
 	PTF_ASSERT_TRUE(writerDevNano.writePacket(rawPacketMicro));
 	PTF_ASSERT_TRUE(writerDevNano.writePacket(rawPacketNano));
 	writerDevNano.close();
@@ -152,7 +150,8 @@ PTF_TEST_CASE(TestPcapFilePrecision)
 
 	PTF_ASSERT_TRUE(readerDevNano.getNextPacket(readPacketNano));
 	PTF_ASSERT_EQUAL(readPacketNano.getPacketTimeStamp().tv_sec, 1);
-	PTF_ASSERT_EQUAL(readPacketNano.getPacketTimeStamp().tv_nsec, pcpp::PcapFileReaderDevice::isNanoSecondPrecisionSupported() ? 1234 : 1000);
+	PTF_ASSERT_EQUAL(readPacketNano.getPacketTimeStamp().tv_nsec,
+					 pcpp::PcapFileReaderDevice::isNanoSecondPrecisionSupported() ? 1234 : 1000);
 
 	readerDevNano.close();
 
@@ -177,7 +176,6 @@ PTF_TEST_CASE(TestPcapFilePrecision)
 
 	readerDevMicro.close();
 } // TestPcapFilePrecision
-
 
 PTF_TEST_CASE(TestPcapSllFileReadWrite)
 {
@@ -232,8 +230,6 @@ PTF_TEST_CASE(TestPcapSllFileReadWrite)
 	writerDev.close();
 } // TestPcapSllFileReadWrite
 
-
-
 PTF_TEST_CASE(TestPcapSll2FileReadWrite)
 {
 	pcpp::PcapFileReaderDevice readerDev(SLL2_PCAP_PATH);
@@ -282,8 +278,6 @@ PTF_TEST_CASE(TestPcapSll2FileReadWrite)
 
 	readerDev.close();
 } // TestPcapSll2FileReadWrite
-
-
 
 PTF_TEST_CASE(TestPcapRawIPFileReadWrite)
 {
@@ -351,8 +345,6 @@ PTF_TEST_CASE(TestPcapRawIPFileReadWrite)
 	writerNgDev.close();
 } // TestPcapRawIPFileReadWrite
 
-
-
 PTF_TEST_CASE(TestPcapFileAppend)
 {
 	// opening the file for the first time just to delete all packets in it
@@ -384,7 +376,7 @@ PTF_TEST_CASE(TestPcapFileAppend)
 	while (readerDev.getNextPacket(rawPacket))
 		counter++;
 
-	PTF_ASSERT_EQUAL(counter, (4631*5));
+	PTF_ASSERT_EQUAL(counter, (4631 * 5));
 
 	pcpp::Logger::getInstance().suppressLogs();
 	pcpp::PcapFileWriterDevice writerDev2(EXAMPLE_PCAP_WRITE_PATH, pcpp::LINKTYPE_LINUX_SLL);
@@ -392,8 +384,6 @@ PTF_TEST_CASE(TestPcapFileAppend)
 	pcpp::Logger::getInstance().enableLogs();
 
 } // TestPcapFileAppend
-
-
 
 PTF_TEST_CASE(TestPcapNgFileReadWrite)
 {
@@ -480,8 +470,6 @@ PTF_TEST_CASE(TestPcapNgFileReadWrite)
 
 } // TestPcapNgFileReadWrite
 
-
-
 PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 {
 	pcpp::PcapNgFileReaderDevice readerDev(EXAMPLE2_PCAPNG_PATH);
@@ -496,10 +484,13 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	PTF_ASSERT_TRUE(readerDev.open());
 	PTF_ASSERT_EQUAL(readerDev.getOS(), "Linux 3.18.1-1-ARCH");
 	PTF_ASSERT_EQUAL(readerDev.getCaptureApplication(), "Dumpcap (Wireshark) 1.99.1 (Git Rev Unknown from unknown)");
-	PTF_ASSERT_EQUAL(readerDev.getCaptureFileComment(), "CLIENT_RANDOM E39B5BF4903C68684E8512FB2F60213E9EE843A0810B4982B607914D8092D482 95A5D39B02693BC1FB39254B179E9293007F6D37C66172B1EE4EF0D5E25CE1DABE878B6143DC3B266883E51A75E99DF9                                                   ");
+	PTF_ASSERT_EQUAL(readerDev.getCaptureFileComment(),
+					 "CLIENT_RANDOM E39B5BF4903C68684E8512FB2F60213E9EE843A0810B4982B607914D8092D482 "
+					 "95A5D39B02693BC1FB39254B179E9293007F6D37C66172B1EE4EF0D5E25CE1DABE878B6143DC3B266883E51A75E99DF9 "
+					 "                                                  ");
 	PTF_ASSERT_EQUAL(readerDev.getHardware(), "");
 
- 	pcpp::PcapNgFileWriterDevice writerDev(EXAMPLE2_PCAPNG_WRITE_PATH);
+	pcpp::PcapNgFileWriterDevice writerDev(EXAMPLE2_PCAPNG_WRITE_PATH);
 	pcpp::PcapNgFileWriterDevice writerCompressDev(EXAMPLE2_PCAPNG_ZSTD_WRITE_PATH, 5);
 
 	// negative tests
@@ -507,8 +498,11 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	writerCompressDev.close();
 	// --------------
 
-	PTF_ASSERT_TRUE(writerDev.open(readerDev.getOS().c_str(), "My Hardware", readerDev.getCaptureApplication().c_str(), "This is a comment in a pcap-ng file"));
-	PTF_ASSERT_TRUE(writerCompressDev.open(readerDev.getOS().c_str(), "My Hardware", readerDev.getCaptureApplication().c_str(), "This is a comment in a pcap-ng file"));
+	PTF_ASSERT_TRUE(writerDev.open(readerDev.getOS().c_str(), "My Hardware", readerDev.getCaptureApplication().c_str(),
+								   "This is a comment in a pcap-ng file"));
+	PTF_ASSERT_TRUE(writerCompressDev.open(readerDev.getOS().c_str(), "My Hardware",
+										   readerDev.getCaptureApplication().c_str(),
+										   "This is a comment in a pcap-ng file"));
 
 	pcpp::RawPacket rawPacket;
 	int packetCount = 0;
@@ -593,7 +587,8 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	PTF_ASSERT_TRUE(readerDev3.open());
 
 	PTF_ASSERT_EQUAL(readerDevCompress.getOS(), "Linux 3.18.1-1-ARCH\0");
-	PTF_ASSERT_EQUAL(readerDevCompress.getCaptureApplication(), "Dumpcap (Wireshark) 1.99.1 (Git Rev Unknown from unknown)");
+	PTF_ASSERT_EQUAL(readerDevCompress.getCaptureApplication(),
+					 "Dumpcap (Wireshark) 1.99.1 (Git Rev Unknown from unknown)");
 	PTF_ASSERT_EQUAL(readerDevCompress.getCaptureFileComment(), "This is a comment in a pcap-ng file");
 	PTF_ASSERT_EQUAL(readerDevCompress.getHardware(), "My Hardware");
 
@@ -612,8 +607,7 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	httpCount = 0;
 	commentCount = 0;
 
-
-	pcpp::RawPacket rawPacket2,rawPacketCompress;
+	pcpp::RawPacket rawPacket2, rawPacketCompress;
 
 	while (readerDev2.getNextPacket(rawPacket, pktComment))
 	{
@@ -680,7 +674,7 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 		if (packet1_timestamp.tv_sec < packetCompress_timestamp.tv_sec)
 		{
 			uint64_t timeDiff = (uint64_t)(packetCompress_timestamp.tv_sec - packet1_timestamp.tv_sec);
-			PTF_ASSERT_LOWER_THAN(timeDiff,2);
+			PTF_ASSERT_LOWER_THAN(timeDiff, 2);
 		}
 		else
 		{
@@ -714,7 +708,7 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	readerDev2.close();
 	readerDev3.close();
 
-	//For now appends are not fully supported with compressed pcapng files
+	// For now appends are not fully supported with compressed pcapng files
 	pcpp::PcapNgFileWriterDevice appendDev(EXAMPLE2_PCAPNG_WRITE_PATH);
 	PTF_ASSERT_TRUE(appendDev.open(true));
 
@@ -722,7 +716,6 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	PTF_ASSERT_TRUE(appendDev.writePacket(rawPacket2, "Additional packet #2"));
 
 	appendDev.close();
-
 
 	pcpp::PcapNgFileReaderDevice readerDev4(EXAMPLE2_PCAPNG_WRITE_PATH);
 	PTF_ASSERT_TRUE(readerDev4.open());
@@ -739,29 +732,29 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	// -------
 
 	// copy the .zstd file to a similar file with .zst extension
-	std::ifstream  zstdFile(EXAMPLE2_PCAPNG_ZSTD_WRITE_PATH, std::ios::binary);
-	std::ofstream  zstFile(EXAMPLE2_PCAPNG_ZST_WRITE_PATH,   std::ios::binary);
+	std::ifstream zstdFile(EXAMPLE2_PCAPNG_ZSTD_WRITE_PATH, std::ios::binary);
+	std::ofstream zstFile(EXAMPLE2_PCAPNG_ZST_WRITE_PATH, std::ios::binary);
 	zstFile << zstdFile.rdbuf();
 	zstdFile.close();
 	zstFile.close();
 
-	pcpp::IFileReaderDevice* genericReader = pcpp::IFileReaderDevice::getReader(EXAMPLE2_PCAP_PATH);
+	pcpp::IFileReaderDevice *genericReader = pcpp::IFileReaderDevice::getReader(EXAMPLE2_PCAP_PATH);
 	FileReaderTeardown genericReaderTeardown1(genericReader);
-	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapFileReaderDevice*>(genericReader));
-	PTF_ASSERT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice*>(genericReader));
+	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapFileReaderDevice *>(genericReader));
+	PTF_ASSERT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice *>(genericReader));
 
 	genericReader = pcpp::IFileReaderDevice::getReader(EXAMPLE2_PCAPNG_PATH);
 	FileReaderTeardown genericReaderTeardown2(genericReader);
-	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice*>(genericReader));
+	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice *>(genericReader));
 
 	genericReader = pcpp::IFileReaderDevice::getReader(EXAMPLE_PCAPNG_ZSTD_WRITE_PATH);
 	FileReaderTeardown genericReaderTeardown3(genericReader);
-	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice*>(genericReader));
+	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice *>(genericReader));
 	PTF_ASSERT_TRUE(genericReader->open());
 
 	genericReader = pcpp::IFileReaderDevice::getReader(EXAMPLE2_PCAPNG_ZST_WRITE_PATH);
 	FileReaderTeardown genericReaderTeardown4(genericReader);
-	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice*>(genericReader));
+	PTF_ASSERT_NOT_NULL(dynamic_cast<pcpp::PcapNgFileReaderDevice *>(genericReader));
 	PTF_ASSERT_TRUE(genericReader->open());
 
 	genericReader->close();
@@ -779,7 +772,7 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	PTF_ASSERT_TRUE(writerDev2.setFilter("dst port 35938"));
 
 	pcpp::PcapNgFileWriterDevice writerCompressDev2(EXAMPLE2_PCAPNG_ZSTD_WRITE_PATH, 5);
-	PTF_ASSERT_TRUE(writerCompressDev2.open());	//Do not try append mode on compressed files!!!
+	PTF_ASSERT_TRUE(writerCompressDev2.open()); // Do not try append mode on compressed files!!!
 	PTF_ASSERT_FALSE(writerCompressDev2.setFilter("bla bla bla"));
 	PTF_ASSERT_TRUE(writerCompressDev2.setFilter("dst port 35938"));
 
@@ -789,7 +782,7 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	while (readerDev5.getNextPacket(rawPacket, pktComment))
 	{
 		filteredReadPacketCount++;
-		if(writerDev2.writePacket(rawPacket))
+		if (writerDev2.writePacket(rawPacket))
 			filteredWritePacketCount++;
 		if (writerCompressDev2.writePacket(rawPacket))
 			filteredCompressWritePacketCount++;
@@ -803,8 +796,6 @@ PTF_TEST_CASE(TestPcapNgFileReadWriteAdv)
 	readerDev5.close();
 	writerDev2.close();
 } // TestPcapNgFileReadWriteAdv
-
-
 
 PTF_TEST_CASE(TestPcapNgFileTooManyInterfaces)
 {
@@ -825,8 +816,6 @@ PTF_TEST_CASE(TestPcapNgFileTooManyInterfaces)
 	PTF_ASSERT_EQUAL(packetCount, 1);
 	readerDev.close();
 } // TestPcapNgFileTooManyInterfaces
-
-
 
 PTF_TEST_CASE(TestPcapFileReadLinkTypeIPv6)
 {
@@ -853,7 +842,6 @@ PTF_TEST_CASE(TestPcapFileReadLinkTypeIPv6)
 		if (packet.isPacketOfType(pcpp::UDP))
 			udpCount++;
 	}
-
 
 	pcpp::IPcapDevice::PcapStats readerStatistics;
 
@@ -897,7 +885,6 @@ PTF_TEST_CASE(TestPcapFileReadLinkTypeIPv4)
 		if (packet.isPacketOfType(pcpp::UDP))
 			udpCount++;
 	}
-
 
 	pcpp::IPcapDevice::PcapStats readerStatistics;
 

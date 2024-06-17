@@ -74,18 +74,19 @@ namespace pcpp
 	{
 #if (BYTE_ORDER == LITTLE_ENDIAN)
 		/** Type */
-		uint8_t type: 4,
+		uint8_t type : 4,
 
-		/** Version bits */
-		version: 4;
+			/** Version bits */
+			version : 4;
 #else
 		/** Version bits */
-		uint8_t version:4,
+		uint8_t version : 4,
 
-		/** Type */
-		type: 4;
+			/** Type */
+			type : 4;
 #endif
-		/** The Virtual Router Identifier (VRID) field identifies the virtual router this packet is reporting status for*/
+		/** The Virtual Router Identifier (VRID) field identifies the virtual router this packet is reporting status
+		 * for*/
 		uint8_t vrId;
 
 		/** This specifies the sending VRRP router's priority for the virtual router */
@@ -94,7 +95,8 @@ namespace pcpp
 		/** Specifies how many IPvX addresses are present in this Packet */
 		uint8_t ipAddrCount;
 
-		/** This specifies authentication type(v2) or (Max) Advertisement interval (in seconds(v2) or centi-seconds(v3)). */
+		/** This specifies authentication type(v2) or (Max) Advertisement interval (in seconds(v2) or
+		 * centi-seconds(v3)). */
 		uint16_t authTypeAdvInt;
 
 		/** This specifies checksum field that is used to detect data corruption in the VRRP message.
@@ -107,22 +109,22 @@ namespace pcpp
 
 	/**
 	 * @class VrrpLayer
-	 * A base class for all VRRP (Virtual Router Redundancy Protocol) protocol classes. This is an abstract class and cannot be instantiated,
-	 * only its child classes can be instantiated. The inherited classes represent the different versions of the protocol:
-	 * VRRPv2 and VRRPv3
+	 * A base class for all VRRP (Virtual Router Redundancy Protocol) protocol classes. This is an abstract class and
+	 * cannot be instantiated, only its child classes can be instantiated. The inherited classes represent the different
+	 * versions of the protocol: VRRPv2 and VRRPv3
 	 */
 	class VrrpLayer : public Layer
 	{
-	private:
+	  private:
 		bool addIPAddressesAt(const std::vector<IPAddress> &ipAddresses, int offset);
 
 		uint8_t getIPAddressLen() const;
 
 		bool isIPAddressValid(IPAddress &ipAddress) const;
 
-		uint8_t* getFirstIPAddressPtr() const;
+		uint8_t *getFirstIPAddressPtr() const;
 
-		uint8_t* getNextIPAddressPtr(uint8_t* ipAddressPtr) const;
+		uint8_t *getNextIPAddressPtr(uint8_t *ipAddressPtr) const;
 
 		IPAddress getIPAddressFromData(uint8_t *data) const;
 
@@ -130,21 +132,21 @@ namespace pcpp
 
 		IPAddress::AddressType m_AddressType;
 
-	protected:
+	  protected:
 		VrrpLayer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet, ProtocolType vrrpVer,
 				  IPAddress::AddressType addressType)
-				: Layer(data, dataLen, prevLayer, packet), m_AddressType(addressType)
+			: Layer(data, dataLen, prevLayer, packet), m_AddressType(addressType)
 		{
 			m_Protocol = vrrpVer;
 		}
 
 		explicit VrrpLayer(ProtocolType subProtocol, uint8_t virtualRouterId, uint8_t priority);
 
-		vrrp_header *getVrrpHeader() const { return (vrrp_header *) m_Data; }
+		vrrp_header *getVrrpHeader() const { return (vrrp_header *)m_Data; }
 
 		void setAddressType(IPAddress::AddressType addressType);
 
-	public:
+	  public:
 		/**
 		 * VRRP message types
 		 */
@@ -175,22 +177,22 @@ namespace pcpp
 		virtual ~VrrpLayer() {}
 
 		/**
-		* @return The VRRP IP Address type
-		*/
+		 * @return The VRRP IP Address type
+		 */
 		IPAddress::AddressType getAddressType() const;
 
 		/**
 		 * A static method that validates the input data
 		 * @param[in] data VRRP raw data (byte stream)
 		 * @param[in] dataLen The length of the byte stream
-		 * @return One of the values ::VRRPv2, ::VRRPv3 according to detected VRRP version or ::UnknownProtocol if couldn't detect
-	 	 * VRRP version
+		 * @return One of the values ::VRRPv2, ::VRRPv3 according to detected VRRP version or ::UnknownProtocol if
+		 * couldn't detect VRRP version
 		 */
 		static ProtocolType getVersionFromData(uint8_t *data, size_t dataLen);
 
 		/**
-		* @return VRRP version of this message
-		*/
+		 * @return VRRP version of this message
+		 */
 		uint8_t getVersion() const;
 
 		/**
@@ -199,8 +201,8 @@ namespace pcpp
 		VrrpType getType() const;
 
 		/**
-		* @return The virtual router id (vrId) in this message
-		*/
+		 * @return The virtual router id (vrId) in this message
+		 */
 		uint8_t getVirtualRouterID() const;
 
 		/**
@@ -210,13 +212,13 @@ namespace pcpp
 		void setVirtualRouterID(uint8_t virtualRouterID);
 
 		/**
-		* @return The priority in this message
-		*/
+		 * @return The priority in this message
+		 */
 		uint8_t getPriority() const;
 
 		/**
-		* @return An enum describing VRRP priority
-		*/
+		 * @return An enum describing VRRP priority
+		 */
 		VrrpPriority getPriorityAsEnum() const;
 
 		/**
@@ -226,8 +228,8 @@ namespace pcpp
 		void setPriority(uint8_t priority);
 
 		/**
-		* @return VRRP checksum of this message
-		*/
+		 * @return VRRP checksum of this message
+		 */
 		uint16_t getChecksum() const;
 
 		/**
@@ -257,33 +259,34 @@ namespace pcpp
 		std::vector<IPAddress> getIPAddresses() const;
 
 		/**
-		 * Add a list of virtual IP addresses at a the end of the virtual IP address list. The vrrp_header#ipAddressCount field will be
-		 * incremented accordingly
+		 * Add a list of virtual IP addresses at a the end of the virtual IP address list. The
+		 * vrrp_header#ipAddressCount field will be incremented accordingly
 		 * @param[in] ipAddresses A vector containing all the virtual IP address
 		 * @return true if added successfully, false otherwise
 		 */
 		bool addIPAddresses(const std::vector<IPAddress> &ipAddresses);
 
 		/**
-		 * Add a virtual IP address at a the end of the virtual IP address list. The vrrp_header#ipAddressCount field will be
-		 * incremented accordingly
+		 * Add a virtual IP address at a the end of the virtual IP address list. The vrrp_header#ipAddressCount field
+		 * will be incremented accordingly
 		 * @param[in] ipAddress Virtual IP address to add
 		 * @return true if add successfully, false otherwise
 		 */
 		bool addIPAddress(const IPAddress &ipAddress);
 
 		/**
-		 * Remove a virtual IP address at a certain index. The vrrp_header#ipAddressCount field will be decremented accordingly
+		 * Remove a virtual IP address at a certain index. The vrrp_header#ipAddressCount field will be decremented
+		 * accordingly
 		 * @param[in] index The index of the virtual IP address to be removed
-		 * @return True if virtual IP address was removed successfully or false otherwise. If false is returned an appropriate error message
-		 * will be printed to log
+		 * @return True if virtual IP address was removed successfully or false otherwise. If false is returned an
+		 * appropriate error message will be printed to log
 		 */
 		bool removeIPAddressAtIndex(int index);
 
 		/**
 		 * Remove all virtual IP addresses in the message. The vrrp_header#ipAddressCount field will be set to 0
-		 * @return True if virtual IP addresses were cleared successfully or false otherwise. If false is returned an appropriate error message
-		 * will be printed to log
+		 * @return True if virtual IP addresses were cleared successfully or false otherwise. If false is returned an
+		 * appropriate error message will be printed to log
 		 */
 		bool removeAllIPAddresses();
 
@@ -311,18 +314,19 @@ namespace pcpp
 
 	/**
 	 * @class VrrpV2Layer
-	 * Represents VRRPv2 (Virtual Router Redundancy Protocol ver 2) layer. This class represents all the different messages of VRRPv2
+	 * Represents VRRPv2 (Virtual Router Redundancy Protocol ver 2) layer. This class represents all the different
+	 * messages of VRRPv2
 	 */
 	class VrrpV2Layer : public VrrpLayer
 	{
-	private:
+	  private:
 		struct vrrpv2_auth_adv
 		{
 			uint8_t authType;
 			uint8_t advInt;
 		};
 
-	public:
+	  public:
 		/**
 		 * VRRP v2 authentication types
 		 */
@@ -341,13 +345,15 @@ namespace pcpp
 		};
 
 		/** A constructor that creates the layer from an existing packet raw data
-		* @param[in] data A pointer to the raw data
-		* @param[in] dataLen Size of the data in bytes
-		* @param[in] prevLayer A pointer to the previous layer
-		* @param[in] packet A pointer to the Packet instance where layer will be stored in
-		*/
+		 * @param[in] data A pointer to the raw data
+		 * @param[in] dataLen Size of the data in bytes
+		 * @param[in] prevLayer A pointer to the previous layer
+		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
+		 */
 		VrrpV2Layer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
-				: VrrpLayer(data, dataLen, prevLayer, packet, VRRPv2, IPAddress::IPv4AddressType) {}
+			: VrrpLayer(data, dataLen, prevLayer, packet, VRRPv2, IPAddress::IPv4AddressType)
+		{
+		}
 
 		/**
 		 * A constructor that allocates a new VRRP v2 layer
@@ -364,8 +370,8 @@ namespace pcpp
 		~VrrpV2Layer() {}
 
 		/**
-		* @return The VRRP advertisement interval in this message
-		*/
+		 * @return The VRRP advertisement interval in this message
+		 */
 		uint8_t getAdvInt() const;
 
 		/**
@@ -375,13 +381,13 @@ namespace pcpp
 		void setAdvInt(uint8_t advInt);
 
 		/**
-		* @return The authentication type in this message
-		*/
+		 * @return The authentication type in this message
+		 */
 		uint8_t getAuthType() const;
 
 		/**
-		* @return The VRRP authentication type as enum
-		*/
+		 * @return The VRRP authentication type as enum
+		 */
 		VrrpAuthType getAuthTypeAsEnum() const;
 
 		/**
@@ -393,34 +399,37 @@ namespace pcpp
 		// implement abstract methods
 
 		/**
-		* Calculate the checksum from header and data and write the result to @ref vrrp_header#checksum
-		* @return The checksum result
-		*/
+		 * Calculate the checksum from header and data and write the result to @ref vrrp_header#checksum
+		 * @return The checksum result
+		 */
 		uint16_t calculateChecksum() const override;
 	};
 
 	/**
 	 * @class VrrpV3Layer
-	 * Represents VRRPv3 (Virtual Router Redundancy Protocol ver 3) layer. This class represents all the different messages of VRRP
+	 * Represents VRRPv3 (Virtual Router Redundancy Protocol ver 3) layer. This class represents all the different
+	 * messages of VRRP
 	 */
 	class VrrpV3Layer : public VrrpLayer
 	{
-	private:
+	  private:
 		struct vrrpv3_rsvd_adv
 		{
 			uint16_t maxAdvInt;
 		};
 
-	public:
+	  public:
 		/** A constructor that creates the layer from an existing packet raw data
-		* @param[in] data A pointer to the raw data
-		* @param[in] dataLen Size of the data in bytes
-		* @param[in] prevLayer A pointer to the previous layer
-		* @param[in] packet A pointer to the Packet instance where layer will be stored in
-		* @param[in] addressType The IP address type to set for this layer
-		*/
+		 * @param[in] data A pointer to the raw data
+		 * @param[in] dataLen Size of the data in bytes
+		 * @param[in] prevLayer A pointer to the previous layer
+		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
+		 * @param[in] addressType The IP address type to set for this layer
+		 */
 		VrrpV3Layer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet, IPAddress::AddressType addressType)
-				: VrrpLayer(data, dataLen, prevLayer, packet, VRRPv3, addressType) {}
+			: VrrpLayer(data, dataLen, prevLayer, packet, VRRPv3, addressType)
+		{
+		}
 
 		/**
 		 * A constructor that allocates a new VRRPv3
@@ -429,7 +438,8 @@ namespace pcpp
 		 * @param priority Priority
 		 * @param maxAdvInt Max advertisement interval
 		 */
-		explicit VrrpV3Layer(IPAddress::AddressType addressType, uint8_t virtualRouterId, uint8_t priority, uint16_t maxAdvInt);
+		explicit VrrpV3Layer(IPAddress::AddressType addressType, uint8_t virtualRouterId, uint8_t priority,
+							 uint16_t maxAdvInt);
 
 		/**
 		 * A destructor for this layer (does nothing)
@@ -437,8 +447,8 @@ namespace pcpp
 		~VrrpV3Layer() {}
 
 		/**
-		* @return The maximum advertisement interval in this message
-		*/
+		 * @return The maximum advertisement interval in this message
+		 */
 		uint16_t getMaxAdvInt() const;
 
 		/**
@@ -450,9 +460,9 @@ namespace pcpp
 		// implement abstract methods
 
 		/**
-		* Calculate the checksum from header and data and write the result to @ref vrrp_header#checksum
-		* @return The checksum result
-		*/
+		 * Calculate the checksum from header and data and write the result to @ref vrrp_header#checksum
+		 * @return The checksum result
+		 */
 		uint16_t calculateChecksum() const override;
 	};
-}
+} // namespace pcpp

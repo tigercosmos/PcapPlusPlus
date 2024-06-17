@@ -7,9 +7,9 @@
 #include "PcapFilter.h"
 
 /**
-* \namespace pcpp
-* \brief The main namespace for the PcapPlusPlus lib
-*/
+ * \namespace pcpp
+ * \brief The main namespace for the PcapPlusPlus lib
+ */
 namespace pcpp
 {
 	/** A vector of pointers to RawPacket */
@@ -22,14 +22,13 @@ namespace pcpp
 	 */
 	class IDevice
 	{
-	protected:
+	  protected:
 		bool m_DeviceOpened;
 
 		// c'tor should not be public
 		IDevice() : m_DeviceOpened(false) {}
 
-	public:
-
+	  public:
 		virtual ~IDevice() {}
 
 		/**
@@ -49,7 +48,6 @@ namespace pcpp
 		inline bool isOpened() { return m_DeviceOpened; }
 	};
 
-
 	/**
 	 * @class IFilterableDevice
 	 * An abstract interface representing all devices that have BPF (Berkeley Packet Filter) filtering capabilities,
@@ -58,21 +56,20 @@ namespace pcpp
 	 */
 	class IFilterableDevice
 	{
-	protected:
-
+	  protected:
 		// c'tor should not be public
 		IFilterableDevice() {}
 
-	public:
-
+	  public:
 		virtual ~IFilterableDevice() {}
 
 		/**
-		 * Set a filter for the device. When implemented by the device, only packets that match the filter will be received
+		 * Set a filter for the device. When implemented by the device, only packets that match the filter will be
+		 * received
 		 * @param[in] filter The filter to be set in PcapPlusPlus' GeneralFilter format
 		 * @return True if filter set successfully, false otherwise
 		 */
-		virtual bool setFilter(GeneralFilter& filter)
+		virtual bool setFilter(GeneralFilter &filter)
 		{
 			std::string filterAsString;
 			filter.parseToString(filterAsString);
@@ -80,8 +77,10 @@ namespace pcpp
 		}
 
 		/**
-		 * Set a filter for the device. When implemented by the device, only packets that match the filter will be received
-		 * @param[in] filterAsString The filter to be set in Berkeley Packet Filter (BPF) syntax (http://biot.com/capstats/bpf.html)
+		 * Set a filter for the device. When implemented by the device, only packets that match the filter will be
+		 * received
+		 * @param[in] filterAsString The filter to be set in Berkeley Packet Filter (BPF) syntax
+		 * (http://biot.com/capstats/bpf.html)
 		 * @return True if filter set successfully, false otherwise
 		 */
 		virtual bool setFilter(std::string filterAsString) = 0;
@@ -92,4 +91,4 @@ namespace pcpp
 		 */
 		virtual bool clearFilter() = 0;
 	};
-}
+} // namespace pcpp

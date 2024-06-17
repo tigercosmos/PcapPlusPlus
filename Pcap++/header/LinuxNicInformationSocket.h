@@ -24,7 +24,7 @@ namespace pcpp
 	 */
 	class LinuxNicInformationSocket
 	{
-	public:
+	  public:
 		/**
 		 * Simple type rename for convenience
 		 */
@@ -61,12 +61,13 @@ namespace pcpp
 		 * @warning For some types of requests to succeed You need to be a root
 		 * or have the CAP_NET_ADMIN capability.
 		 */
-		bool makeRequest(const char* nicName, const IoctlType ioctlType, ifreq* request);
-	private:
+		bool makeRequest(const char *nicName, const IoctlType ioctlType, ifreq *request);
+
+	  private:
 		/* Hidden copy constructor. This structure is not copyable */
-		LinuxNicInformationSocket(const LinuxNicInformationSocket&);
+		LinuxNicInformationSocket(const LinuxNicInformationSocket &);
 		/* Hidden copy assignment operator. This structure is not copyable */
-		LinuxNicInformationSocket operator=(const LinuxNicInformationSocket&);
+		LinuxNicInformationSocket operator=(const LinuxNicInformationSocket &);
 		LinuxSocket m_Socket;
 	};
 } // namespace pcpp

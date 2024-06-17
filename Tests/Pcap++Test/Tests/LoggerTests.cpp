@@ -8,84 +8,76 @@
 #include <random>
 #include "SystemUtils.h"
 
-
 namespace pcpp
 {
-	void invokeDebugLog()
-	{
-		PCPP_LOG_DEBUG("debug log");
-	}
+	void invokeDebugLog() { PCPP_LOG_DEBUG("debug log"); }
 
-	void invokeErrorLog(const std::string& message = "")
-	{
-		PCPP_LOG_ERROR("error log" << message);
-	}
-}
-
+	void invokeErrorLog(const std::string &message = "") { PCPP_LOG_ERROR("error log" << message); }
+} // namespace pcpp
 
 class LogPrinter
 {
-	public:
-		static int lastLogLevelSeen;
-		static std::string* lastLogMessageSeen;
-		static std::string* lastFilenameSeen;
-		static std::string* lastMethodSeen;
-		static int lastLineSeen;
+  public:
+	static int lastLogLevelSeen;
+	static std::string *lastLogMessageSeen;
+	static std::string *lastFilenameSeen;
+	static std::string *lastMethodSeen;
+	static int lastLineSeen;
 
-		static void logPrinter(pcpp::Logger::LogLevel logLevel, const std::string& logMessage, const std::string& fileName, const std::string& method, const int line)
+	static void logPrinter(pcpp::Logger::LogLevel logLevel, const std::string &logMessage, const std::string &fileName,
+						   const std::string &method, const int line)
+	{
+		LogPrinter::clean();
+		LogPrinter::lastLogLevelSeen = (int)logLevel;
+		LogPrinter::lastLogMessageSeen = new std::string(logMessage);
+		LogPrinter::lastFilenameSeen = new std::string(fileName);
+		LogPrinter::lastMethodSeen = new std::string(method);
+		LogPrinter::lastLineSeen = line;
+	}
+
+	static void clean()
+	{
+		LogPrinter::lastLogLevelSeen = 999;
+		LogPrinter::lastLineSeen = 99999;
+		if (LogPrinter::lastLogMessageSeen != nullptr)
 		{
-			LogPrinter::clean();
-			LogPrinter::lastLogLevelSeen = (int)logLevel;
-			LogPrinter::lastLogMessageSeen = new std::string(logMessage);
-			LogPrinter::lastFilenameSeen = new std::string(fileName);
-			LogPrinter::lastMethodSeen = new std::string(method);
-			LogPrinter::lastLineSeen = line;
+			delete LogPrinter::lastLogMessageSeen;
+			LogPrinter::lastLogMessageSeen = nullptr;
+		}
+		if (LogPrinter::lastFilenameSeen != nullptr)
+		{
+			delete LogPrinter::lastFilenameSeen;
+			LogPrinter::lastFilenameSeen = nullptr;
 		}
 
-		static void clean()
+		if (LogPrinter::lastMethodSeen != nullptr)
 		{
-			LogPrinter::lastLogLevelSeen = 999;
-			LogPrinter::lastLineSeen = 99999;
-			if (LogPrinter::lastLogMessageSeen != nullptr)
-			{
-				delete LogPrinter::lastLogMessageSeen;
-				LogPrinter::lastLogMessageSeen = nullptr;
-			}
-			if (LogPrinter::lastFilenameSeen != nullptr)
-			{
-				delete LogPrinter::lastFilenameSeen;
-				LogPrinter::lastFilenameSeen = nullptr;
-			}
-
-			if (LogPrinter::lastMethodSeen != nullptr)
-			{
-				delete LogPrinter::lastMethodSeen;
-				LogPrinter::lastMethodSeen = nullptr;
-			}
+			delete LogPrinter::lastMethodSeen;
+			LogPrinter::lastMethodSeen = nullptr;
 		}
+	}
 };
 
 int LogPrinter::lastLogLevelSeen = 999;
-std::string* LogPrinter::lastLogMessageSeen = nullptr;
-std::string* LogPrinter::lastFilenameSeen = nullptr;
-std::string* LogPrinter::lastMethodSeen = nullptr;
+std::string *LogPrinter::lastLogMessageSeen = nullptr;
+std::string *LogPrinter::lastFilenameSeen = nullptr;
+std::string *LogPrinter::lastMethodSeen = nullptr;
 int LogPrinter::lastLineSeen = 99999;
-
 
 class MultiThreadLogCounter
 {
-	public:
-		static const int ThreadCount = 5;
-		static int logMessageThreadCount[ThreadCount];
-		static void logPrinter(pcpp::Logger::LogLevel logLevel, const std::string& logMessage, const std::string& fileName, const std::string& method, const int line)
-		{
-			int threadId = logMessage[logMessage.length() - 1] - '0';
-			MultiThreadLogCounter::logMessageThreadCount[threadId]++;
-		}
+  public:
+	static const int ThreadCount = 5;
+	static int logMessageThreadCount[ThreadCount];
+	static void logPrinter(pcpp::Logger::LogLevel logLevel, const std::string &logMessage, const std::string &fileName,
+						   const std::string &method, const int line)
+	{
+		int threadId = logMessage[logMessage.length() - 1] - '0';
+		MultiThreadLogCounter::logMessageThreadCount[threadId]++;
+	}
 };
 
 int MultiThreadLogCounter::logMessageThreadCount[MultiThreadLogCounter::ThreadCount] = {0, 0, 0, 0, 0};
-
 
 #if defined(_WIN32)
 #define SEPARATOR '\\'
@@ -93,59 +85,54 @@ int MultiThreadLogCounter::logMessageThreadCount[MultiThreadLogCounter::ThreadCo
 #define SEPARATOR '/'
 #endif
 
-
-std::string getLFileName(const std::string& path)
+std::string getLFileName(const std::string &path)
 {
 	std::string result = path;
 	// check the "/" separator
 	size_t i = result.rfind('/', result.length());
 	if (i != std::string::npos)
 	{
-		result = result.substr(i+1, result.length() - i);
+		result = result.substr(i + 1, result.length() - i);
 	}
 	// check the "\\" separator
 	i = result.rfind('\\', result.length());
 	if (i != std::string::npos)
 	{
-		result = result.substr(i+1, result.length() - i);
+		result = result.substr(i + 1, result.length() - i);
 	}
 	return result;
 }
 
-
-std::string getLowerCaseFileName(const std::string& path)
+std::string getLowerCaseFileName(const std::string &path)
 {
 	std::string result = getLFileName(path);
 	std::transform(result.begin(), result.end(), result.begin(), ::tolower);
 	return result;
 }
 
-
-std::string getMethodWithoutNamespace(const std::string& method)
+std::string getMethodWithoutNamespace(const std::string &method)
 {
 	std::string result = method;
 	size_t i = result.rfind(':', result.length());
 	if (i != std::string::npos)
 	{
-		result = result.substr(i+1, result.length() - i);
+		result = result.substr(i + 1, result.length() - i);
 	}
 	return result;
 }
 
-
 class LoggerCleaner
 {
-	public:
-		~LoggerCleaner()
-		{
-			pcpp::Logger::getInstance().enableLogs();
-			pcpp::Logger::getInstance().setAllModulesToLogLevel(pcpp::Logger::Info);
-			pcpp::Logger::getInstance().resetLogPrinter();
-			std::cout.clear();
-			LogPrinter::clean();
-		}
+  public:
+	~LoggerCleaner()
+	{
+		pcpp::Logger::getInstance().enableLogs();
+		pcpp::Logger::getInstance().setAllModulesToLogLevel(pcpp::Logger::Info);
+		pcpp::Logger::getInstance().resetLogPrinter();
+		std::cout.clear();
+		LogPrinter::clean();
+	}
 };
-
 
 void printLogThread(int threadId)
 {
@@ -158,7 +145,7 @@ void printLogThread(int threadId)
 	for (int i = 0; i < 1000; i++)
 	{
 		pcpp::invokeErrorLog(threadIdAsString);
-		int sleepTime =  dist(simpleRand);
+		int sleepTime = dist(simpleRand);
 		pcpp::multiPlatformMSleep(sleepTime);
 	}
 }
@@ -177,7 +164,7 @@ PTF_TEST_CASE(TestLoggerMultiThread)
 		threads[i] = std::thread(printLogThread, i);
 	}
 
-	for (auto & thread : threads)
+	for (auto &thread : threads)
 	{
 		thread.join();
 	}
@@ -191,7 +178,6 @@ PTF_TEST_CASE(TestLoggerMultiThread)
 
 	PTF_ASSERT_EQUAL(totalLogMessages, 5000);
 } // TestLoggerMultiThread
-
 
 PTF_TEST_CASE(TestLogger)
 {

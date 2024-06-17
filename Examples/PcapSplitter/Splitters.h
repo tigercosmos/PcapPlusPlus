@@ -20,21 +20,20 @@
  */
 class Splitter
 {
-public:
-
+  public:
 	/**
 	 * A method that gets a packet and returns:
 	 * - The file number to write the packet to
 	 * - A vector of file numbers to close (may be empty)
 	 */
-	virtual int getFileNumber(pcpp::Packet& packet, std::vector<int>& filesToClose) = 0;
+	virtual int getFileNumber(pcpp::Packet &packet, std::vector<int> &filesToClose) = 0;
 
 	/**
 	 * Most splitters have a parameter (for example: packet count for each file or max file size, etc.).
 	 * This method should return true if the parameter value is legal or false otherwise. If parameter value is
 	 * illegal it should return a proper error string that will be displayed for the user
 	 */
-	virtual bool isSplitterParamLegal(std::string& errorString) = 0;
+	virtual bool isSplitterParamLegal(std::string &errorString) = 0;
 
 	/**
 	 * A method that enables the splitter to decide what will be the output file names based on the file number
@@ -42,10 +41,10 @@ public:
 	 * first packet that will be written to this file. The default implementation is the following:
 	 * ' /requested-path/original-file-name-[4-digit-number-starting-at-0000].pcap'
 	 */
-	virtual std::string getFileName(pcpp::Packet& packet, const std::string &outputPcapBasePath, int fileNumber)
+	virtual std::string getFileName(pcpp::Packet &packet, const std::string &outputPcapBasePath, int fileNumber)
 	{
-	    std::ostringstream sstream;
-	    sstream << std::setw(4) << std::setfill( '0' ) << fileNumber;
+		std::ostringstream sstream;
+		sstream << std::setw(4) << std::setfill('0') << fileNumber;
 		return outputPcapBasePath.c_str() + sstream.str();
 	}
 
@@ -54,7 +53,6 @@ public:
 	 */
 	virtual ~Splitter() {}
 };
-
 
 /**
  * A virtual abstract splitter which represent splitters that may or may not have a limit on the number of
@@ -72,7 +70,7 @@ class SplitterWithMaxFiles : public Splitter
 	// in order to support all OS's, the maximum number of concurrent open file is set to 250
 	static const int MAX_NUMBER_OF_CONCURRENT_OPEN_FILES = 250;
 
-protected:
+  protected:
 	int m_MaxFiles;
 	int m_NextFile;
 	pcpp::LRUList<int> m_LRUFileList;
@@ -82,7 +80,7 @@ protected:
 	 * This method puts the file in the LRU list, and if the list is full it pulls out the least recently used file
 	 * and returns it in filesToClose vector. The application will take care of closing that file
 	 */
-	void writingToFile(int fileNum, std::vector<int>& filesToClose)
+	void writingToFile(int fileNum, std::vector<int> &filesToClose)
 	{
 		int fileToClose;
 		if (m_LRUFileList.put(fileNum, &fileToClose) == 1)
@@ -91,12 +89,12 @@ protected:
 
 	/**
 	 * A helper method that is called by child classes and returns the next file number. If there's no output file limit
-	 * it just return prev_file_number+1. But if there is a file limit it return file number in cyclic manner, meaning if
-	 * reached the max file number, the next file number will be 0.
-	 * In addition the method puts the next file in the LRU list and if the list is full it pulls out the least recently
-	 * used file and returns it in filesToClose vector. The application will take care of closing that file
+	 * it just return prev_file_number+1. But if there is a file limit it return file number in cyclic manner, meaning
+	 * if reached the max file number, the next file number will be 0. In addition the method puts the next file in the
+	 * LRU list and if the list is full it pulls out the least recently used file and returns it in filesToClose vector.
+	 * The application will take care of closing that file
 	 */
-	int getNextFileNumber(std::vector<int>& filesToClose)
+	int getNextFileNumber(std::vector<int> &filesToClose)
 	{
 		int nextFile = 0;
 
@@ -109,7 +107,6 @@ protected:
 			m_NextFile++;
 		}
 
-
 		// put the next file in the LRU list
 		int fileToClose;
 		if (m_LRUFileList.put(nextFile, &fileToClose) == 1)
@@ -121,24 +118,24 @@ protected:
 	}
 
 	/**
-	 * A protected c'tor for this class which gets the output file limit size. If maxFile is UNLIMITED_FILES_MAGIC_NUMBER,
-	 * it's considered there's no output files limit
+	 * A protected c'tor for this class which gets the output file limit size. If maxFile is
+	 * UNLIMITED_FILES_MAGIC_NUMBER, it's considered there's no output files limit
 	 */
-	explicit SplitterWithMaxFiles(int maxFiles, int firstFileNumber = 0) : m_LRUFileList(MAX_NUMBER_OF_CONCURRENT_OPEN_FILES)
+	explicit SplitterWithMaxFiles(int maxFiles, int firstFileNumber = 0)
+		: m_LRUFileList(MAX_NUMBER_OF_CONCURRENT_OPEN_FILES)
 	{
 		m_MaxFiles = maxFiles;
 		m_NextFile = firstFileNumber;
 	}
 
-public:
-
+  public:
 	static const int UNLIMITED_FILES_MAGIC_NUMBER = -12345;
 
 	/**
 	 * This method checks the maximum number of file parameter. If it equals UNLIMITED_FILES_MAGIC_NUMBER it means there
 	 * is no limit. Else it verifies the limit is a positive number
 	 */
-	bool isSplitterParamLegal(std::string& errorString)
+	bool isSplitterParamLegal(std::string &errorString)
 	{
 		// unlimited number of output files
 		if (m_MaxFiles == UNLIMITED_FILES_MAGIC_NUMBER)
@@ -154,17 +151,16 @@ public:
 	}
 };
 
-
 /**
  * An abstract virtual splitter which represent splitters that needs to keep a mapping between a certain packet value to
  * a certain file number the packet needs to be written to. For example: in client-ip splitter all flows with a
- * certain client-ip should be written to the same file. So this class will enable it to keep a mapping between client-ips
- * and file numbers. This class inherits SplitterWithMaxFiles so it supports having or not having a limit on the number
- * of output files
+ * certain client-ip should be written to the same file. So this class will enable it to keep a mapping between
+ * client-ips and file numbers. This class inherits SplitterWithMaxFiles so it supports having or not having a limit on
+ * the number of output files
  */
 class ValueBasedSplitter : public SplitterWithMaxFiles
 {
-protected:
+  protected:
 	// A flow table that keeps track of all flows (a flow is usually identified by 5-tuple)
 	std::unordered_map<uint32_t, int> m_FlowTable;
 	// a map between the relevant packet value (e.g client-ip) and the file to write the packet to
@@ -179,7 +175,7 @@ protected:
 	 * A helper method that gets the packet value and returns the file to write it to, and also a file to close if the
 	 * LRU list is full
 	 */
-	int getFileNumberForValue(uint32_t value, std::vector<int>& filesToClose)
+	int getFileNumberForValue(uint32_t value, std::vector<int> &filesToClose)
 	{
 		// search the value in the value-to-file map. If it's there, return the file number
 		if (m_ValueToFileTable.find(value) != m_ValueToFileTable.end())
@@ -198,7 +194,7 @@ protected:
 /**
  * An auxiliary method for extracting packet's IPv4/IPv6 source address as string
  */
-std::string getSrcIPString(pcpp::Packet& packet)
+std::string getSrcIPString(pcpp::Packet &packet)
 {
 	if (packet.isPacketOfType(pcpp::IP))
 		return packet.getLayerOfType<pcpp::IPLayer>()->getSrcIPAddress().toString();
@@ -208,7 +204,7 @@ std::string getSrcIPString(pcpp::Packet& packet)
 /**
  * An auxiliary method for extracting packet's IPv4/IPv6 dest address string
  */
-std::string getDstIPString(pcpp::Packet& packet)
+std::string getDstIPString(pcpp::Packet &packet)
 {
 	if (packet.isPacketOfType(pcpp::IP))
 		return packet.getLayerOfType<pcpp::IPLayer>()->getDstIPAddress().toString();

@@ -16,16 +16,16 @@ struct __pfring;
 typedef struct __pfring pfring;
 
 /**
-* \namespace pcpp
-* \brief The main namespace for the PcapPlusPlus lib
-*/
+ * \namespace pcpp
+ * \brief The main namespace for the PcapPlusPlus lib
+ */
 namespace pcpp
 {
 
 	class PfRingDevice;
 
-	typedef void (*OnPfRingPacketsArriveCallback)(RawPacket* packets, uint32_t numOfPackets, uint8_t threadId, PfRingDevice* device, void* userCookie);
-
+	typedef void (*OnPfRingPacketsArriveCallback)(RawPacket *packets, uint32_t numOfPackets, uint8_t threadId,
+												  PfRingDevice *device, void *userCookie);
 
 	/**
 	 * @class PfRingDevice
@@ -34,12 +34,12 @@ namespace pcpp
 	class PfRingDevice : public IDevice, public IFilterableDevice
 	{
 		friend class PfRingDeviceList;
-	private:
 
+	  private:
 		struct CoreConfiguration
 		{
 			std::thread RxThread;
-			pfring* Channel;
+			pfring *Channel;
 			bool IsInUse;
 			bool IsAffinitySet;
 
@@ -47,7 +47,7 @@ namespace pcpp
 			void clear();
 		};
 
-		pfring** m_PfRingDescriptors;
+		pfring **m_PfRingDescriptors;
 		uint8_t m_NumOfOpenedRxChannels;
 		std::string m_DeviceName;
 		int m_InterfaceIndex;
@@ -56,29 +56,33 @@ namespace pcpp
 		CoreConfiguration m_CoreConfiguration[MAX_NUM_OF_CORES];
 		bool m_StopThread;
 		OnPfRingPacketsArriveCallback m_OnPacketsArriveCallback;
-		void* m_OnPacketsArriveUserCookie;
+		void *m_OnPacketsArriveUserCookie;
 		bool m_ReentrantMode;
 		bool m_HwClockEnabled;
 		bool m_IsFilterCurrentlySet;
 
-		PfRingDevice(const char* deviceName);
+		PfRingDevice(const char *deviceName);
 
 		bool initCoreConfigurationByCoreMask(CoreMask coreMask);
-		void captureThreadMain(std::condition_variable* startCond, std::mutex* startMutex, const int* startState);
+		void captureThreadMain(std::condition_variable *startCond, std::mutex *startMutex, const int *startState);
 
-		int openSingleRxChannel(const char* deviceName, pfring** ring);
+		int openSingleRxChannel(const char *deviceName, pfring **ring);
 
-		bool getIsHwClockEnable() { setPfRingDeviceAttributes(); return m_HwClockEnabled; }
-		bool setPfRingDeviceClock(pfring* ring);
+		bool getIsHwClockEnable()
+		{
+			setPfRingDeviceAttributes();
+			return m_HwClockEnabled;
+		}
+		bool setPfRingDeviceClock(pfring *ring);
 
 		void clearCoreConfiguration();
 		int getCoresInUseCount() const;
 
 		void setPfRingDeviceAttributes();
 
-		bool sendData(const uint8_t* packetData, int packetDataLength, bool flushTxQueues);
-	public:
+		bool sendData(const uint8_t *packetData, int packetDataLength, bool flushTxQueues);
 
+	  public:
 		/**
 		 * An enum representing the type of packet distribution between different RX channels
 		 */
@@ -115,26 +119,42 @@ namespace pcpp
 		 * Get the MAC address of the current device
 		 * @return The MAC address of the current device
 		 */
-		MacAddress getMacAddress() { setPfRingDeviceAttributes(); return m_MacAddress; }
+		MacAddress getMacAddress()
+		{
+			setPfRingDeviceAttributes();
+			return m_MacAddress;
+		}
 
 		/**
 		 * Get PF_RING interface index of the current device
 		 * @return PF_RING interface index of the current device
 		 */
-		int getInterfaceIndex() { setPfRingDeviceAttributes(); return m_InterfaceIndex; }
+		int getInterfaceIndex()
+		{
+			setPfRingDeviceAttributes();
+			return m_InterfaceIndex;
+		}
 
 		/**
 		 * Get MTU of the current device
 		 * @return Upon success return the device MTU, 0 otherwise
 		 */
-		int getMtu() { setPfRingDeviceAttributes(); return m_DeviceMTU; }
+		int getMtu()
+		{
+			setPfRingDeviceAttributes();
+			return m_DeviceMTU;
+		}
 
 		/**
 		 * Return true if device supports hardware timestamping. If it does, this feature will be automatically set
 		 * for this device. You can read more about this in PF_RING documentation
 		 * @return True if device supports hardware timestamping, false otherwise
 		 */
-		bool isHwClockEnabledForDevice() { setPfRingDeviceAttributes(); return m_HwClockEnabled; }
+		bool isHwClockEnabledForDevice()
+		{
+			setPfRingDeviceAttributes();
+			return m_HwClockEnabled;
+		}
 
 		/**
 		 * Gets the interface name (e.g eth0, eth1, etc.)
@@ -142,31 +162,32 @@ namespace pcpp
 		 */
 		std::string getDeviceName() const { return m_DeviceName; }
 
-
 		/**
 		 * Start single-threaded capturing with callback. Works with open() or openSingleRxChannel().
 		 * @param[in] onPacketsArrive A callback to call whenever a packet arrives
-		 * @param[in] onPacketsArriveUserCookie A cookie that will be delivered to onPacketsArrive callback on every packet
+		 * @param[in] onPacketsArriveUserCookie A cookie that will be delivered to onPacketsArrive callback on every
+		 * packet
 		 * @return True if this action succeeds, false otherwise
 		 */
-		bool startCaptureSingleThread(OnPfRingPacketsArriveCallback onPacketsArrive, void* onPacketsArriveUserCookie);
+		bool startCaptureSingleThread(OnPfRingPacketsArriveCallback onPacketsArrive, void *onPacketsArriveUserCookie);
 
 		/**
 		 * Start multi-threaded (multi-core) capturing with callback. Works with openMultiRxChannels().
-		 * This method will return an error if the number of opened channels is different than the number of threads/cores
-		 * requested
+		 * This method will return an error if the number of opened channels is different than the number of
+		 * threads/cores requested
 		 * @param[in] onPacketsArrive A callback to call whenever a packet arrives
-		 * @param[in] onPacketsArriveUserCookie A cookie that will be delivered to onPacketsArrive callback on every packet
+		 * @param[in] onPacketsArriveUserCookie A cookie that will be delivered to onPacketsArrive callback on every
+		 * packet
 		 * @param[in] coreMask The cores to be used as mask. For example:
 		 * @return True if this action succeeds, false otherwise
 		 */
-		bool startCaptureMultiThread(OnPfRingPacketsArriveCallback onPacketsArrive, void* onPacketsArriveUserCookie, CoreMask coreMask);
+		bool startCaptureMultiThread(OnPfRingPacketsArriveCallback onPacketsArrive, void *onPacketsArriveUserCookie,
+									 CoreMask coreMask);
 
 		/**
 		 * Stops capturing packets (works will all type of startCapture*)
 		 */
 		void stopCapture();
-
 
 		/**
 		 * Opens a single RX channel (=RX queue) on this interface. All packets will be received on a single thread
@@ -178,22 +199,22 @@ namespace pcpp
 		bool openSingleRxChannel(uint8_t channelId);
 
 		/**
-		 * Opens a set of RX channels (=RX queues) on this interface, identified by their IDs. All packets will be received on a single thread
-		 * without core affinity. If one of the channel IDs requested doesn't exist on this interface, the method will fail
-		 * (return false)
+		 * Opens a set of RX channels (=RX queues) on this interface, identified by their IDs. All packets will be
+		 * received on a single thread without core affinity. If one of the channel IDs requested doesn't exist on this
+		 * interface, the method will fail (return false)
 		 * @param[in] channelIds An array of channel IDs
 		 * @param[in] numOfChannelIds The channel ID array size
 		 * @return True if this action succeeds, false otherwise
 		 */
-		bool openMultiRxChannels(const uint8_t* channelIds, int numOfChannelIds);
+		bool openMultiRxChannels(const uint8_t *channelIds, int numOfChannelIds);
 
 		/**
 		 * Opens numOfRxChannelsToOpen RX channels. If numOfRxChannelsToOpen is larger than available RX queues for this
 		 * interface than a number of RX channels will be opened on each RX queue. For example: if the user asks for 10
-		 * RX channels but the interface has only 4 RX queues, then 3 RX channels will be opened for RX-queue0 and RX-queue2,
-		 * and 2 RX channels will be opened for RX-queue2 and RX-queue3.
-		 * Packets will be distributed between different RX queues on per-flow manner, but within multiple RX channels in
-		 * the same RX queue packet will be distributed according to distribution requested by "dist"
+		 * RX channels but the interface has only 4 RX queues, then 3 RX channels will be opened for RX-queue0 and
+		 * RX-queue2, and 2 RX channels will be opened for RX-queue2 and RX-queue3. Packets will be distributed between
+		 * different RX queues on per-flow manner, but within multiple RX channels in the same RX queue packet will be
+		 * distributed according to distribution requested by "dist"
 		 * @param[in] numOfRxChannelsToOpen Number of RX channels to open
 		 * @param[in] dist Distribution method
 		 * @return True if this action succeeds, false otherwise
@@ -224,22 +245,25 @@ namespace pcpp
 		/**
 		 * Get the statistics of a specific thread/core (=RX channel)
 		 * @param[in] core The requested core
-		 * @param[out] stats A reference for the stats object where the stats are written. Current values will be overridden
+		 * @param[out] stats A reference for the stats object where the stats are written. Current values will be
+		 * overridden
 		 */
-		void getThreadStatistics(SystemCore core, PfRingStats& stats) const;
+		void getThreadStatistics(SystemCore core, PfRingStats &stats) const;
 
 		/**
 		 * Get the statistics of the current thread/core (=RX channel)
-		 * @param[out] stats A reference for the stats object where the stats are written. Current values will be overridden
+		 * @param[out] stats A reference for the stats object where the stats are written. Current values will be
+		 * overridden
 		 */
-		void getCurrentThreadStatistics(PfRingStats& stats) const;
+		void getCurrentThreadStatistics(PfRingStats &stats) const;
 
 		/**
-		 * Get the statistics for the entire device. If more than 1 RX channel is opened, this method aggregates the stats
-		 * of all channels
-		 * @param[out] stats A reference for the stats object where the stats are written. Current values will be overridden
+		 * Get the statistics for the entire device. If more than 1 RX channel is opened, this method aggregates the
+		 * stats of all channels
+		 * @param[out] stats A reference for the stats object where the stats are written. Current values will be
+		 * overridden
 		 */
-		void getStatistics(PfRingStats& stats) const;
+		void getStatistics(PfRingStats &stats) const;
 
 		/**
 		 * Return true if filter is currently set
@@ -256,7 +280,7 @@ namespace pcpp
 		 * @param[in] rawPacket The raw packet to send
 		 * @return True if raw packet was sent completely, false otherwise
 		 */
-		bool sendPacket(const RawPacket& rawPacket);
+		bool sendPacket(const RawPacket &rawPacket);
 
 		/**
 		 * Send raw data. This data must be a valid and fully specified packet (the MAC address up);
@@ -269,7 +293,7 @@ namespace pcpp
 		 * @return True if raw packet was sent completely, false otherwise
 		 *
 		 */
-		bool sendPacket(const uint8_t* packetData, int packetDataLength);
+		bool sendPacket(const uint8_t *packetData, int packetDataLength);
 
 		/**
 		 * Send a packet. This packet must be fully specified (the MAC address up)
@@ -280,7 +304,7 @@ namespace pcpp
 		 * @param[in] packet The packet to send
 		 * @return True if raw packet was sent completely, false otherwise
 		 */
-		bool sendPacket(const Packet& packet);
+		bool sendPacket(const Packet &packet);
 
 		/**
 		 * Send raw packets. All raw packets must be fully specified (the MAC address up)
@@ -291,7 +315,7 @@ namespace pcpp
 		 * @param[in] arrLength RawPacket array length
 		 * @return Number of packets that were sent completely
 		 */
-		int sendPackets(const RawPacket* rawPacketsArr, int arrLength);
+		int sendPackets(const RawPacket *rawPacketsArr, int arrLength);
 
 		/**
 		 * Send packets. All packets must be fully specified (the MAC address up)
@@ -302,7 +326,7 @@ namespace pcpp
 		 * @param[in] arrLength Packet pointers array length
 		 * @return Number of packets that were sent completely
 		 */
-		int sendPackets(const Packet** packetsArr, int arrLength);
+		int sendPackets(const Packet **packetsArr, int arrLength);
 
 		/**
 		 * Send all raw packets pointed by the RawPacketVector. All packets must be fully specified (the MAC address up)
@@ -312,11 +336,9 @@ namespace pcpp
 		 * @param[in] rawPackets The raw packet vector
 		 * @return Number of raw packets that were sent completely
 		 */
-		int sendPackets(const RawPacketVector& rawPackets);
-
+		int sendPackets(const RawPacketVector &rawPackets);
 
 		// implement abstract methods
-
 
 		/**
 		 * Opens the entire device (including all RX channels/queues on this interface). All packets will be received

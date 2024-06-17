@@ -3,7 +3,7 @@
 #include <Packet.h>
 #include <PcapFileDevice.h>
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	// open a pcap file for reading
 	pcpp::PcapFileReaderDevice reader("1_packet.pcap");
@@ -32,10 +32,8 @@ int main(int argc, char* argv[])
 		pcpp::IPv4Address destIP = parsedPacket.getLayerOfType<pcpp::IPv4Layer>()->getDstIPv4Address();
 
 		// print source and dest IPs
-		std::cout
-			<< "Source IP is '" << srcIP << "'; "
-			<< "Dest IP is '" << destIP << "'"
-			<< std::endl;
+		std::cout << "Source IP is '" << srcIP << "'; "
+				  << "Dest IP is '" << destIP << "'" << std::endl;
 	}
 
 	// close the file

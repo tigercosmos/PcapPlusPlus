@@ -4,7 +4,6 @@
 #include "IPSecLayer.h"
 #include "SystemUtils.h"
 
-
 PTF_TEST_CASE(IPSecParsingTest)
 {
 	timeval time;
@@ -27,7 +26,7 @@ PTF_TEST_CASE(IPSecParsingTest)
 	PTF_ASSERT_TRUE(ipsec2Packet.isPacketOfType(pcpp::ICMP));
 	PTF_ASSERT_TRUE(ipsec3Packet.isPacketOfType(pcpp::ESP));
 
-	pcpp::AuthenticationHeaderLayer* ahLayer = ipsec1Packet.getLayerOfType<pcpp::AuthenticationHeaderLayer>();
+	pcpp::AuthenticationHeaderLayer *ahLayer = ipsec1Packet.getLayerOfType<pcpp::AuthenticationHeaderLayer>();
 	PTF_ASSERT_NOT_NULL(ahLayer);
 	PTF_ASSERT_EQUAL(ahLayer->getSPI(), 0x8179b705);
 	PTF_ASSERT_EQUAL(ahLayer->getSequenceNumber(), 3);
@@ -37,7 +36,7 @@ PTF_TEST_CASE(IPSecParsingTest)
 	PTF_ASSERT_EQUAL(ahLayer->toString(), "Authentication Header Layer");
 	PTF_ASSERT_EQUAL(ahLayer->getNextLayer()->getProtocol(), pcpp::ESP, enum);
 
-	pcpp::ESPLayer* espLayer = ipsec1Packet.getLayerOfType<pcpp::ESPLayer>();
+	pcpp::ESPLayer *espLayer = ipsec1Packet.getLayerOfType<pcpp::ESPLayer>();
 	PTF_ASSERT_NOT_NULL(espLayer);
 	PTF_ASSERT_EQUAL(espLayer->getSPI(), 0x48dac2e4);
 	PTF_ASSERT_EQUAL(espLayer->getSequenceNumber(), 3);

@@ -25,47 +25,53 @@
 #define INCLUDE_LIGHT_SPECIAL_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <stddef.h>
 #include <stdint.h>
 
 #ifndef NULL
-#define NULL   ((void *) 0)
+#define NULL ((void *)0)
 #endif
 
-struct _light_section_header {
-	uint32_t byteorder_magic;
-	uint16_t major_version;
-	uint16_t minor_version;
-	uint64_t section_length;
-};
+	struct _light_section_header
+	{
+		uint32_t byteorder_magic;
+		uint16_t major_version;
+		uint16_t minor_version;
+		uint64_t section_length;
+	};
 
-struct _light_interface_description_block {
-	uint16_t link_type;
-	uint16_t reserved;
-	uint32_t snapshot_length;
-};
+	struct _light_interface_description_block
+	{
+		uint16_t link_type;
+		uint16_t reserved;
+		uint32_t snapshot_length;
+	};
 
-struct _light_enhanced_packet_block {
-	uint32_t interface_id;
-	uint32_t timestamp_high, timestamp_low;
-	uint32_t capture_packet_length;
-	uint32_t original_capture_length;
-	uint32_t packet_data[0];
-};
+	struct _light_enhanced_packet_block
+	{
+		uint32_t interface_id;
+		uint32_t timestamp_high, timestamp_low;
+		uint32_t capture_packet_length;
+		uint32_t original_capture_length;
+		uint32_t packet_data[0];
+	};
 
-struct _light_simple_packet_block {
-	uint32_t original_packet_length;
-	uint32_t packet_data[0];
-};
+	struct _light_simple_packet_block
+	{
+		uint32_t original_packet_length;
+		uint32_t packet_data[0];
+	};
 
-struct _light_custom_nonstandard_block {
-	uint32_t data_length;
-	uint32_t reserved0, reserved1;
-	uint32_t packet_data[0];
-};
+	struct _light_custom_nonstandard_block
+	{
+		uint32_t data_length;
+		uint32_t reserved0, reserved1;
+		uint32_t packet_data[0];
+	};
 
 #ifdef __cplusplus
 }

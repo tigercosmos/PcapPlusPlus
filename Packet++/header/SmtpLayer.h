@@ -17,7 +17,7 @@ namespace pcpp
 	 */
 	class SmtpLayer : public SingleCommandTextProtocol
 	{
-	protected:
+	  protected:
 		SmtpLayer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
 			: SingleCommandTextProtocol(data, dataLen, prevLayer, packet)
 		{
@@ -29,7 +29,7 @@ namespace pcpp
 			m_Protocol = SMTP;
 		};
 
-	public:
+	  public:
 		/**
 		 * A static method that checks whether the port is considered as SMTP control
 		 * @param[in] port The port number to be checked
@@ -61,7 +61,7 @@ namespace pcpp
 	 */
 	class SmtpRequestLayer : public SmtpLayer
 	{
-	public:
+	  public:
 		/**
 		 * Enum for SMTP command codes
 		 */
@@ -93,7 +93,7 @@ namespace pcpp
 			VRFY = ('V') | ('R' << 8) | ('F' << 16) | ('Y' << 24),
 			/// Start TLS handshake
 			STARTTLS = (('S') | ('T' << 8) | ('A' << 16) | ('R' << 24) |
-					static_cast<uint64_t>(('T') | ('T' << 8) | ('L' << 16) | ('S' << 24)) << 32),
+						static_cast<uint64_t>(('T') | ('T' << 8) | ('L' << 16) | ('S' << 24)) << 32),
 			/// Reverse the role of sender and receiver
 			TURN = ('T') | ('U' << 8) | ('R' << 16) | ('N' << 24),
 			/// Send mail to terminal
@@ -197,7 +197,7 @@ namespace pcpp
 	 */
 	class SmtpResponseLayer : public SmtpLayer
 	{
-	public:
+	  public:
 		/**
 		 * Enum for SMTP response codes
 		 */

@@ -48,14 +48,17 @@ namespace pcpp
 	 */
 	class Sll2Layer : public Layer
 	{
-	public:
+	  public:
 		/**
 		 * A constructor that creates the layer from an existing packet raw data
 		 * @param[in] data A pointer to the raw data (will be casted to ether_header)
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		Sll2Layer(uint8_t* data, size_t dataLen, Packet* packet) : Layer(data, dataLen, nullptr, packet) { m_Protocol = SLL2; }
+		Sll2Layer(uint8_t *data, size_t dataLen, Packet *packet) : Layer(data, dataLen, nullptr, packet)
+		{
+			m_Protocol = SLL2;
+		}
 
 		/**
 		 * A constructor that creates a new SLL2 header and allocates the data
@@ -68,10 +71,11 @@ namespace pcpp
 		~Sll2Layer() {}
 
 		/**
-		 * Get a pointer to the Sll header. Notice this points directly to the data, so every change will change the actual packet data
+		 * Get a pointer to the Sll header. Notice this points directly to the data, so every change will change the
+		 * actual packet data
 		 * @return A pointer to the sll2_header
 		 */
-		sll2_header* getSll2Header() const { return (sll2_header*)m_Data; }
+		sll2_header *getSll2Header() const { return (sll2_header *)m_Data; }
 
 		/**
 		 * A static method that validates the input data
@@ -79,7 +83,7 @@ namespace pcpp
 		 * @param[in] dataLen The length of the byte stream
 		 * @return True if the data is valid and can represent an IEEE 802.3 Eth packet
 		 */
-		static bool isDataValid(const uint8_t* data, size_t dataLen);
+		static bool isDataValid(const uint8_t *data, size_t dataLen);
 
 		/**
 		 * Get a protocol type of this layer
@@ -139,7 +143,7 @@ namespace pcpp
 		 * Get link layer address data pointer
 		 * @return link layer address data pointer
 		 */
-		const uint8_t* getLinkLayerAddr() const;
+		const uint8_t *getLinkLayerAddr() const;
 
 		/**
 		 * A setter for the link layer address field
@@ -147,11 +151,12 @@ namespace pcpp
 		 * @param[in] addrLength Address length, must be lower or equal to 8 (which is max length for SLL2 address)
 		 * @return True if address was set successfully, or false of addrLength is out of bounds (0 or larger than 8)
 		 */
-		bool setLinkLayerAddr(const uint8_t* addr, size_t addrLength);
+		bool setLinkLayerAddr(const uint8_t *addr, size_t addrLength);
 
 		/**
 		 * Get a MAC address in the link layer address field
-		 * @return return macAddress pointer was set successfully, null pointer if d MAC address isn't valid or if set failed
+		 * @return return macAddress pointer was set successfully, null pointer if d MAC address isn't valid or if set
+		 * failed
 		 */
 		MacAddress getLinkLayerAsMacAddress();
 
@@ -160,14 +165,13 @@ namespace pcpp
 		 * @param[in] macAddr MAC address to set
 		 * @return True if address was set successfully, false if MAC address isn't valid or if set failed
 		 */
-		bool setMacAddressAsLinkLayer(const MacAddress& macAddr);
+		bool setMacAddressAsLinkLayer(const MacAddress &macAddr);
 
 		// implement abstract methods
 
 		/**
-		 * Currently identifies the following next layers: IPv4Layer, IPv6Layer, ArpLayer, VlanLayer, PPPoESessionLayer, PPPoEDiscoveryLayer,
-		 * MplsLayer.
-		 * Otherwise sets PayloadLayer
+		 * Currently identifies the following next layers: IPv4Layer, IPv6Layer, ArpLayer, VlanLayer, PPPoESessionLayer,
+		 * PPPoEDiscoveryLayer, MplsLayer. Otherwise sets PayloadLayer
 		 */
 		void parseNextLayer();
 

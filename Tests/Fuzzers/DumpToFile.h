@@ -4,7 +4,7 @@
 
 // This function is created as PcapPlusPlus doesn't seem to offer a way of
 // parsing Pcap files directly from memory
-static int dumpDataToPcapFile(const uint8_t *data, size_t size, const char* path)
+static int dumpDataToPcapFile(const uint8_t *data, size_t size, const char *path)
 {
 	FILE *fd;
 	int written = 0;

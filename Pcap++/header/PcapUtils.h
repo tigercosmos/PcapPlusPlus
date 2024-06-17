@@ -18,7 +18,7 @@ namespace pcpp
 		 */
 		struct PcapCloseDeleter
 		{
-			void operator()(pcap_t* ptr) const;
+			void operator()(pcap_t *ptr) const;
 		};
 
 		/**
@@ -27,9 +27,9 @@ namespace pcpp
 		 */
 		struct PcapFreeAllDevsDeleter
 		{
-			void operator()(pcap_if_t* ptr) const;
+			void operator()(pcap_if_t *ptr) const;
 		};
-	}
+	} // namespace internal
 
 	/// @endcond
-}
+} // namespace pcpp

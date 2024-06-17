@@ -6,10 +6,7 @@ namespace pcpp
 {
 
 	// ----------------- Class FtpRequestLayer -----------------
-	bool FtpRequestLayer::setCommand(FtpCommand code)
-	{
-		return setCommandInternal(getCommandAsString(code));
-	}
+	bool FtpRequestLayer::setCommand(FtpCommand code) { return setCommandInternal(getCommandAsString(code)); }
 
 	FtpRequestLayer::FtpCommand FtpRequestLayer::getCommand() const
 	{
@@ -22,15 +19,9 @@ namespace pcpp
 		return static_cast<FtpCommand>(val);
 	}
 
-	std::string FtpRequestLayer::getCommandString() const
-	{
-		return getCommandInternal();
-	}
+	std::string FtpRequestLayer::getCommandString() const { return getCommandInternal(); }
 
-	bool FtpRequestLayer::setCommandOption(const std::string &value)
-	{
-		return setCommandOptionInternal(value);
-	}
+	bool FtpRequestLayer::setCommandOption(const std::string &value) { return setCommandOptionInternal(value); }
 
 	std::string FtpRequestLayer::getCommandOption(bool removeEscapeCharacters) const
 	{
@@ -96,7 +87,7 @@ namespace pcpp
 			return "Language Negotiation";
 		case FtpCommand::LIST:
 			return "Returns information of a file or directory if specified, else information of the current working "
-				"directory is returned";
+				   "directory is returned";
 		case FtpCommand::LPRT:
 			return "Specifies a long address and port to which the server should connect";
 		case FtpCommand::LPSV:
@@ -117,7 +108,7 @@ namespace pcpp
 			return "Lists the contents of a directory in a standardized machine-readable format";
 		case FtpCommand::MLST:
 			return "Provides data about exactly the object named on its command line in a standardized "
-				"machine-readable format";
+				   "machine-readable format";
 		case FtpCommand::MODE:
 			return "Sets the transfer mode (Stream, Block, or Compressed)";
 		case FtpCommand::NLST:
@@ -156,14 +147,14 @@ namespace pcpp
 			return "Rename to";
 		case FtpCommand::SITE:
 			return "Sends site specific commands to remote server (like SITE IDLE 60 or SITE UMASK 002). Inspect SITE "
-				"HELP output for complete list of supported commands";
+				   "HELP output for complete list of supported commands";
 		case FtpCommand::SIZE:
 			return "Return the size of a file";
 		case FtpCommand::SMNT:
 			return "Mount file structure";
 		case FtpCommand::SPSV:
 			return "Use single port passive mode (only one TCP port number for both control connections and "
-				"passive-mode data connections)";
+				   "passive-mode data connections)";
 		case FtpCommand::STAT:
 			return "Returns information on the server status, including the status of the current connection";
 		case FtpCommand::STOR:
@@ -215,10 +206,7 @@ namespace pcpp
 		return oss.str();
 	}
 
-	std::string FtpRequestLayer::toString() const
-	{
-		return "FTP Request: " + getCommandString();
-	}
+	std::string FtpRequestLayer::toString() const { return "FTP Request: " + getCommandString(); }
 
 	// ----------------- Class FtpResponseLayer -----------------
 	bool FtpResponseLayer::setStatusCode(FtpStatusCode code)
@@ -233,15 +221,9 @@ namespace pcpp
 		return static_cast<FtpStatusCode>(atoi(getCommandInternal().c_str()));
 	}
 
-	std::string FtpResponseLayer::getStatusCodeString() const
-	{
-		return getCommandInternal();
-	}
+	std::string FtpResponseLayer::getStatusCodeString() const { return getCommandInternal(); }
 
-	bool FtpResponseLayer::setStatusOption(const std::string &value)
-	{
-		return setCommandOptionInternal(value);
-	}
+	bool FtpResponseLayer::setStatusOption(const std::string &value) { return setCommandOptionInternal(value); }
 
 	std::string FtpResponseLayer::getStatusOption(bool removeEscapeCharacters) const
 	{
@@ -380,14 +362,8 @@ namespace pcpp
 		}
 	}
 
-	std::string FtpResponseLayer::toString() const
-	{
-		return "FTP Response: " + getStatusCodeString();
-	}
+	std::string FtpResponseLayer::toString() const { return "FTP Response: " + getStatusCodeString(); }
 
-	std::string FtpDataLayer::toString() const
-	{
-		return "FTP Data";
-	}
+	std::string FtpDataLayer::toString() const { return "FTP Data"; }
 
 } // namespace pcpp

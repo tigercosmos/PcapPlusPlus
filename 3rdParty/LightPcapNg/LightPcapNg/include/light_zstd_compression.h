@@ -26,52 +26,50 @@
 #if defined(USE_Z_STD)
 
 #include <stdint.h>
-#include <zstd.h>      // presumes zstd library is installed
+#include <zstd.h> // presumes zstd library is installed
 
-
-//An ethernet packet should only ever be up to 1500 bytes + some header crap
-//We also expect some ovehead for the pcapng blocks which contain the ethernet packets
-//so allocate 1700 bytes as the max input size we expect in a single shot
+// An ethernet packet should only ever be up to 1500 bytes + some header crap
+// We also expect some ovehead for the pcapng blocks which contain the ethernet packets
+// so allocate 1700 bytes as the max input size we expect in a single shot
 #define COMPRESSION_BUFFER_IN_MAX_SIZE 1700
 
-//This is the z-std compression type I would call it z-std type and realias
-//2x but compiler won't let me do that across bounds it seems
-//So I gave it a generic "light" name....
+// This is the z-std compression type I would call it z-std type and realias
+// 2x but compiler won't let me do that across bounds it seems
+// So I gave it a generic "light" name....
 struct zstd_compression_t
 {
-	uint32_t* buffer_in;
-	uint32_t* buffer_out;
+	uint32_t *buffer_in;
+	uint32_t *buffer_out;
 	size_t buffer_in_max_size;
 	size_t buffer_out_max_size;
 	int compression_level;
-	ZSTD_CCtx* cctx;
+	ZSTD_CCtx *cctx;
 };
 
 struct zstd_decompression_t
 {
-	uint32_t* buffer_in;
-	uint32_t* buffer_out;
+	uint32_t *buffer_in;
+	uint32_t *buffer_out;
 	size_t buffer_in_max_size;
 	size_t buffer_out_max_size;
-	ZSTD_DCtx* dctx;
+	ZSTD_DCtx *dctx;
 	int outputReady;
 	ZSTD_outBuffer output;
 	ZSTD_inBuffer input;
 };
-
 
 typedef struct zstd_compression_t _compression_t;
 typedef struct zstd_decompression_t _decompression_t;
 
 struct light_file_t;
 
-_compression_t * get_zstd_compression_context(int compression_level);
-void free_zstd_compression_context(_compression_t* context);
+_compression_t *get_zstd_compression_context(int compression_level);
+void free_zstd_compression_context(_compression_t *context);
 
-_decompression_t * get_zstd_decompression_context();
-void free_zstd_decompression_context(_decompression_t* context);
+_decompression_t *get_zstd_decompression_context();
+void free_zstd_decompression_context(_decompression_t *context);
 
-int is_zstd_compressed_file(const char* file_path);
+int is_zstd_compressed_file(const char *file_path);
 
 size_t read_zstd_compressed(struct light_file_t *fd, void *buf, size_t count);
 
@@ -79,5 +77,5 @@ size_t write_zstd_compressed(struct light_file_t *fd, const void *buf, size_t co
 
 int close_zstd_compressed(struct light_file_t *fd);
 
-#endif //USE_Z_STD
+#endif // USE_Z_STD
 #endif /* INCLUDE_LIGHT_ZSTD_COMPRESSION_H_ */

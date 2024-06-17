@@ -17,25 +17,27 @@
  * PcapPlusPlus uses some heuristics to determine the type of the SSH message (which will be covered later).
  * If it doesn't find a match to one of the other SSH messages, it assumes it is an encrypted SSH message.
  *
- * Following is an overview of the SSH protocol classes currently supported in PcapPlusPlus. They cover the different messages of the SSH protocol:
+ * Following is an overview of the SSH protocol classes currently supported in PcapPlusPlus. They cover the different
+ messages of the SSH protocol:
  *
   @verbatim
 
-                                 +----------------------------+      SSH version identification
-                             +---|  SSHIdentificationMessage  | ===> as described here:
-                             |   +----------------------------+      https://tools.ietf.org/html/rfc4253#section-4.2
-                             |
+								 +----------------------------+      SSH version identification
+							 +---|  SSHIdentificationMessage  | ===> as described here:
+							 |   +----------------------------+      https://tools.ietf.org/html/rfc4253#section-4.2
+							 |
   +------------+             |   +----------------------------+      SSH handshake message
-  |  SSHLayer  |-------------+---|  SSHHandshakeMessage       | ===> which is typically one of the messages described here:
-  | (abstract) |             |   +----------------------------+      https://tools.ietf.org/html/rfc4253#section-12
+  |  SSHLayer  |-------------+---|  SSHHandshakeMessage       | ===> which is typically one of the messages described
+ here: | (abstract) |             |   +----------------------------+      https://tools.ietf.org/html/rfc4253#section-12
   +------------+             |                 |
-                             |                 |     +----------------------------+      SSH Key Exchange message
-                             |                 +-----|  SSHKeyExchangeInitMessage | ===> as described here:
-                             |                       +----------------------------+      https://tools.ietf.org/html/rfc4253#section-7
-                             |
-                             |   +----------------------------+
-                             +---|  SSHEncryptedMessage       | ===> An encrypted SSH message
-                                 +----------------------------+
+							 |                 |     +----------------------------+      SSH Key Exchange message
+							 |                 +-----|  SSHKeyExchangeInitMessage | ===> as described here:
+							 |                       +----------------------------+
+ https://tools.ietf.org/html/rfc4253#section-7
+							 |
+							 |   +----------------------------+
+							 +---|  SSHEncryptedMessage       | ===> An encrypted SSH message
+								 +----------------------------+
 
   @endverbatim
 
@@ -43,7 +45,8 @@
   * 1. If the data starts with the characters "SSH-" and ends with "\n" (or "\r\n") it's assumed the message is of type
   *    pcpp#SSHIdentificationMessage
   * 2. Try to determine if this is a non-encrypted SSH handshake message:
-  *    - Look at the first 4 bytes of the data which may contain the packet length and see if the value is smaller of equal
+  *    - Look at the first 4 bytes of the data which may contain the packet length and see if the value is smaller of
+ equal
   *      than the entire layer length
   *    - The next byte contains the padding length, check if it's smaller or equal than the packet length
   *    - The next byte contains the message type, check if the value is a valid message type as described in:
@@ -70,7 +73,7 @@ namespace pcpp
 	 */
 	class SSHLayer : public Layer
 	{
-	public:
+	  public:
 		/**
 		 * A static method that takes raw packet data and uses the heuristics described in the
 		 * SSHLayer.h file description to create an SSH layer instance. This method assumes the data is
@@ -82,7 +85,7 @@ namespace pcpp
 		 * @return An instance of one of the classes that inherit SSHLayer as described in the
 		 * SSHLayer.h file description
 		 */
-		static SSHLayer* createSSHMessage(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet);
+		static SSHLayer *createSSHMessage(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet);
 
 		/**
 		 * A static method that takes src and dst ports and determines whether it's SSH traffic or not.
@@ -96,8 +99,8 @@ namespace pcpp
 		// implement abstract methods
 
 		/**
-		 * Several SSH records can reside in a single packets. This method examins the remaining data and creates additional
-		 * SSH records if applicable
+		 * Several SSH records can reside in a single packets. This method examins the remaining data and creates
+		 * additional SSH records if applicable
 		 */
 		void parseNextLayer();
 
@@ -108,43 +111,46 @@ namespace pcpp
 
 		OsiModelLayer getOsiModelLayer() const { return OsiModelApplicationLayer; }
 
-	protected:
+	  protected:
 		// protected c'tor, this class cannot be instantiated
-		SSHLayer(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : Layer(data, dataLen, prevLayer, packet) { m_Protocol = SSH; }
+		SSHLayer(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: Layer(data, dataLen, prevLayer, packet)
+		{
+			m_Protocol = SSH;
+		}
 
-	private:
+	  private:
 		// this layer supports only parsing
 		SSHLayer();
 	};
 
-
-
 	/**
 	 * @class SSHIdentificationMessage
-	 * A class that represents SSH identification message as described in RFC 4253: <https://tools.ietf.org/html/rfc4253#section-4.2>
+	 * A class that represents SSH identification message as described in RFC 4253:
+	 * <https://tools.ietf.org/html/rfc4253#section-4.2>
 	 *
-	 * The message content is typically a string that contains the protocol version, software version and a few more details.
-	 * This string can be retrieved using the getIdentificationMessage() method
+	 * The message content is typically a string that contains the protocol version, software version and a few more
+	 * details. This string can be retrieved using the getIdentificationMessage() method
 	 */
 	class SSHIdentificationMessage : public SSHLayer
 	{
-	public:
+	  public:
 		/**
 		 * @return The SSH identification message which is typically the content of this message
 		 */
 		std::string getIdentificationMessage();
 
 		/**
-		 * A static method that takes raw data and tries to parse it as an SSH identification message using the heuristics described
-	 	 * in the SSHLayer.h file description. It returns a SSHIdentificationMessage instance if such a message can be identified or NULL
-		 * otherwise.
+		 * A static method that takes raw data and tries to parse it as an SSH identification message using the
+		 * heuristics described in the SSHLayer.h file description. It returns a SSHIdentificationMessage instance if
+		 * such a message can be identified or NULL otherwise.
 		 * @param[in] data A pointer to the raw data
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] prevLayer A pointer to the previous layer
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 * @return An instance of SSHIdentificationMessage or NULL if this is not an identification message
 		 */
-		static SSHIdentificationMessage* tryParse(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet);
+		static SSHIdentificationMessage *tryParse(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet);
 
 		// implement abstract methods
 
@@ -155,15 +161,16 @@ namespace pcpp
 
 		std::string toString() const;
 
-	private:
+	  private:
 		// this layer supports only parsing
 		SSHIdentificationMessage();
 
 		// private c'tor, this class cannot be instantiated
-		SSHIdentificationMessage(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : SSHLayer(data, dataLen, prevLayer, packet) {}
-
+		SSHIdentificationMessage(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: SSHLayer(data, dataLen, prevLayer, packet)
+		{
+		}
 	};
-
 
 	/**
 	 * @class SSHHandshakeMessage
@@ -178,16 +185,19 @@ namespace pcpp
 	 +---------------------------------------+---------+---------+-----------     ---------+
 	 @endverbatim
 	 *
-	 * The first 4 bytes hold the packet length, followed by 1 byte that holds the padding length (which comes at the end of the message),
-	 * then 1 byte that holds the message type (which can be of type SSHHandshakeMessage#SSHHandshakeMessageType) and then the message content.
+	 * The first 4 bytes hold the packet length, followed by 1 byte that holds the padding length (which comes at the
+	 end of the message),
+	 * then 1 byte that holds the message type (which can be of type SSHHandshakeMessage#SSHHandshakeMessageType) and
+	 then the message content.
 	 * At the end of the content there is typically padding.
 	 *
-	 * This class provides access to all of these values. The message content itself is not parse with the exception of SSHKeyExchangeInitMessage
+	 * This class provides access to all of these values. The message content itself is not parse with the exception of
+	 SSHKeyExchangeInitMessage
 	 * which inherits from this class and provides parsing of the Key Exchange Init message.
 	 */
 	class SSHHandshakeMessage : public SSHLayer
 	{
-	public:
+	  public:
 		/**
 		 * An enum that represents SSH non-encrypted message types
 		 */
@@ -224,7 +234,7 @@ namespace pcpp
 		/**
 		 * @return A raw byte stream of the message content
 		 */
-		uint8_t* getSSHHandshakeMessage() const;
+		uint8_t *getSSHHandshakeMessage() const;
 
 		/**
 		 * @return The message content length in [bytes] which is calculated by the overall packet length
@@ -249,7 +259,7 @@ namespace pcpp
 		 * for Key Exchange Init message or SSHHandshakeMessage for any other message type. If parsing fails NULL
 		 * will be returned
 		 */
-		static SSHHandshakeMessage* tryParse(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet);
+		static SSHHandshakeMessage *tryParse(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet);
 
 		// implement abstract methods
 
@@ -260,48 +270,49 @@ namespace pcpp
 
 		std::string toString() const;
 
-	protected:
-
-		/**
-		 * An internal struct representing the SSH handshake message header
-		 */
-		#pragma pack(push, 1)
+	  protected:
+/**
+ * An internal struct representing the SSH handshake message header
+ */
+#pragma pack(push, 1)
 		struct ssh_message_base
 		{
 			uint32_t packetLength;
 			uint8_t paddingLength;
 			uint8_t messageCode;
 		};
-		#pragma pack(pop)
+#pragma pack(pop)
 
 		// this layer supports only parsing
 		SSHHandshakeMessage();
 
 		// private c'tor, this class cannot be instantiated
-		SSHHandshakeMessage(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : SSHLayer(data, dataLen, prevLayer, packet) {}
+		SSHHandshakeMessage(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: SSHLayer(data, dataLen, prevLayer, packet)
+		{
+		}
 
-		ssh_message_base* getMsgBaseHeader() const { return (ssh_message_base*)m_Data; }
+		ssh_message_base *getMsgBaseHeader() const { return (ssh_message_base *)m_Data; }
 	};
-
 
 	/**
 	 * @class SSHKeyExchangeInitMessage
 	 * A class representing the SSH Key Exchange Init message. This is a non-encrypted message that contains information
-	 * about the algorithms used for key exchange, encryption, MAC and compression. This class provides methods to access
-	 * these details
+	 * about the algorithms used for key exchange, encryption, MAC and compression. This class provides methods to
+	 * access these details
 	 */
 	class SSHKeyExchangeInitMessage : public SSHHandshakeMessage
 	{
-	public:
+	  public:
 		/**
 		 * A c'tor for this class that accepts raw message data. Please avoid using it as it's used internally
 		 * when parsing SSH handshake messages in SSHHandshakeMessage#tryParse()
- 		 * @param[in] data A pointer to the raw data
+		 * @param[in] data A pointer to the raw data
 		 * @param[in] dataLen Size of the data in bytes
 		 * @param[in] prevLayer A pointer to the previous layer
 		 * @param[in] packet A pointer to the Packet instance where layer will be stored in
 		 */
-		SSHKeyExchangeInitMessage(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet);
+		SSHKeyExchangeInitMessage(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet);
 
 		/**
 		 * Each SSH Key Exchange Init message contains a random 16-byte value generated by the sender.
@@ -309,7 +320,7 @@ namespace pcpp
 		 * please refer to getCookieAsHexStream()
 		 * @return A pointer to the 16-byte cookie value or NULL if the message is malformed
 		 */
-		uint8_t* getCookie();
+		uint8_t *getCookie();
 
 		/**
 		 * Each SSH Key Exchange Init message contains a random 16-byte value generated by the sender.
@@ -386,7 +397,7 @@ namespace pcpp
 		 */
 		bool isFirstKexPacketFollows();
 
-	private:
+	  private:
 		size_t m_FieldOffsets[11];
 		bool m_OffsetsInitialized;
 
@@ -395,24 +406,26 @@ namespace pcpp
 		std::string getFieldValue(int fieldOffsetIndex);
 	};
 
-
 	/**
 	 * @class SSHEncryptedMessage
-	 * A class representing an SSH encrypted message. In such messages there is very little information to extract from the packet,
-	 * hence this class doesn't expose any methods or getters, other than the ones inherited from parent classes.
+	 * A class representing an SSH encrypted message. In such messages there is very little information to extract from
+	 * the packet, hence this class doesn't expose any methods or getters, other than the ones inherited from parent
+	 * classes.
 	 *
-	 * It is assumed that any SSH message which does not fit to any of the other SSH message types, according to the heuristics described in
-	 * the SSHLayer.h file description, is considered as an encrypted message.
+	 * It is assumed that any SSH message which does not fit to any of the other SSH message types, according to the
+	 * heuristics described in the SSHLayer.h file description, is considered as an encrypted message.
 	 */
 	class SSHEncryptedMessage : public SSHLayer
 	{
-	public:
-
+	  public:
 		/**
 		 * A c'tor for this class that accepts raw message data. Please avoid using it as it's used internally
 		 * when parsing SSH messagess in SSHLayer#createSSHMessage()
 		 */
-		SSHEncryptedMessage(uint8_t* data, size_t dataLen, Layer* prevLayer, Packet* packet) : SSHLayer(data, dataLen, prevLayer, packet) {}
+		SSHEncryptedMessage(uint8_t *data, size_t dataLen, Layer *prevLayer, Packet *packet)
+			: SSHLayer(data, dataLen, prevLayer, packet)
+		{
+		}
 
 		// implement abstract methods
 
@@ -424,4 +437,4 @@ namespace pcpp
 		std::string toString() const;
 	};
 
-}
+} // namespace pcpp
