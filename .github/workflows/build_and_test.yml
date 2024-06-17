@@ -3,7 +3,7 @@ on:
   push:
     branches: ["master", "dev"]
   pull_request:
-    branches: ["dev"]
+    branches: ["master", "dev"]
   schedule:
     - cron: '0 0 * * 0' # Run every Sunday at midnight
 
@@ -30,6 +30,7 @@ jobs:
         run: |
           apk update && apk add cppcheck python3-dev
           python3 -m pip install cmake-format
+          pip install clang-format==18.1.6
 
       - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
 
