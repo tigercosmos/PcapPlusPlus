@@ -4,4 +4,5 @@ UseTab: Always
 BreakBeforeBraces: Allman
 AllowShortFunctionsOnASingleLine: All
 NamespaceIndentation: All
+SortIncludes: false
 ...
